@@ -5,7 +5,6 @@ app/metadata.sh
 app/private/scripts/playerAppConfig.js
 app/private/scripts/telemetry/**
 app/public/scripts/publicAppConfig.js
-app/migration/**
 app/thirdparty/**
 semantic/**
 dist/**
