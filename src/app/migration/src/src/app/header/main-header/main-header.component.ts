@@ -9,13 +9,12 @@ import { ProfileService } from '../../services/profile.service';
 })
 
 export class MainHeaderComponent implements OnInit {
-  userid: string; 
+  userid: string;
   userProfile; object;
-  constructor(private permissionService: PermissionService, private profileService: ProfileService) { 
+  constructor(private permissionService: PermissionService, private profileService: ProfileService) {
   }
 
   ngOnInit() {
 
   }
-
 }

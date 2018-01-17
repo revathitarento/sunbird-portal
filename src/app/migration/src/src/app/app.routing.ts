@@ -6,7 +6,7 @@ import { CommunityListComponent } from './main-view/community-list/community-lis
 const appRoutes: Routes = [
     { path: 'migration/groups', component: CommunityListComponent }, // canActivate: [AuthGuard]
     { path: 'migration/profile', component: ProfileComponent }
-    //,{ path:'**', redirectTo: "/public/#!/"}
+    // ,{ path:'**', redirectTo: "/public/#!/"}
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

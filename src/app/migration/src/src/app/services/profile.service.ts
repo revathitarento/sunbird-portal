@@ -1,64 +1,66 @@
 import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { HttpClient } from '@angular/common/http';
-import * as moment from 'moment'
-import { Observable } from "rxjs/Rx"
+import * as moment from 'moment';
+import { Observable } from 'rxjs/Rx';
 import { HttpParams } from '@angular/common/http/src/params';
 import { UUID } from 'angular2-uuid';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 import { HttpHeaders } from '@angular/common/http';
-declare var jquery:any;
-declare var $ :any;
+declare var jquery: any;
+declare var $: any;
 
 @Injectable()
 export class ProfileService extends DataService {
-  userid: string; 
-  readUserProfileUrl: string;
-  rolesAndPermissions : any[];
-  currentUserProfile : object;
-  currentUserRoles : any[];
-  currentRoleActions : any[];
+  userid: string;
+  readUserProfileUrl = '/private/service/v1/learner/user/v1/read/';
+  rolesAndPermissions: any[] = [];  // permission sevrvice
+  currentUserProfile: object = {};
+  currentUserRoles: any[] = [];
+  currentRoleActions: any[] = [];
 
-  constructor(public http : HttpClient) { 
+  constructor(public http: HttpClient) {
     super(http);
     this.userid = $('#userId').attr('value');
-    this.readUserProfileUrl = "/private/service/v1/learner/user/v1/read/";
-    this.rolesAndPermissions = []; // permission sevrvice
-    this.currentUserProfile = {};
-    this.currentUserRoles = [];
-    this.currentRoleActions = [];
-
     this.getUserProfile().subscribe(
       data => {
         this.setCurrentUserProfile(data);
       },
-      err => { 
-        console.log("error in getting profile",err);
+      err => {
+        console.log('error in getting profile', err);
       }
     );
   }
-  public getUserProfile(){
-    return  this.http.get(this.readUserProfileUrl + this.userid,{
-        headers: new HttpHeaders().set('Content-Type', 'application/json')
-                                  .set("Accept", 'application/json')
-                                  .set('X-Consumer-ID', 'X-Consumer-ID')
-                                  .set('X-Device-ID', 'X-Device-ID')
-                                  .set('X-Org-code', 'AP')
-                                  .set('X-Source', 'web')
-                                  .set("ts", moment().format())
-                                  .set('X-msgid', UUID.UUID())
-      })
+  public getUserProfile() {
+    const header = this.prepareHeader(null);
+    return  this.http.get(this.readUserProfileUrl + this.userid, header);
   }
+  private prepareHeader(headers: HttpHeaders | null): object {
 
-  public setCurrentUserProfile(res){
+    headers = headers || new HttpHeaders();
+
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Accept', 'application/json');
+    headers = headers.set('X-Consumer-ID', 'X-Consumer-ID');
+    headers = headers.set('X-Device-ID', 'X-Device-ID');
+    headers = headers.set('X-Org-code', 'AP');
+    headers = headers.set('X-Source', 'web');
+    headers = headers.set('ts', moment().format());
+    headers = headers.set('X-msgid', UUID.UUID());
+
+    return {
+        headers: headers
+    };
+  }
+  public setCurrentUserProfile(res) {
     if (res && res.responseCode === 'OK') {
-      var profileData = res.result.response
-      var userRoles = profileData.roles
+      const profileData = res.result.response;
+      let userRoles = profileData.roles;
       _.forEach(profileData.organisations, (org) => {
         if (org.roles && _.isArray(org.roles)) {
-          userRoles = _.union(userRoles, org.roles)
+          userRoles = _.union(userRoles, org.roles);
         }
-      })
+      });
       this.currentUserProfile = profileData;
       this.currentUserRoles = userRoles;
       this.setCurrentRoleActions(userRoles);
@@ -67,13 +69,13 @@ export class ProfileService extends DataService {
     }
   }
 
-  public setCurrentRoleActions(userRoles){
+  public setCurrentRoleActions(userRoles) {
     _.forEach(userRoles,  (r) => {
-      var roleActions = _.filter(this.rolesAndPermissions, { role: r })
+      const roleActions = _.filter(this.rolesAndPermissions, { role: r });
       if (_.isArray(roleActions) && roleActions.length > 0) {
         this.currentRoleActions = _.concat(this.currentRoleActions,
-          _.map(roleActions[0].actions, 'id'))
+          _.map(roleActions[0].actions, 'id'));
       }
-    })
+    });
   }
 }

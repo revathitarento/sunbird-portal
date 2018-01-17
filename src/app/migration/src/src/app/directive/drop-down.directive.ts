@@ -1,18 +1,17 @@
 import { Directive, OnInit , ElementRef} from '@angular/core';
-declare var jquery:any;
-declare var $ :any;
+declare var jquery: any;
+declare var $: any;
 
 @Directive({
   selector: '[appDropDown]'
 })
 export class DropDownDirective implements OnInit{
 
-  constructor() { 
-  	
+  constructor() {
   }
   ngOnInit() {
-  	$('.ui.dropdown').dropdown();
-    //$('#dropdown-menu-list-header').dropdown()
+    $('.ui.dropdown').dropdown();
+    // $('#dropdown-menu-list-header').dropdown()
   }
 
 }

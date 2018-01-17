@@ -9,11 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileComponent implements OnInit {
   posts: any;
-  
     constructor() {
     }
-  
     ngOnInit() {
-      
     }
 }
