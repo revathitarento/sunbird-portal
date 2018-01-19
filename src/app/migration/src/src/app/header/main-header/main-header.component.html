@@ -22,9 +22,9 @@
         <i class="float-ContentLeft alarm-icon-header alarm icon large alaramIconColor"></i>
         <div appDropDown class="ui floating dropdown right top pointing
              header-user-container padding-top-circular-human-icon" id="dropdown-menu-list-header">
-            <img src="{{ profileService.currentUserProfile.avatar || '/assets/common/images/user_logo.png'}}" class="ui circular image logged-in-user" />
+            <img src="{{ profileService.currentUserProfile['avatar'] || '/assets/common/images/user_logo.png'}}" class="ui circular image logged-in-user" />
             <div class="menu">
-                <div class="item headerDropdownProfile" >{{profileService.currentUserProfile.userName}}</div>
+                <div class="item headerDropdownProfile" >{{profileService.currentUserProfile['userName']}}</div>
                 <div class="ui divider"></div>
                 <a class="item" href="/private/index#!/profile" >Profile</a>
                 <a class="item" href="/private/index#!/workspace/content/create" >Workspace</a>

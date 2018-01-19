@@ -7,6 +7,7 @@ import { HttpParams } from '@angular/common/http/src/params';
 import { UUID } from 'angular2-uuid';
 import * as _ from 'lodash';
 import { HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 declare var jquery: any;
 declare var $: any;
 
@@ -18,7 +19,8 @@ export class ProfileService extends DataService {
   currentUserProfile: object = {};
   currentUserRoles: any[] = [];
   currentRoleActions: any[] = [];
-
+  profileAvailable = false;
+  profileAvailable$ = new BehaviorSubject<boolean>(this.profileAvailable);
   constructor(public http: HttpClient) {
     super(http);
     this.userid = $('#userId').attr('value');
@@ -77,5 +79,7 @@ export class ProfileService extends DataService {
           _.map(roleActions[0].actions, 'id'));
       }
     });
+    this.profileAvailable$.next(true);
+    console.log('Profile available');
   }
 }

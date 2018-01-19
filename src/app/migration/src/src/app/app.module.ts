@@ -6,12 +6,14 @@ import { MainMenuComponent } from './header/main-menu/main-menu.component';
 import { SearchComponent } from './header/search/search.component';
 import { CommunityListComponent } from './main-view/community-list/community-list.component';
 import { DropDownDirective } from './directive/drop-down.directive';
-import { Routes, RouterModule } from '@angular/router';
-import { routing } from './app.routing';
+import { AppRoutingModule } from './app.routing';
 import { ProfileComponent } from './main-view/profile/profile.component';
 import {HttpClientModule} from '@angular/common/http';
 import { ProfileService } from './services/profile.service';
 import { PermissionService } from './services/permission.service';
+import { AuthGuard } from './services/auth-guard.service';
+import { RouteResolveService } from './services/route-resolve.service';
+import { AuthGuardComponent } from './random/auth-guard/auth-guard.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,16 +22,19 @@ import { PermissionService } from './services/permission.service';
     SearchComponent,
     CommunityListComponent,
     DropDownDirective,
-    ProfileComponent
+    ProfileComponent,
+    AuthGuardComponent
   ],
   imports: [
     BrowserModule,
-    routing,
+    AppRoutingModule,
     HttpClientModule
   ],
   providers: [
+    RouteResolveService,
     ProfileService,
-    PermissionService
+    PermissionService,
+    AuthGuard
   ],
     entryComponents: [AppComponent],
     bootstrap: [AppComponent]

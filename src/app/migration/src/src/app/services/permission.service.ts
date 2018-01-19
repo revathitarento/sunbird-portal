@@ -7,16 +7,18 @@ import { HttpParams } from '@angular/common/http/src/params';
 import { UUID } from 'angular2-uuid';
 import * as _ from 'lodash';
 import { HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 declare var jquery: any;
 declare var $: any;
 
 @Injectable()
 export class PermissionService extends DataService {
   userid: string;
-  readPermissionsUrl = '/private/service/v1/learner/data/v1/role/read';;
+  readPermissionsUrl = '/private/service/v1/learner/data/v1/role/read';
   rolesAndPermissions: any[] = [];
   mainRoles: any[] = [];
-
+  permissionAvailable = false;
+  permissionAvailable$ = new BehaviorSubject<boolean>(this.permissionAvailable);
   constructor(public http: HttpClient) {
     super(http);
     this.userid = $('#userId').attr('value');
@@ -63,5 +65,7 @@ export class PermissionService extends DataService {
       this.rolesAndPermissions.push(mainRole);
     });
     this.rolesAndPermissions = _.uniqBy(this.rolesAndPermissions, 'role');
+    this.permissionAvailable$.next(true);
+    console.log('Permission available');
   }
 }
