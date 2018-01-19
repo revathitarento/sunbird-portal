@@ -11,12 +11,15 @@ const appRoutes: Routes = [
         path: 'migration/groups',
         component: CommunityListComponent,
         canActivate: [
-            'CanActivateViaAuthGuard',
+            'CanActivate',
         ]
     },
     {
         path: 'migration/profile',
-        component: ProfileComponent
+        component: ProfileComponent,
+        canActivate: [
+            'CanActivate',
+        ]
     },
     {
         path: 'migration/auth',
@@ -36,8 +39,8 @@ const appRoutes: Routes = [
   providers: [
     RouteResolveService,
     {
-      provide: 'CanActivateViaAuthGuard',
-      useValue: () => {
+      provide: 'CanActivate',
+      useValue: ( ) => {
         return true;
       }
     }
