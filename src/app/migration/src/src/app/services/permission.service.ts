@@ -8,8 +8,6 @@ import { UUID } from 'angular2-uuid';
 import * as _ from 'lodash';
 import { HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-declare var jquery: any;
-declare var $: any;
 
 @Injectable()
 export class PermissionService extends DataService {
@@ -21,7 +19,8 @@ export class PermissionService extends DataService {
   permissionAvailable$ = new BehaviorSubject<boolean>(this.permissionAvailable);
   constructor(public http: HttpClient) {
     super(http);
-    this.userid = $('#userId').attr('value');
+    this.userid =  (<HTMLInputElement>document.getElementById('userId')).value;
+    console.log(this.userid);
     this.getPermissionsData().subscribe(
       data => {
         this.setRolesAndPermissions(data);

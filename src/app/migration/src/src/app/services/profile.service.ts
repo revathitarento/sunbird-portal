@@ -8,8 +8,6 @@ import { UUID } from 'angular2-uuid';
 import * as _ from 'lodash';
 import { HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-declare var jquery: any;
-declare var $: any;
 
 @Injectable()
 export class ProfileService extends DataService {
@@ -23,7 +21,7 @@ export class ProfileService extends DataService {
   profileAvailable$ = new BehaviorSubject<boolean>(this.profileAvailable);
   constructor(public http: HttpClient) {
     super(http);
-    this.userid = $('#userId').attr('value');
+    this.userid =  (<HTMLInputElement>document.getElementById('userId')).value;
     this.getUserProfile().subscribe(
       data => {
         this.setCurrentUserProfile(data);
