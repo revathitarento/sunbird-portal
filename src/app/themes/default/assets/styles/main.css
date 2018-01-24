@@ -467,6 +467,13 @@ h4.ui.header.sectionHeading {
   font-family: 'sunbirdboldfont';
   font-size: 1.375em;
 }
+a {
+  outline: none !important;
+}
+a:active,
+a:hover {
+  outline: none !important;
+}
 .ui.menu {
   font-family: 'sunbirdregularfont';
   color: #333333;
@@ -887,6 +894,9 @@ i.large.icon.limitedPublishingLinkIcon {
   top: -40px;
   z-index: 10;
 }
+.slick-prev {
+  left: -15px;
+}
 .slick-prev,
 .slick-next {
   right: -10px;
@@ -1052,14 +1062,14 @@ i.large.icon.limitedPublishingLinkIcon {
   padding-top: 20px;
   font-size: 18px;
   font-weight: 600;
-  color: #fdfdfd;
+  color: #7c7b7b;
 }
 .noResultSearchText {
   text-align: center;
   padding-top: 5px;
   font-size: 16px;
   /* font-weight: 600; */
-  color: #fdfdfd;
+  color: #7c7b7b;
 }
 .profileCard-circular-image {
   position: relative;
@@ -1989,7 +1999,7 @@ ul.fancytree-container li {
   z-index: 11;
 }
 .conceptSelector.ui.form .treepicker-parent input {
-  color: #F5F5F5;
+  color: #cdcccc;
   font-family: Roboto;
   font-size: 13px;
 }
