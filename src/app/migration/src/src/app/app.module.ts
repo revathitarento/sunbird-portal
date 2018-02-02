@@ -14,6 +14,7 @@ import { AuthGuard } from './services/auth-guard.service';
 import { RouteResolveService } from './services/route-resolve.service';
 import { AuthGuardComponent } from './random/auth-guard/auth-guard.component';
 import { SuiModule } from 'ng2-semantic-ui';
+import { PermissionDirective } from './directive/permission.directive';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { SuiModule } from 'ng2-semantic-ui';
     SearchComponent,
     CommunityListComponent,
     ProfileComponent,
-    AuthGuardComponent
+    AuthGuardComponent,
+    PermissionDirective
   ],
   imports: [
     BrowserModule,

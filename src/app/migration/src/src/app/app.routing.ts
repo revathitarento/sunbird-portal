@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './services/auth-guard.service';
 import { RouteResolveService } from './services/route-resolve.service';
 import { AuthGuardComponent } from './random/auth-guard/auth-guard.component';
+import {BreadcrumbsModule} from 'ng2-breadcrumbs';
 
 const appRoutes: Routes = [
     {
@@ -17,9 +18,15 @@ const appRoutes: Routes = [
     {
         path: 'migration/profile',
         component: ProfileComponent,
+        resolve: {
+            profile: RouteResolveService
+        },
         canActivate: [
-            'CanActivate',
-        ]
+            AuthGuard,
+        ],
+        data: {
+            breadcrumb: ['Home', 'profile']
+        }
     },
     {
         path: 'migration/auth',
@@ -29,13 +36,18 @@ const appRoutes: Routes = [
         },
         canActivate: [
             AuthGuard,
-        ]
+        ],
+        data: {
+            breadcrumb: ['Home', 'auth']
+        }
     }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes)],
-  exports: [RouterModule],
+  imports: [RouterModule.forRoot(appRoutes),
+            BreadcrumbsModule],
+  exports: [RouterModule,
+            BreadcrumbsModule],
   providers: [
     RouteResolveService,
     {
