@@ -1,11 +1,10 @@
-import { ProfileComponent } from './main-view/profile/profile.component';
 import { CommunityListComponent } from './main-view/community-list/community-list.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './services/auth-guard.service';
-import { RouteResolveService } from './services/route-resolve.service';
+import { AuthGuard } from './services/auth-guard/auth-guard.service';
+import { RouteResolveService } from './services/route-resolve/route-resolve.service';
 import { AuthGuardComponent } from './random/auth-guard/auth-guard.component';
-import {BreadcrumbsModule} from 'ng2-breadcrumbs';
+import { ProfileComponent } from './profile/profile/profile.component';
 
 const appRoutes: Routes = [
     {
@@ -17,16 +16,7 @@ const appRoutes: Routes = [
     },
     {
         path: 'migration/profile',
-        component: ProfileComponent,
-        resolve: {
-            profile: RouteResolveService
-        },
-        canActivate: [
-            AuthGuard,
-        ],
-        data: {
-            breadcrumb: ['Home', 'profile']
-        }
+        component: ProfileComponent
     },
     {
         path: 'migration/auth',
@@ -44,10 +34,8 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes),
-            BreadcrumbsModule],
-  exports: [RouterModule,
-            BreadcrumbsModule],
+  imports: [RouterModule.forRoot(appRoutes)],
+  exports: [RouterModule],
   providers: [
     RouteResolveService,
     {
