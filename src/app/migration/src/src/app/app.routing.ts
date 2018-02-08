@@ -1,5 +1,6 @@
 import { AuthGuardComponent } from './../random/auth-guard/auth-guard.component';
 import { ProfileComponent } from './components/profile/profile/profile.component';
+import { DiscussionsComponent } from './components/discussions/discussions.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteResolveService } from './services/route-resolve/route-resolve.service';
@@ -30,7 +31,11 @@ const appRoutes: Routes = [
         data: {
             breadcrumb: ['Home', 'auth']
         }
-    }
+    },
+    //{
+      //  path: 'migration/discussions',
+       // component: discussionsComponent
+  //  }
 ];
 
 @NgModule({
