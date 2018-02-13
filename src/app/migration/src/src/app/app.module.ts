@@ -22,6 +22,12 @@ import { ProfileHeaderComponent } from './components/profile/profile-header/prof
 import { ProfileViewComponent } from './components/profile/profile-view/profile-view.component';
 import { AuthGuard } from './auth-guards/auth-guard.service';
 import { LearnerService } from './services/learner/learner.service';
+import { ThreadListComponent } from './components/discussions/thread-list/thread-list.component';
+import { CreateThreadComponent } from './components/discussions/create-thread/create-thread.component';
+import { ThreadDetailsComponent } from './components/discussions/thread-details/thread-details.component';
+// import {DiscussionsComponent} from './components/discussions/discussions.component';
+import {FormsModule} from '@angular/forms';
+import { DiscussionsApiservice } from './services/discussions/discussions.service';
 
 @NgModule({
   declarations: [
@@ -35,13 +41,18 @@ import { LearnerService } from './services/learner/learner.service';
     ProfileComponent,
     AppLoaderComponent,
     ProfileHeaderComponent,
-    ProfileViewComponent
+    ProfileViewComponent,
+    ThreadListComponent,
+    ThreadDetailsComponent,
+    CreateThreadComponent
+    // DiscussionsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    SuiModule
+    SuiModule,
+    FormsModule
   ],
   providers: [
     RouteResolveService,
@@ -51,7 +62,8 @@ import { LearnerService } from './services/learner/learner.service';
     ResourceService,
     LearnerService,
     ContentService,
-    AnnouncementService
+    AnnouncementService,
+    DiscussionsApiservice
   ],
     entryComponents: [AppComponent],
     bootstrap: [AppComponent]

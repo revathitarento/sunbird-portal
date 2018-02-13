@@ -1,0 +1,9 @@
+.ui.dimmer .quesHeading,
+.left-class,
+.content.padding-top-20 {
+    text-align: left;
+}
+
+.content.padding-top-20 {
+    padding-bottom: 10px;
+}

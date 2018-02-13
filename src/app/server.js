@@ -101,6 +101,10 @@ app.use(express.static(path.join(__dirname, 'migration/dist'), { extensions: ['e
 app.use('/announcement/v1', bodyParser.urlencoded({ extended: false }),
   bodyParser.json({ limit: '10mb' }), require('./helpers/announcement')(keycloak))
 
+// Discussions routing
+app.use('/discussions/v1', bodyParser.urlencoded({ extended: false }),
+ bodyParser.json({ limit: '10mb' }), require('./helpers/discussion-poc')(keycloak))
+
 app.use('/private/index', function (req, res, next) {
   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
   res.header('Expires', '-1')
