@@ -1,0 +1,59 @@
+<div class="ui padded grid">
+    <div class="row">
+        <div class="twelve wide column">
+            <div class="ui grid">
+                <div class="one wide column"></div>
+                <div class="eight wide column">
+                    <div class="ui segment">
+                        <div class="ui top padded grid">
+                            <div class="text-align-left">
+                                <a class="cursor-pointer" (click)="changeWidget()">
+                                    <i class="large arrow left icon"></i>
+                                </a>
+                            </div>
+                            <div class="cardsHeading">
+                                Post a question {{message}}
+                            </div>
+                        </div>
+                        <div class="ui divider"></div>
+                        <form name="createQuestion" class="ui form">
+                            <div class="ui form">
+                                <div class="field">
+                                    <label class="left-class">Title</label>
+                                    <input autocomplete="off" type="text" name="threadTitle" [(ngModel)]="discussionsModel.threadTitle" #threadTitle="ngModel"
+                                    />
+                                    <div *ngIf="threadTitle.dirty || threadTitle.touched" class="field padding-top-10">
+                                        <div class="ui negative message">
+                                            <div class="header">
+                                                This is a required field.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label class="left-class">Description</label>
+                                    <textarea type="text" autocomplete="off" name="threadDesc" [(ngModel)]="discussionsModel.threadDesc" #threadDesc="ngModel"></textarea>
+                                    <div *ngIf="threadDesc.dirty || threadDesc.touched" class="field padding-top-10">
+                                        <div class="ui negative message">
+                                            <div class="header">
+                                                This is a required field.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ui horizontal divider"></div>
+                            <div class="">
+                                <div class="text-align-right">
+                                    <button [disabled]="discussionsModel.threadTitle=='' || discussionsModel.threadDesc==''" type="button" class="ui primary submit button"
+                                        (click)="onCreateThread()">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="three wide column"></div>
+            </div>
+        </div>
+    </div>
+</div>
