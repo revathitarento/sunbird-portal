@@ -9,12 +9,17 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./thread-details.component.css']
 })
 export class ThreadDetailsComponent implements OnInit {
-  public message: any;
   public successMessage: boolean;
+  public message: any;
+  public threadDetails: any;
   public discussionsModel = new DiscussionsObject('', '', '');
   constructor(private router: Router, private discussionService: DiscussionsApiservice) {
     this.discussionService.currentMessage.subscribe(message => this.message = message);
-   console.log('getting from service', this.message);
+    console.log('getting from service', this.message);
+    this.discussionService.getThreadbyId(this.message.id).subscribe(data => {
+      this.threadDetails = data['result'];
+      console.log('get by ID', this.threadDetails);
+    });
   }
   ngOnInit() {
   }

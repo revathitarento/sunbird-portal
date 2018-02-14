@@ -21,7 +21,7 @@
                             <div class="ui relaxed divided list questionList">
                                 <div class="item" *ngFor="let thread of result; let i = index">
                                     <div class="content">
-                                        <a (click)="gotoThread(thread.id)" class="header quesHeading">{{thread.title}}</a>
+                                        <a (click)="gotoThread(thread.id, i)" class="header quesHeading">{{thread.title}}</a>
                                         <div class="ui comments">
                                             <div class="right floated column comment">
                                                 <div class="metadata">

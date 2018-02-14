@@ -12,9 +12,9 @@
                                 </a>
                             </div>
                             <div class="cardsHeading">
-                                <!-- {{thread.title}} -->
+                                {{threadDetails.thread.title}}
                             </div>
-                            <div class="content margin-left-30 description">
+                            <div class="content margin-left-30 description" [innerHtml]="threadDetails.thread.description">
                             </div>
                             <div class="ui comments">
                                 <div class="comment">
@@ -22,7 +22,7 @@
                                         <div class="metadata">
                                             <span class="author">vaish</span>
                                             <span> | </span>
-                                            <div class="date">08-02-2018</div>
+                                            <div class="date">{{threadDetails.thread.created_at | date : longdate}}</div>
                                             <div title="like" class="cursor-pointer" (click)="upVote(thread.id)">
                                                 <i class="custom-vote-icon large thumbs up icon"></i>
                                             </div>
@@ -36,17 +36,15 @@
                         </div>
                         <div class="ui divider"></div>
                         <div class="ui comments margin-top-0">
-                            <div class="comment">
+                            <div class="comment" *ngFor="let replies of threadDetails.thread.replies">
                                 <div class="content padding-top-20">
                                     <div class="metadata">
                                         <i class="user circle outline black large icon"></i>
-                                        <span class="author">username</span>
+                                        <span class="author">{{replies.username}}</span>
                                         <span> | </span>
-                                        <div class="date">08-02-2018</div>
+                                        <div class="date">{{replies.created_at | date : longDate}}</div>
                                     </div>
-                                    <!-- <br/> can_unaccept_answer: {{reply.can_unaccept_answer}}
-                        <br/> accepted_answer: {{reply.accepted_answer}} -->
-                                    <div class="text margin-left-10"></div>
+                                    <div class="text margin-left-10" [innerHtml]="replies.cooked"></div>
                                     <div class="actions metadata">
                                         <span title="like" class="cursor-pointer" (click)="actions(reply.id,2)">
                                             <i class="custom-vote-icon large thumbs up icon"></i>
