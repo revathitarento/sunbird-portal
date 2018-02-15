@@ -171,6 +171,7 @@ class ThreadController {
 	 * @return  {[type]} return transformed data
 	 */
 	postActions(requestObj) {
+		console.log('req', requestObj.body);
 		return this.__postActions()(requestObj)
 	}
 	/**

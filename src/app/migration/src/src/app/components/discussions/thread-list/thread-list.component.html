@@ -25,7 +25,13 @@
                                         <div class="ui comments">
                                             <div class="right floated column comment">
                                                 <div class="metadata">
-                                                    <div class="right aligned column date">{{thread.created_at | date : longdate}}&nbsp;</div>
+                                                    <div class="right aligned column date">{{thread.created_at | date : longdate}}</div>
+                                                    <div title="like" class="cursor-pointer">
+                                                        <i class="custom-vote-icon large thumbs up icon"></i>
+                                                    </div>
+                                                    <div title="dislike" class="cursor-pointer">
+                                                        <i class="custom-vote-icon large thumbs down icon"></i>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

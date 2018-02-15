@@ -39,6 +39,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DataService } from '../data/data.service';
+import { UserService } from '../user/user.service';
 const urlConFig = (<any>urlConfig);
 
 @Injectable()
@@ -48,8 +49,9 @@ export class DiscussionsApiservice extends DataService {
     private threadsURL = '/discussions/v1/list/do_212390847580487680138';
     public baseUrl = '';
 
-    constructor(public http: HttpClient) {
+    constructor(public http: HttpClient, private userService: UserService) {
         super(http, urlConFig.URLS.RESOURCEBUNDLES_PREFIX);
+        this.userService.getUserProfile();
     }
     public changeMessage(object) {
         console.log('object from list comp', object);
@@ -88,5 +90,25 @@ export class DiscussionsApiservice extends DataService {
             .map((response: Response) => {
                 return response;
             });
+    }
+    actions(id, actionTypeId) {
+        console.log('inside service actions()', id, actionTypeId);
+        const option = {
+            url: `/discussions/v1/thread/actions/` + id,
+            data: { 'actionTypeId': actionTypeId }
+        };
+        return this.post(option).map((response: Response) => {
+            return response;
+        });
+    }
+    undoActions(id, actionTypeId) {
+        console.log('inside service actions()', id, actionTypeId);
+        const option = {
+            url: `/discussions/v1/thread/actions/` + id,
+            data: { 'actionTypeId': actionTypeId, 'undo': true }
+        };
+        return this.post(option).map((response: Response) => {
+            return response;
+        });
     }
 }

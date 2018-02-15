@@ -36,17 +36,9 @@ const appRoutes: Routes = [
             breadcrumb: ['Home', 'auth']
         }
     },
-    // {
-    //     path: 'migration/discussions', component: ThreadListComponent, children: [
-    //         { path: '', redirectTo: 'thread-list', pathMatch: 'full' },
-    //         { path: 'thread-list', component: ThreadListComponent },
-    //         { path: 'thread-details', component: ThreadDetailsComponent },
-    //         { path: 'create-thread', component: CreateThreadComponent }
-    //     ]
-    // }
-    { path: 'migration/thread-list', component: ThreadListComponent, canActivate: ['CanActivate'] },
-    { path: 'migration/thread-details', component: ThreadDetailsComponent, canActivate: ['CanActivate'] },
-    { path: 'migration/create-thread', component: CreateThreadComponent, canActivate: ['CanActivate'] }
+    { path: 'migration/thread-list/:id', component: ThreadListComponent, canActivate: ['CanActivate'] },
+    { path: 'migration/thread-details/:threadId', component: ThreadDetailsComponent, canActivate: ['CanActivate'] },
+    { path: 'migration/create-thread/:id', component: CreateThreadComponent, canActivate: ['CanActivate'] }
 ];
 
 @NgModule({

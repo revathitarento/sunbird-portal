@@ -24,10 +24,10 @@
                                             <span> | </span>
                                             <div class="date">{{threadDetails.thread.created_at | date : longdate}}</div>
                                             <div title="like" class="cursor-pointer" (click)="upVote(thread.id)">
-                                                <i class="custom-vote-icon large thumbs up icon"></i>
+                                                <i class="custom-vote-icon large thumbs up icon"></i>{{message.like_count}}
                                             </div>
                                             <div title="dislike" class="cursor-pointer" (click)="downVote(thread.id)">
-                                                <i class="custom-vote-icon large thumbs down icon"></i>
+                                                <i class="custom-vote-icon large thumbs down icon"></i>0
                                             </div>
                                         </div>
                                     </div>
@@ -36,34 +36,36 @@
                         </div>
                         <div class="ui divider"></div>
                         <div class="ui comments margin-top-0">
-                            <div class="comment" *ngFor="let replies of threadDetails.thread.replies">
+                            <div class="comment" *ngFor="let reply of threadDetails.thread.replies">
                                 <div class="content padding-top-20">
                                     <div class="metadata">
                                         <i class="user circle outline black large icon"></i>
-                                        <span class="author">{{replies.username}}</span>
+                                        <span class="author">{{reply.username}}</span>
                                         <span> | </span>
-                                        <div class="date">{{replies.created_at | date : longDate}}</div>
+                                        <div class="date">{{reply.created_at | date : longDate}}</div>
                                     </div>
-                                    <div class="text margin-left-10" [innerHtml]="replies.cooked"></div>
+                                    <div class="text margin-left-10" [innerHtml]="reply.cooked"></div>
                                     <div class="actions metadata">
-                                        <span title="like" class="cursor-pointer" (click)="actions(reply.id,2)">
+                                        <span *ngIf="showAction(reply.id,2) == 'can_act'" title="like" class="cursor-pointer" (click)="actions(reply.id,2)">
                                             <i class="custom-vote-icon large thumbs up icon"></i>
                                         </span>
-                                        <span title="undo like" class="cursor-pointer" (click)="undoActions(reply.id,2)">
+                                        <!-- <span>{{reply[i].count}} | 0 votes</span> -->
+                                        <span *ngIf="showAction(reply.id,2) == 'acted'" title="undo like" class="cursor-pointer" (click)="undoActions(reply.id,2)">
                                             <i class="custom-vote-icon large thumbs up blue icon"></i>
                                         </span>
-                                        <span title="dislike" class="cursor-pointer" (click)="actions(reply.id,5)">
+                                        <span *ngIf="showAction(reply.id,5) == 'can_act'" title="dislike" class="cursor-pointer" (click)="actions(reply.id,5)">
                                             <i class="custom-vote-icon large thumbs down icon"></i>
                                         </span>
-                                        <span title="undo dislike" class="cursor-pointer" (click)="undoActions(reply.id,5)">
+                                        <!-- <span>{{reply[i].count}} | 0 votes</span> -->
+                                        <span *ngIf="showAction(reply.id,5) == 'acted'" title="undo dislike" class="cursor-pointer" (click)="undoActions(reply.id,5)">
                                             <i class="custom-vote-icon large thumbs down blue icon"></i>
                                         </span>
                                         <span>
-                                            <span title="flag as spam" class="cursor-pointer" (click)="actions(reply.id,8)">
+                                            <span *ngIf="showAction(reply.id,8) == 'can_act'" title="flag as spam" class="cursor-pointer" (click)="actions(reply.id,8)">
                                                 <i class="custom-vote-icon large flag icon"></i>
                                             </span>
 
-                                            <span title="undo spam" class="cursor-pointer" (click)="undoActions(reply.id,8)">
+                                            <span *ngIf="showAction(reply.id,8) == 'acted'" title="undo spam" class="cursor-pointer" (click)="undoActions(reply.id,8)">
                                                 <i class="custom-vote-icon large flag blue icon"></i>
                                             </span>
                                         </span>
@@ -75,6 +77,7 @@
                                                 <i class="custom-vote-icon large check circle outline icon ui green"></i>
                                             </span>
                                         </span>
+                                        <span>{{reply.reads}} views</span>
                                     </div>
                                 </div>
                             </div>
