@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/app/services/permission/permission.service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../index.html">All files</a> / <a href="index.html">src/app/services/permission</a> permission.service.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">22.54% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>16/71</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/32</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">7.69% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/13</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">21.88% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>14/64</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { LearnerService } from './../learner/learner.service';
+import * as  urlConfig from './../../config/url.config.json';
+import { UserService } from '../user/user.service';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import * as moment from 'moment';
+import { Observable } from 'rxjs/Rx';
+import { HttpParams } from '@angular/common/http/src/params';
+import { UUID } from 'angular2-uuid';
+import * as _ from 'lodash';
+import { HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+&nbsp;
+@Injectable()
+export class PermissionService {
+<span class="cstat-no" title="statement not covered" >  urlConFig = (&lt;any&gt;urlConfig);</span>
+  private <span class="cstat-no" title="statement not covered" >readPermissionsUrl = this.urlConFig.URLS.ROLES.READ;</span>
+  private <span class="cstat-no" title="statement not covered" >rolesAndPermissions: any[] = [];</span>
+  private <span class="cstat-no" title="statement not covered" >mainRoles: any[] = [];</span>
+  public <span class="cstat-no" title="statement not covered" >permissionAvailable = false;</span>
+  private <span class="cstat-no" title="statement not covered" >currentRoleActions: any[] = [];</span>
+  private <span class="cstat-no" title="statement not covered" >userRoles: any[] = [];</span>
+  public <span class="cstat-no" title="statement not covered" >permissionAvailable$ = new BehaviorSubject&lt;string&gt;(undefined);</span>
+&nbsp;
+<span class="fstat-no" title="function not covered" >  constructor(public <span class="cstat-no" title="statement not covered" ></span>http: HttpClient,</span> public <span class="cstat-no" title="statement not covered" >learner: LearnerService,</span> public <span class="cstat-no" title="statement not covered" >userService: UserService)</span> {
+<span class="cstat-no" title="statement not covered" >    this.getPermissionsData();</span>
+  }
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  private getPermissionsData() {</span></span>
+    const option = <span class="cstat-no" title="statement not covered" >{</span>
+      url: this.readPermissionsUrl
+    };
+<span class="cstat-no" title="statement not covered" >    this.learner.get(option).subscribe(</span>
+<span class="fstat-no" title="function not covered" >      data =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        this.setRolesAndPermissions(data);</span>
+      },
+<span class="fstat-no" title="function not covered" >      err =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        console.log('error in getting permission', err);</span>
+      }
+    );
+  }
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  private setRolesAndPermissions(</span>data) {</span>
+    const rolePermissions = <span class="cstat-no" title="statement not covered" >_.cloneDeep(data.result.roles);</span>
+<span class="cstat-no" title="statement not covered" >    _.forEach(rolePermissions, <span class="fstat-no" title="function not covered" >(</span>r, p) =&gt; {</span>
+      const mainRole = <span class="cstat-no" title="statement not covered" >{ role: r.id, actions: [], roleName: r.name };</span>
+<span class="cstat-no" title="statement not covered" >      this.mainRoles.push(mainRole);</span>
+<span class="cstat-no" title="statement not covered" >      _.forEach(r.actionGroups, <span class="fstat-no" title="function not covered" >(</span>ag) =&gt; {</span>
+        const subRole = <span class="cstat-no" title="statement not covered" >{ role: ag.id, actions: ag.actions, roleName: ag.name };</span>
+<span class="cstat-no" title="statement not covered" >        mainRole.actions = _.concat(mainRole.actions, ag.actions);</span>
+<span class="cstat-no" title="statement not covered" >        this.rolesAndPermissions.push(subRole);</span>
+      });
+<span class="cstat-no" title="statement not covered" >      this.rolesAndPermissions.push(mainRole);</span>
+    });
+<span class="cstat-no" title="statement not covered" >    this.rolesAndPermissions = _.uniqBy(this.rolesAndPermissions, 'role');</span>
+<span class="cstat-no" title="statement not covered" >    this.setCurrentRoleActions();</span>
+  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  private setCurrentRoleActions() {</span></span>
+<span class="cstat-no" title="statement not covered" >    this.userService.userData$.subscribe(</span>
+<span class="fstat-no" title="function not covered" >      user =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        if (user) {</span>
+<span class="cstat-no" title="statement not covered" >          if (!user.err) {</span>
+<span class="cstat-no" title="statement not covered" >            this.userRoles = user.userProfile.userRoles;</span>
+<span class="cstat-no" title="statement not covered" >            _.forEach(this.userRoles,  <span class="fstat-no" title="function not covered" >(</span>r) =&gt; {</span>
+              const roleActions = <span class="cstat-no" title="statement not covered" >_.filter(this.rolesAndPermissions, { role: r });</span>
+<span class="cstat-no" title="statement not covered" >              if (_.isArray(roleActions) &amp;&amp; roleActions.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >                this.currentRoleActions = _.concat(this.currentRoleActions,</span>
+                  _.map(roleActions[0].actions, 'id'));
+              }
+            });
+<span class="cstat-no" title="statement not covered" >            this.permissionAvailable = true;</span>
+<span class="cstat-no" title="statement not covered" >            this.permissionAvailable$.next('success');</span>
+          } else <span class="cstat-no" title="statement not covered" >if (user.err) {</span>
+<span class="cstat-no" title="statement not covered" >            this.permissionAvailable$.next('error');</span>
+          }
+        } else {
+&nbsp;
+        }
+      }
+    );
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  public checkRolesPermissions(</span>data, flag) {
+<span class="cstat-no" title="statement not covered" >    if (this.userRoles &amp;&amp; this.userRoles.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >      if (!this.checkActionsPermissions(data, flag)) {</span>
+<span class="cstat-no" title="statement not covered" >        if (_.isArray(data)) {</span>
+<span class="cstat-no" title="statement not covered" >          if ((_.intersection(data, this.userRoles).length === 0) &amp;&amp; !flag) {</span>
+<span class="cstat-no" title="statement not covered" >            return true;</span>
+          }
+<span class="cstat-no" title="statement not covered" >          return ((_.intersection(data, this.userRoles).length &gt; 0) &amp;&amp; flag);</span>
+        }
+      } else {
+<span class="cstat-no" title="statement not covered" >        return true;</span>
+      }
+    }
+<span class="cstat-no" title="statement not covered" >    return false;</span>
+  }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  checkActionsPermissions(</span>data, flag) {
+<span class="cstat-no" title="statement not covered" >    if (_.isArray(data)) {</span>
+<span class="cstat-no" title="statement not covered" >      if ((_.intersection(data, this.currentRoleActions).length === 0) &amp;&amp; !flag) {</span>
+<span class="cstat-no" title="statement not covered" >        return false;</span>
+      }
+<span class="cstat-no" title="statement not covered" >      return ((_.intersection(data, this.currentRoleActions).length &gt; 0) &amp;&amp; flag);</span>
+    }
+<span class="cstat-no" title="statement not covered" >    return false;</span>
+  }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Feb 15 2018 12:52:23 GMT+0530 (IST)
+</div>
+</div>
+<script src="../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../sorter.js"></script>
+</body>
+</html>

@@ -25,12 +25,16 @@ export class ThreadListComponent implements OnInit {
                 console.log('Error occured in Display threads.');
             });
     }
+
     ngOnInit(): void {
         this.displayThreads();
     }
+
     createThread() {
         this.router.navigate(['migration/create-thread']);
     }
+
+    
     gotoThread(threadId, index) {
         this.router.navigate(['migration/thread-details']);
         console.log('inside gotoThread()', threadId, index, this.result[index]);

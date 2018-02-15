@@ -26,7 +26,6 @@ import { LearnerService } from './services/learner/learner.service';
 import { ThreadListComponent } from './components/discussions/thread-list/thread-list.component';
 import { CreateThreadComponent } from './components/discussions/create-thread/create-thread.component';
 import { ThreadDetailsComponent } from './components/discussions/thread-details/thread-details.component';
-// import {DiscussionsComponent} from './components/discussions/discussions.component';
 import {FormsModule} from '@angular/forms';
 import { DiscussionsApiservice } from './services/discussions/discussions.service';
 
@@ -49,7 +48,7 @@ import { DiscussionsApiservice } from './services/discussions/discussions.servic
     ProfileViewComponent,
     ThreadListComponent,
     ThreadDetailsComponent,
-    CreateThreadComponent
+    CreateThreadComponent,
     // DiscussionsComponent
   ],
   imports: [
