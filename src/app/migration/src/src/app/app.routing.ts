@@ -1,5 +1,4 @@
 import { AuthGuardComponent } from './../random/auth-guard/auth-guard.component';
-import { ProfileComponent } from './components/profile/profile/profile.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { RouteResolveService } from './services/route-resolve/route-resolve.service';
@@ -19,10 +18,6 @@ const appRoutes: Routes = [
         canActivate: [
             'CanActivate',
         ]
-    },
-    {
-        path: 'migration/profile',
-        component: ProfileComponent
     },
     {
         path: 'migration/auth',
