@@ -1,0 +1,83 @@
+<div>
+</div>
+<div>
+  <div>
+    <div class="ui raised segment annGridPadding cursor-pointer margin-bottom-10" id="annInboxDiv-{{index}}" 
+    [ngClass]="{'announcementCardLeftBorder':item.read  === false}" >
+      <div>
+        <p class="ui grey label annType" *ngIf="item.type">
+          {{item.type}}
+        </p>
+      </div>  
+        <div class="header announcementHomeCard-header">
+          <span class="header ng-binding">
+                  {{item.title}}
+              </span>
+        </div>
+        <div>
+            <p class="ng-binding annOrgName">
+              {{item.from}}
+            </p>
+         </div>
+        <div class="padding-top-5">
+              <span class="ng-binding announcement-description">
+                      {{item.description | slice:0:180}}
+                  </span>
+              <span *ngIf="item.description.length > 180">
+                      ...
+                      <span class="announcementBlueText">
+                          {{resourceService.frmelmnts?.lbl?.anncmntreadmore}}
+                      </span>
+              </span>
+        </div>
+        <div class="padding-top-20" *ngIf="item.links.length > 0">
+            <div *ngFor="let links of item.links ;  let first = first; let last = last; let i = index" [ngClass]="{ first: first , last: last}">
+              <div *ngIf="first">
+                <i class="linkify icon opacity04">
+                        </i>
+                <span class="ng-binding cursor-pointer annUrlLinks">
+                            {{links | slice:0:70}}
+                            <span *ngIf="links.length > 70">
+                                ...
+                            </span>
+                </span>
+              </div>
+              <div *ngIf="last">
+                <span class="margin-left-30 annLinksAttachmentsMore annSmallText" *ngIf="(item.links.length - 1) > 0">
+                            +{{item.links.length - 1}} more weblink(s)
+                        </span>
+              </div>
+            </div>
+          </div>
+          <div class="padding-top-10" *ngIf="item.attachments.length > 0">
+              <div *ngFor="let attachment of item.attachments; let first = first; let last = last; let i = index" [ngClass]="{ first: first , last: last}">
+                <div *ngIf="first">
+                  <i class="file text outline icon opacity04">
+                          </i>
+                  <span class="ng-binding annAttachment cursor-pointer">
+                              {{attachment.name | slice:0:30}}
+                          </span>
+                  <span class="annLinksAttachmentsMore">
+                              <small>
+                                  ({{fileExtension}}, {{attachment.size | uppercase}})
+                              </small>
+                             
+                  </span>
+                </div>
+                <div *ngIf="last">
+                  <span class="margin-left-30 announcement-description annSmallText" *ngIf="(item.attachments.length - 1) > 0">
+                              + {{item.attachments.length - 1}} more attachment(s)
+                          </span>
+                </div>
+              </div>
+            </div>
+            <div class="ui divider">
+              </div>
+              <div>
+                  <span class="ng-binding annCreatedDate">
+                          {{resourceService.frmelmnts?.lbl?.anncmntdtlssenton}} {{item.createdDate | dateFormat}}
+                      </span>
+                </div>
+    </div>
+  </div>
+</div>
