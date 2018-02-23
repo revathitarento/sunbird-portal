@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DataService } from '../data/data.service';
-import {Post} from './models/post.model';
+import { Post } from './models/post.model';
 const urlConFig = (<any>urlConfig);
 
 @Injectable()
@@ -18,21 +18,26 @@ export class DiscussionsApiservice extends DataService {
 
     constructor(public http: HttpClient) {
         super(http, urlConFig.URLS.RESOURCEBUNDLES_PREFIX);
+
     }
     public changeMessage(object) {
         console.log('object from list comp', object);
         this.messageSource.next(object);
     }
-     getThreads() {
+
+    getThreads() {
         const option = {
-          url: '/discussions/v1/list/do_212390847580487680138'      
+            url: '/discussions/v1/list/do_212390847580487680138'
         };
-         return this.get(option)
-             .map((response: Response) => {
-                 return response;
-         })            
-     }
+        return this.get(option)
+            .map((response: Response) => {
+                console.log("Response: ", response);
+                return response;
+            })
+
+    }
     public getThreadbyId(threadId) {
+
         const option = {
             url: `/discussions/v1/thread/` + threadId
         };
@@ -40,6 +45,7 @@ export class DiscussionsApiservice extends DataService {
             .map((response: Response) => {
                 return response;
             });
+
     }
 
     private handleError(error: Response) {
@@ -57,8 +63,8 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
-    
-    postReply(threadId,model) {
+
+    postReply(threadId, model) {
         const body = model;
         console.log('inside postReply()', body, threadId);
         return this.http.post(`${this.baseUrl}/discussions/v1/thread/reply/` + threadId, body)
@@ -85,5 +91,16 @@ export class DiscussionsApiservice extends DataService {
         return this.post(option).map((response: Response) => {
             return response;
         });
+    }
+    markAsCorrects(replyId, isUndo) {
+        console.log('inside mark as correct answer', replyId, isUndo);
+        const body = {
+            'id': replyId,
+            'isUndo': isUndo
+        };
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/replies/marksolution`, body)
+            .map((response: Response) => {
+                return response;
+            });
     }
 }

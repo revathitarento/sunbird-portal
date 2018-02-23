@@ -150,13 +150,31 @@ module.exports = function (keycloak) {
       })
   })
   router.post('/thread/replies/marksolution', (requestObj, responseObj, next) => {
-    threadController.markAsSolution(requestObj)
-      .then((data) => {
-        sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
-      })
-      .catch((err) => {
-        sendErrorResponse(responseObj, API_IDS.markassolution, err.message, err.status)
-      })
+    console.log("Mark solution body",requestObj.body );
+    var data;
+    if(requestObj.body.isUndo == false){
+      data = {
+        id : requestObj.body.id,
+        option: true
+      }
+    }
+    else{
+      data = {
+        id : requestObj.body.id,
+        option: false
+      }
+    }
+   // return data;
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+   
+    // threadController.markAsSolution(requestObj)
+    //   .then((data) => {
+    //     data = true;
+    //     sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+    //   })
+    //   .catch((err) => {
+    //     sendErrorResponse(responseObj, API_IDS.markassolution, err.message, err.status)
+    //   })
   })
   return router
 }

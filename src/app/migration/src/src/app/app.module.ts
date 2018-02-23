@@ -22,11 +22,14 @@ import { MainMenuComponent } from './components/header/main-menu/main-menu.compo
 import { AuthGuard } from './auth-guards/auth-guard.service';
 import { LearnerService } from './services/learner/learner.service';
 import { CommonModule } from '@angular/common';
-import { ThreadListComponent } from './components/discussions/thread-list/thread-list.component';
-import { CreateThreadComponent } from './components/discussions/create-thread/create-thread.component';
-import { ThreadDetailsComponent } from './components/discussions/thread-details/thread-details.component';
-import {FormsModule} from '@angular/forms';
+import { ThreadDetailsComponent } from '../app/modules/common/components/discussions/thread-details/thread-details.component';
+import { ThreadListComponent } from '../app/modules/common/components/discussions/thread-list/thread-list.component';
+import { CreateThreadComponent } from '../app/modules/common/components/discussions/create-thread/create-thread.component';
 import { DiscussionsApiservice } from './services/discussions/discussions.service';
+import {FormsModule} from '@angular/forms';
+import { SortByDatePipe} from '../app/modules/common/components/discussions/sort-by-date.pipe'
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,6 +41,7 @@ import { DiscussionsApiservice } from './services/discussions/discussions.servic
     ThreadListComponent,
     ThreadDetailsComponent,
     CreateThreadComponent,
+    SortByDatePipe,
   ],
   imports: [
     CommonModule,

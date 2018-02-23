@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">40.38% </span>
+        <span class="strong">59.62% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>21/52</span>
+        <span class='fraction'>31/52</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/2</span>
+        <span class='fraction'>2/2</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">6.25% </span>
+        <span class="strong">25% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>1/16</span>
+        <span class='fraction'>4/16</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">36.73% </span>
+        <span class="strong">57.14% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>18/49</span>
+        <span class='fraction'>28/49</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -145,23 +145,23 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -234,23 +234,23 @@ const urlConFig = (&lt;any&gt;urlConfig);
 &nbsp;
 @Injectable()
 export class DiscussionsApiservice extends DataService {
-    public <span class="cstat-no" title="statement not covered" >messageSource = new BehaviorSubject&lt;any&gt;([]);</span>
-<span class="cstat-no" title="statement not covered" >    currentMessage = this.messageSource.asObservable();</span>
-    private <span class="cstat-no" title="statement not covered" >threadsURL = '/discussions/v1/list/do_212390847580487680138';</span>
-    public <span class="cstat-no" title="statement not covered" >baseUrl = '';</span>
+    public messageSource = new BehaviorSubject&lt;any&gt;([]);
+    currentMessage = this.messageSource.asObservable();
+    private threadsURL = '/discussions/v1/list/do_212390847580487680138';
+    public baseUrl = '';
 &nbsp;
-<span class="fstat-no" title="function not covered" >    constructor(public <span class="cstat-no" title="statement not covered" ></span>http: HttpClient)</span> {
-<span class="cstat-no" title="statement not covered" >        super(http, urlConFig.URLS.RESOURCEBUNDLES_PREFIX);</span>
+    constructor(public http: HttpClient) {
+        super(http, urlConFig.URLS.RESOURCEBUNDLES_PREFIX);
     }
-<span class="fstat-no" title="function not covered" >    public changeMessage(</span>object) {
-<span class="cstat-no" title="statement not covered" >        console.log('object from list comp', object);</span>
-<span class="cstat-no" title="statement not covered" >        this.messageSource.next(object);</span>
+    public changeMessage(object) {
+        console.log('object from list comp', object);
+        this.messageSource.next(object);
     }
-<span class="fstat-no" title="function not covered" >     getThreads() {</span>
-        const option = <span class="cstat-no" title="statement not covered" >{</span>
+     getThreads() {
+        const option = {
           url: '/discussions/v1/list/do_212390847580487680138'      
         };
-<span class="cstat-no" title="statement not covered" >         return this.get(option)</span>
+         return this.get(option)
              .map(<span class="fstat-no" title="function not covered" >(</span>response: Response) =&gt; {
 <span class="cstat-no" title="statement not covered" >                 return response;</span>
          })            
@@ -316,7 +316,7 @@ export class DiscussionsApiservice extends DataService {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Feb 15 2018 12:52:23 GMT+0530 (IST)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Feb 16 2018 10:59:51 GMT+0530 (IST)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

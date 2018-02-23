@@ -4,9 +4,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { RouteResolveService } from './services/route-resolve/route-resolve.service';
 import { CommunityListComponent } from './components/community-list/community-list.component';
 import { AuthGuard } from './auth-guards/auth-guard.service';
-import { ThreadDetailsComponent } from './components/discussions/thread-details/thread-details.component';
-import { ThreadListComponent } from './components/discussions/thread-list/thread-list.component';
-import { CreateThreadComponent } from './components/discussions/create-thread/create-thread.component';
+import { ThreadDetailsComponent } from '../app/modules/common/components/discussions/thread-details/thread-details.component';
+import { ThreadListComponent } from '../app/modules/common/components/discussions/thread-list/thread-list.component';
+import { CreateThreadComponent } from '../app/modules/common/components/discussions/create-thread/create-thread.component';
 import { DiscussionsApiservice } from './services/discussions/discussions.service';
 // import {DiscussionsComponent} from './components/discussions/discussions.component';
 
@@ -40,9 +40,9 @@ const appRoutes: Routes = [
     //         { path: 'create-thread', component: CreateThreadComponent }
     //     ]
     // }
-    { path: 'migration/thread-list', component: ThreadListComponent, canActivate: ['CanActivate'] },
-    { path: 'migration/thread-details', component: ThreadDetailsComponent, canActivate: ['CanActivate'] },
-    { path: 'migration/create-thread', component: CreateThreadComponent, canActivate: ['CanActivate'] }
+    { path: 'migration/thread-list/:id', component: ThreadListComponent, canActivate: ['CanActivate'] },
+    { path: 'migration/thread-details/:threadId', component: ThreadDetailsComponent, canActivate: ['CanActivate'] },
+    { path: 'migration/create-thread/:id', component: CreateThreadComponent, canActivate: ['CanActivate'] }
 ];
 
 @NgModule({

@@ -1,0 +1,195 @@
+<div class="ui padded grid">
+    <div class="row">
+        <div class="twelve wide column">
+            <div class="ui grid">
+                <div class="one wide column"></div>
+                <div class="eight wide column">
+                    <div class="ui segment">
+                        <div [ngClass]="loading? 'ui active inverted dimmer' : ''">
+                            <div class="ui text loader">Loading</div>
+                        </div>
+                        <div class="ui top padded grid">
+                            <div class="text-align-left">
+                                <a class="cursor-pointer go-back-arrow" [routerLink]="['/migration/thread-list', id]">
+                                    <i class="large arrow left icon"></i>
+                                </a>
+                            </div>
+
+                            <div class="cardsHeading">
+                                {{threadDetails.thread.title}}
+                            </div>
+                            <br/>
+                            <div class="content description" [innerHtml]="threadDetails.thread.description">
+                            </div>
+
+                            <div class="ui comments">
+                                <div class="comment">
+                                    <div class="content">
+                                        <div class="metadata">
+                                            <span class="author">{{threadDetails.thread.created_by}}</span>
+                                            <span> | </span>
+                                            <span title="like" class="cursor-pointer" (click)="upVote(thread.id)">
+                                                <i class="custom-vote-icon thumbs up icon"></i>{{message.like_count}}
+                                            </span>
+                                            <span title="dislike" class="cursor-pointer" (click)="downVote(thread.id)">
+                                                <i class="custom-vote-icon thumbs down icon"></i>0
+                                            </span>
+                                            <span title="share a link to this thread" class="cursor-pointer">
+                                                <i class="linkify icon"></i>
+                                            </span>
+                                            <span title="delete this thread" class="cursor-pointer">
+                                                <i class="trash outline icon"></i>
+                                            </span>
+                                            <span title="lock this thread" class="cursor-pointer">
+                                                <i class="lock icon"></i>
+                                            </span>
+                                            <span title="unlock this thread" class="cursor-pointer">
+                                                <i class="unlock alternate icon"></i>
+                                            </span>
+                                            <span class="date">{{threadDetails.thread.created_at | date : longdate}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui divider"></div>
+                        <div class="ui dropdown text-align-right" suiDropdown>
+                            <div class="text">Sort By</div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu" suiDropdownMenu>
+
+                                <div class="item" (click)="ascSortClick()">
+                                    <i class="folder icon"></i>
+                                    Older
+                                </div>
+                                <div class="item" (click)="descSortClick()">
+                                    <i class="trash icon"></i>
+                                    Newer
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui comments margin-top-0">
+                            <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param">
+
+                                <div class="content padding-top-20">
+
+                                    <div class="metadata">
+                                        <i class="user circle outline black large icon"></i>
+                                        <span class="author">{{reply.username}}</span>
+                                        <span> | </span>
+                                        <div class="date">{{reply.created_at | date : longDate}}</div>
+                                    </div>
+                                    <div class="text margin-left-10" [innerHtml]="reply.cooked"></div>
+                                    <div class="actions metadata">
+                                        <span *ngIf="showAction(reply.id,2) == 'can_act'" title="like" class="cursor-pointer" (click)="actions(reply.id,2)">
+                                            <i class="custom-vote-icon thumbs up icon"></i>
+                                        </span>
+
+                                        <!-- <span>{{reply[i].count}} | 0 votes</span> -->
+                                        <span *ngIf="showAction(reply.id,2) == 'acted'" title="undo like" class="cursor-pointer" (click)="undoActions(reply.id,2)">
+                                            <i class="custom-vote-icon thumbs up blue icon"></i>
+                                        </span>
+                                        <div *ngIf="actId == 2 && repId == reply.id && notifyActions == true && actionType == 'can_act'">Undo like</div>
+                                        <div *ngIf="actId == 2 && repId == reply.id && notifyActions == true && actionType == 'acted'">Liked the reply </div>
+
+                                        <!-- <div class="notifyAction" *ngIf="notifyActions == true ">showAction {{showAction(reply.id,2) == 'acted'}}</div> -->
+                                        <span *ngIf="showAction(reply.id,5) == 'can_act'" title="dislike" class="cursor-pointer" (click)="actions(reply.id,5)">
+                                            <i class="custom-vote-icon thumbs down icon"></i>
+                                        </span>
+                                        <!-- <span>{{reply[i].count}} | 0 votes</span> -->
+                                        <span *ngIf="showAction(reply.id,5) == 'acted'" title="undo dislike" class="cursor-pointer" (click)="undoActions(reply.id,5)">
+                                            <i class="custom-vote-icon thumbs down blue icon"></i>
+                                        </span>
+                                        <div *ngIf="actId == 5 && repId == reply.id && notifyActions == true && actionType == 'can_act'">Undo dislike </div>
+                                        <div *ngIf="actId == 5 && repId == reply.id && notifyActions == true && actionType == 'acted'">Dislike</div>
+                                        <span>
+                                            <span *ngIf="showAction(reply.id,8) == 'can_act'" title="flag as spam" class="cursor-pointer" (click)="actions(reply.id,8)">
+                                                <i class="custom-vote-icon flag icon"></i>
+                                            </span>
+                                            <span *ngIf="showAction(reply.id,8) == 'acted'" title="undo spam" class="cursor-pointer" (click)="undoActions(reply.id,8)">
+                                                <i class="custom-vote-icon flag blue icon"></i>
+                                            </span>
+                                            <div *ngIf="actId == 8 && repId == reply.id && notifyActions == true  && actionType == 'can_act'">Undo Spam</div>
+                                            <div *ngIf="actId == 8 && repId == reply.id && notifyActions == true  && actionType == 'acted'">Spammed</div>
+                                        </span>
+                                        <span>
+
+                                            <div *ngIf="markRepId !== reply.id || markResValue == false">
+                                                <span title="Mark as Right Answer" class="cursor-pointer" (click)="markAsCorrect(reply.id,false)">
+                                                    <i class="custom-vote-icon checkmark icon"></i>
+                                                </span>
+                                            </div>
+
+                                            <div *ngIf="markRepId == reply.id &&  markResValue == true">
+                                                <span title="Undo Marked" (click)="markAsCorrect(reply.id,true)">
+                                                    <i class="custom-vote-icon checkmark icon ui green"></i>
+                                                </span>
+                                            </div>
+
+                                            <!-- markRepId, reply.id {{markRepId == reply.id}} markResValue {{this.markResValue}} -->
+                                        </span>
+                                        <span>{{reply.reads}} views</span>
+                                        <span title="share a link to this post" class="cursor-pointer">
+                                            <i class="linkify icon"></i>
+                                        </span>
+                                        <span title="delete this post" class="cursor-pointer">
+                                            <i class="trash outline icon"></i>
+                                        </span>
+                                        <span title="lock this post" class="cursor-pointer">
+                                            <i class="lock icon"></i>
+                                        </span>
+                                        <span title="unlock this post" class="cursor-pointer">
+                                            <i class="unlock alternate icon"></i>
+                                        </span>
+                                        <span title="edit this post" class="cursor-pointer" (click)="onEditReply(reply.id)">
+                                            <i class="write icon"></i>
+                                        </span>
+                                    </div>
+                                    <!-- <div class="notifyAction" *ngIf="notifyActions == true ">
+                                            <span *ngIf="showAction(reply.id,2) == 'can_act' && repId">Liked </span>
+                                            <span *ngIf="showAction(reply.id,2) == 'acted' && repId" >Undo Like</span>                                           
+                                            <span *ngIf="showAction(reply.id,5) == 'can_act' && repId == reply.id">Dis liked</span>
+                                            <span *ngIf="showAction(reply.id,5) == 'acted' && repId == reply.id">Undo dislike</span>
+                                            <span *ngIf="showAction(reply.id,8) == 'can_act' && repId == reply.id">flagged </span>
+                                            <span *ngIf="showAction(reply.id,8) == 'acted' && repId == reply.id">Undo spam </span>  
+                                            </div>
+                                         -->
+
+                                    <!-- <div *ngIf='{{"can_act" == 8}}'>The reply is Flagged</div> -->
+                                </div>
+                            </div>
+                            <form class="ui reply form" name="answerForm" (ngSubmit)="submitReply()" novalidate="">
+                                <div *ngIf="successMessage" class="field">
+                                    <div class="ui positive message">
+                                        <div class="header">
+                                            Your answer has been added successfully.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <textarea type="text" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" minlength="20" required #replyAnswer="ngModel"></textarea> {{replyAnswer.className}}
+                                    <div class="ui negative message" [hidden]="replyAnswer.valid || replyAnswer.pristine">
+                                        This is a required field.
+                                    </div>
+                                    <div class="ui negative message" *ngIf="replyAnswer.errors?.minlength">
+                                        Your reply must be at least 20 characters long.
+                                    </div>
+
+                                </div>
+                                <div class="text-align-right">
+                                    <button *ngIf="!btnloader" [disabled]="discussionsModel.replyAnswer == ''" type="submit" class="ui primary submit labeled icon button">
+                                        <i class="reply icon"></i>Add your reply
+                                    </button>
+                                    <button *ngIf="btnloader" class="ui primary loading button">
+                                        <i class="spinner icon"></i>Loading</button>
+                                    <!-- [ngClass]=" btnloader? 'ui primary loading button' : 'reply icon'" -->
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column"></div>
+            </div>
+        </div>
+    </div>
+</div>

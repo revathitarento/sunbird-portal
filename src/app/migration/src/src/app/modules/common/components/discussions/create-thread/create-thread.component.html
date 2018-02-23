@@ -5,9 +5,12 @@
                 <div class="one wide column"></div>
                 <div class="eight wide column">
                     <div class="ui segment">
+                            <div [ngClass]="loading? 'ui active inverted dimmer' : ''">
+                                    <div class="ui text loader">Loading</div>
+                                  </div>
                         <div class="ui top padded grid">
                             <div class="text-align-left">
-                                <a class="cursor-pointer" (click)="changeWidget()">
+                                <a class="cursor-pointer" [routerLink]="['/migration/thread-list', id]">
                                     <i class="large arrow left icon"></i>
                                 </a>
                             </div>
@@ -17,12 +20,26 @@
                         </div>
                         <div class="ui divider"></div>
                         <form name="createQuestion" class="ui form">
+                                <div *ngIf="successMessage" class="field">
+                                        <div class="ui positive message">
+                                            <div class="header">
+                                                Your answer has been added successfully.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="errorMessage" class="field">
+                                            <div class="ui negative message">
+                                                <div class="header">
+                                                    Error in creating question.
+                                                </div>
+                                            </div>
+                                        </div>                                    
                             <div class="ui form">
                                 <div class="field">
                                     <label class="left-class">Title</label>
-                                    <input autocomplete="off" type="text" name="threadTitle" [(ngModel)]="discussionsModel.threadTitle" #threadTitle="ngModel"
+                                    <input autocomplete="off" type="text" name="threadTitle" minlength="15" required [(ngModel)]="discussionsModel.threadTitle" #threadTitle="ngModel"
                                     />
-                                    <div *ngIf="threadTitle.dirty || threadTitle.touched" class="field padding-top-10">
+                                    <div [hidden]="threadTitle.valid || threadTitle.pristine || threadTitle.errors?.minlength" class="field padding-top-10">
                                         <div class="ui negative message">
                                             <div class="header">
                                                 This is a required field.
@@ -32,8 +49,8 @@
                                 </div>
                                 <div class="field">
                                     <label class="left-class">Description</label>
-                                    <textarea type="text" autocomplete="off" name="threadDesc" [(ngModel)]="discussionsModel.threadDesc" #threadDesc="ngModel"></textarea>
-                                    <div *ngIf="threadDesc.dirty || threadDesc.touched" class="field padding-top-10">
+                                    <textarea type="text" autocomplete="off" name="threadDesc" [(ngModel)]="discussionsModel.threadDesc" (ngModelChange)="showErrfield()" #threadDesc="ngModel"></textarea>
+                                    <div [hidden]="threadDesc.valid || threadDesc.pristine " class="field padding-top-10">
                                         <div class="ui negative message">
                                             <div class="header">
                                                 This is a required field.

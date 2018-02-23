@@ -1,0 +1,98 @@
+<div class="ui padded grid">
+    <div class="row">
+        <div class="twelve wide column">
+            <div class="ui grid">
+                <div class="row">
+                    <div class="one wide column"></div>
+                    <div class="eight wide column">
+                        <div class="ui segment">
+                            <div class="ui top padded grid">
+                                <div class="header cardsHeading discussionHeading">
+                                    Questions
+                                </div>
+
+                            </div>
+                            <div class="ui right floated button margin-top--30">
+                                <a class="cursor-pointer" [routerLink]="['/migration/create-thread', id]">
+                                    <i class="large add circle icon"></i>Create
+                                </a>
+                            </div>
+                            <!-- <span class="badge">{{result.length}}</span> -->
+                            <div (click)="checkNewQuestion()" class="cursor-pointer" style="text-align: center"></div>
+                            <div [ngClass]="loading? 'ui relaxed divided list questionList  active inverted dimmer' : 'ui relaxed divided list questionList'">
+                                <div class="ui text loader">Loading</div>
+                                <div *ngIf="showErrMessage">Error in displaying Threads</div>
+
+
+
+                                <div class="ui dropdown" suiDropdown>
+                                    <div class="text">Sort By</div>
+                                    <i class="dropdown icon"></i>
+                                    <div class="menu" suiDropdownMenu>
+
+                                        <div class="item" (click)="ascSortClick()">
+                                            <i class="folder icon"></i>
+                                            Older
+                                        </div>
+                                        <div class="item" (click)="descSortClick()">
+                                            <i class="trash icon"></i>
+                                            Newer
+                                        </div>
+                                        <div class="item" (click)="likeSortClick()">
+                                            <i class="trash icon"></i>
+                                            Votes
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="item" *ngFor="let thread of result | sortByDate:param">
+
+
+                                    <div class="content">
+                                        <a (click)="gotoThread(thread.id)" class="header quesHeading margin-top-10 margin-bottom-10">{{thread.title }}</a>
+                                        <div class=" ">
+                                            <div class="right floated column comment margin-bottom-20">
+                                                <div class="metadata">
+                                                    <div class="right aligned column date">{{thread.created_at | date:"dd/MM/yyyy" }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui comments margin-top-0 left-class">
+                                        <div class="comment">
+                                            <div class="content metadata margin-left-right-0">
+                                                <i class="user circle outline icon"></i>
+                                                <span>{{thread.last_poster_username}}</span>
+                                                <span title="like" class="cursor-pointer">
+                                                    <i class="custom-vote-icon thumbs up icon"></i>
+                                                </span> {{thread.like_count}}
+                                                <span title="dislike" class="cursor-pointer">
+                                                    <i class="custom-vote-icon thumbs down icon"></i>
+                                                </span>
+                                                <span title="share a link to this thread" class="cursor-pointer">
+                                                    <i class="linkify icon"></i>
+                                                </span>
+                                                <span title="delete this post" class="cursor-pointer">
+                                                    <i class="trash outline icon"></i>
+                                                </span>
+                                                <span title="lock this post" class="cursor-pointer">
+                                                    <i class="lock icon"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="content description" *ngIf="thread.length == 0">No Questions added</div>
+                                </div>
+
+                                <!-- <div class="content description" *ngIf="threads.length == 0">No Questions added</div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="three wide column"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

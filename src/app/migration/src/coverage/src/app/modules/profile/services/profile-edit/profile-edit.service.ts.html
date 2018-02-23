@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/app/modules/profile/services/profile-edit/profile-edit.service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../../index.html">All files</a> / <a href="index.html">src/app/modules/profile/services/profile-edit</a> profile-edit.service.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">56.25% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>18/32</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">14.29% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">55.17% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>16/29</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { UserService } from './../../../../services/user/user.service';
+import { ResourceService } from './../../../../services/resource/resource.service';
+import { ConfigB } from './../../../../config/config';
+import { LearnerService } from './../../../../services/learner/learner.service';
+import { Injectable } from '@angular/core';
+import * as urlconfig from './../../../../config/url.config.json';
+import { UUID } from 'angular2-uuid';
+import * as moment from 'moment';
+import { Observable } from 'rxjs/Observable';
+// import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/throw';
+const urlConfig = (&lt;any&gt;urlconfig);
+@Injectable()
+export class ProfileEditService {
+<span class="cstat-no" title="statement not covered" >  rootOrgId = '';</span>
+<span class="fstat-no" title="function not covered" >  constructor(private <span class="cstat-no" title="statement not covered" ></span>learnerService: LearnerService,</span>
+    public <span class="cstat-no" title="statement not covered" >resourceService: ResourceService,</span>
+    public <span class="cstat-no" title="statement not covered" >userService: UserService)</span> { }
+&nbsp;
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  public updateAvatar(</span>file) {</span>
+<span class="cstat-no" title="statement not covered" >    return this.uploadMedia(file).flatMap( <span class="fstat-no" title="function not covered" >results =&gt; {</span></span>
+      const req = <span class="cstat-no" title="statement not covered" >{</span>
+        avatar: results.result.url,
+        userId:  this.userService.userid// 'd5efd1ab-3cad-4034-8143-32c480f5cc9e' // this.userService.userid
+      };
+<span class="cstat-no" title="statement not covered" >      return this.updateProfile(req);</span>
+    });
+  }
+  // public updateUserInfo(option) {
+  // return this.updateProfile(option.req).flatMap(
+  //     results =&gt; {
+  //       return Observable.of(results);
+  //     }
+  //   );
+  // }
+<span class="fstat-no" title="function not covered" >  public updateProfile(</span>request) {
+    const data = <span class="cstat-no" title="statement not covered" >{</span>
+      id: UUID.UUID(),
+      ts: moment().format(),
+      params: {},
+      request: request
+    };
+    const options = <span class="cstat-no" title="statement not covered" >{</span>
+      url: urlConfig.URLS.USER.UPDATE_USER_PROFILE,
+      data: data
+    };
+<span class="cstat-no" title="statement not covered" >    return this.learnerService.patch(options);</span>
+  }
+<span class="fstat-no" title="function not covered" >  public uploadMedia (</span>file) {
+    const options = <span class="cstat-no" title="statement not covered" >{</span>
+      url: urlConfig.URLS.CONTENT.UPLOAD_MEDIA,
+      data: file,
+      header: this.getHeader()
+    };
+<span class="cstat-no" title="statement not covered" >    return this.learnerService.post(options);</span>
+  }
+<span class="fstat-no" title="function not covered" >  private getHeader() {</span>
+<span class="cstat-no" title="statement not covered" >    return {</span>
+      // 'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-Consumer-ID': 'X-Consumer-ID',
+      'X-Device-ID': 'X-Device-ID',
+      'X-Org-code': this.rootOrgId,
+      'X-Source': 'web',
+      'ts': moment().format(),
+      'X-msgid': UUID.UUID()
+    };
+  }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Feb 15 2018 16:49:55 GMT+0530 (IST)
+</div>
+</div>
+<script src="../../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../../sorter.js"></script>
+</body>
+</html>

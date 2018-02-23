@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">62.96% </span>
+        <span class="strong">68.75% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>17/27</span>
-      </div>
-      <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
-        <span class="quiet">Branches</span>
-        <span class='fraction'>0/0</span>
+        <span class='fraction'>22/32</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">12.5% </span>
-        <span class="quiet">Functions</span>
+        <span class="quiet">Branches</span>
         <span class='fraction'>1/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">62.5% </span>
+        <span class="strong">44.44% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>4/9</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">65.52% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>15/24</span>
+        <span class='fraction'>19/29</span>
       </div>
     </div>
   </div>
@@ -107,16 +107,25 @@
 62
 63
 64
-65</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,16 +136,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -148,6 +162,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -157,9 +177,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,7 +196,7 @@ import { UUID } from 'angular2-uuid';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
+// import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 &nbsp;
@@ -192,38 +210,47 @@ interface RequestParam {
 @Injectable()
 export class DataService {
   headers: object;
-<span class="cstat-no" title="statement not covered" >  rootOrgId = '';</span>
-<span class="fstat-no" title="function not covered" >  constructor(public <span class="cstat-no" title="statement not covered" ></span>http: HttpClient,</span> public <span class="cstat-no" title="statement not covered" >baseUrl)</span> {
+  rootOrgId = '';
+  constructor(public http: HttpClient, public baseUrl) {
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  get(</span>requestParam: RequestParam) {
-    const httpOptions = <span class="cstat-no" title="statement not covered" >{</span>
-      headers: this.getHeader(),
+  get(requestParam: RequestParam) {
+    const httpOptions = {
+      headers: (&lt;any&gt;requestParam.header) ? (&lt;any&gt;<span class="branch-0 cbranch-no" title="branch not covered" >requestParam.header) </span>: this.getHeader(),
       params: (&lt;any&gt;requestParam.param)
     };
-<span class="cstat-no" title="statement not covered" >    return this.http.get(this.baseUrl + requestParam.url, httpOptions)</span>
-&nbsp;
+    return this.http.get(this.baseUrl + requestParam.url, httpOptions)
+    .flatMap(<span class="fstat-no" title="function not covered" >(</span>data: any) =&gt; {
+<span class="cstat-no" title="statement not covered" >      if (data.responseCode !== 'OK') {</span>
+<span class="cstat-no" title="statement not covered" >        return Observable.throw(data);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      return Observable.of(data);</span>
+    });
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  post(</span>requestParam: RequestParam) {
     const httpOptions = <span class="cstat-no" title="statement not covered" >{</span>
-      headers: this.getHeader(),
+      headers: (&lt;any&gt;requestParam.header) ? (&lt;any&gt;requestParam.header) : this.getHeader(),
       params: (&lt;any&gt;requestParam.param)
     };
-<span class="cstat-no" title="statement not covered" >    return this.http.post(this.baseUrl + requestParam.url, requestParam.data , httpOptions);</span>
+<span class="cstat-no" title="statement not covered" >    return this.http.post(this.baseUrl + requestParam.url, requestParam.data , httpOptions)</span>
+    .flatMap(<span class="fstat-no" title="function not covered" >(</span>data: any) =&gt; {
+<span class="cstat-no" title="statement not covered" >      if (data.responseCode !== 'OK') {</span>
+<span class="cstat-no" title="statement not covered" >        return Observable.throw(data);</span>
+      }
+<span class="cstat-no" title="statement not covered" >      return Observable.of(data);</span>
+    });
   }
 &nbsp;
-<span class="fstat-no" title="function not covered" >  update(</span>requestParam: RequestParam) {
+<span class="fstat-no" title="function not covered" >  patch(</span>requestParam: RequestParam) {
 <span class="cstat-no" title="statement not covered" >    return this.http.patch(this.baseUrl + requestParam.url, requestParam.data);</span>
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  delete(</span>requestParam: RequestParam) {
 <span class="cstat-no" title="statement not covered" >    return this.http.delete(this.baseUrl + requestParam.url);</span>
   }
-<span class="fstat-no" title="function not covered" >  private addParam() {</span>
-  }
-<span class="fstat-no" title="function not covered" >  private getHeader() {</span>
-<span class="cstat-no" title="statement not covered" >    return {</span>
+  private getHeader() {
+    return {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'X-Consumer-ID': 'X-Consumer-ID',
@@ -241,7 +268,7 @@ export class DataService {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Feb 15 2018 12:52:23 GMT+0530 (IST)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Feb 16 2018 10:59:51 GMT+0530 (IST)
 </div>
 </div>
 <script src="../../../../prettify.js"></script>

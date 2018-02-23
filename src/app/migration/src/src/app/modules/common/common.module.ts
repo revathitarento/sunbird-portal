@@ -3,9 +3,11 @@ import { NgModule } from '@angular/core';
 import { AppLoaderComponent } from './components/app-loader/app-loader.component';
 import { PermissionDirective } from './directives/permission/permission.directive';
 
+
+
 @NgModule({
   imports: [
-    CommonModule,
+    CommonModule
   ],
   declarations: [AppLoaderComponent, PermissionDirective],
   exports: [AppLoaderComponent, PermissionDirective]
