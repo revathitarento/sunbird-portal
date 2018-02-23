@@ -35,7 +35,7 @@ class ThreadService {
     /**
      * @property {string} discourseEndPoint - An endpoint url for discourse api
      */
-    this.discourseEndPoint = 'http://07ab012d.ngrok.io'
+    this.discourseEndPoint = 'http://f149617a.ngrok.io'
     /**
      * @property {object} discourseUriList - List of discourse uri's
      */
@@ -45,7 +45,7 @@ class ThreadService {
       postThread: '/posts',
       users: '/users',
       postActions: '/post_actions',
-			acceptAsSolution: '/solution/accept'
+      acceptAsSolution: '/solution/accept'
     }
 
     this.apiAuth = {
@@ -125,7 +125,7 @@ class ThreadService {
     console.log('action data', actionData)
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(actionData.userName).then((success) => {
-        console.log('suc',success);
+        console.log('suc', success);
 
         let formData = {
           api_key: this.apiAuth.apiKey,
@@ -144,7 +144,7 @@ class ThreadService {
         }
         this.httpService.call(options).then((data) => {
           let res = JSON.parse(data.body)
-          console.log('res',res);
+          console.log('res', res);
           if (res.id) {
             resolve(res.id)
           } else {
@@ -265,7 +265,7 @@ class ThreadService {
           console.log(res)
           if (res) {
 
-              resolve(res.topic_id)
+            resolve(res.topic_id)
 
           } else {
             reject({
@@ -305,14 +305,14 @@ class ThreadService {
           method: 'GET',
           uri: this.discourseEndPoint + this.discourseUris.list + contextId + '.json'
         }
-        console.log("optins ",options)
+        console.log("optins ", options)
         this.httpService.call(options).then((data) => {
           let res = JSON.parse(data.body)
           console.log(res)
-          if(res.topic_list){
+          if (res.topic_list) {
             resolve(res.topic_list.topics)
           }
-          else{
+          else {
             resolve([])
           }
 

@@ -14,8 +14,8 @@ const API_IDS = {
   listthreads: 'list-threads',
   replythread: 'reply-thread',
   getthreadbyid: 'get-thread-by-id',
-  actions:'actions',
-  markassolution:'markassolution'
+  actions: 'actions',
+  markassolution: 'markassolution'
 }
 
 let threadController = new ThreadController({
@@ -24,7 +24,7 @@ let threadController = new ThreadController({
 
 const API_VERSION = '1.0'
 
-function sendSuccessResponse (res, id, result, code = HttpStatus.OK) {
+function sendSuccessResponse(res, id, result, code = HttpStatus.OK) {
   res.status(code)
   res.send({
     'id': API_ID_BASE + '.' + id,
@@ -43,7 +43,7 @@ function sendSuccessResponse (res, id, result, code = HttpStatus.OK) {
   res.end()
 }
 
-function sendErrorRespons (res, id, message, httpCode = HttpStatus.BAD_REQUEST) {
+function sendErrorRespons(res, id, message, httpCode = HttpStatus.BAD_REQUEST) {
   let responseCode = getErrorCode(httpCode)
 
   res.status(httpCode)
@@ -64,7 +64,7 @@ function sendErrorRespons (res, id, message, httpCode = HttpStatus.BAD_REQUEST) 
   res.end()
 }
 
-function getErrorCode (httpCode) {
+function getErrorCode(httpCode) {
   let responseCode = 'UNKNOWN_ERROR'
 
   if (httpCode >= 500) {
@@ -82,7 +82,7 @@ function getErrorCode (httpCode) {
   return responseCode
 }
 
-function sendErrorResponse (res, id, message, httpCode = HttpStatus.BAD_REQUEST) {
+function sendErrorResponse(res, id, message, httpCode = HttpStatus.BAD_REQUEST) {
   let responseCode = getErrorCode(httpCode)
 
   res.status(httpCode)
@@ -149,14 +149,85 @@ module.exports = function (keycloak) {
         sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
       })
   })
+  // router.post('/thread/replies/marksolution', (requestObj, responseObj, next) => {
+  //   threadController.markAsSolution(requestObj)
+  //     .then((data) => {
+  //       sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  //     })
+  //     .catch((err) => {
+  //       sendErrorResponse(responseObj, API_IDS.markassolution, err.message, err.status)
+  //     })
+  // })
   router.post('/thread/replies/marksolution', (requestObj, responseObj, next) => {
-    threadController.markAsSolution(requestObj)
-      .then((data) => {
-        sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
-      })
-      .catch((err) => {
-        sendErrorResponse(responseObj, API_IDS.markassolution, err.message, err.status)
-      })
+    console.log("Mark solution body",requestObj.body );
+    var data;
+    if(requestObj.body.isUndo == false){
+      data = {
+        id : requestObj.body.id,
+        option: true
+      }
+    }
+    else{
+      data = {
+        id : requestObj.body.id,
+        option: false
+      }
+    }
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+  router.post('/thread/lock/:id', (requestObj, responseObj, next) => {
+    console.log('lock', requestObj.body)
+    var data
+    if(requestObj.body.isLocked == false){
+    data = {
+      id: requestObj.body.id,
+      option: true
+    }
+    console.log('inside if', data)
+    } else {
+      data = {
+        id: requestObj.body.id,
+        option: false
+      }
+      console.log('inside else', data)
+    }
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+  router.post('/thread/delete/:id', (requestObj, responseObj, next) => {
+    console.log('lock', requestObj.body)
+    var data
+    if(requestObj.body.isDeleted == false){
+    data = {
+      id: requestObj.body.id,
+      option: true
+    }
+    console.log('inside if', data)
+    } else {
+      data = {
+        id: requestObj.body.id,
+        option: false
+      }
+      console.log('inside else', data)
+    }
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+  router.post('/thread/archive/:id', (requestObj, responseObj, next) => {
+    console.log('lock', requestObj.body)
+    var data
+    if(requestObj.body.isArchived == false){
+    data = {
+      id: requestObj.body.id,
+      option: true
+    }
+    console.log('inside if', data)
+    } else {
+      data = {
+        id: requestObj.body.id,
+        option: false
+      }
+      console.log('inside else', data)
+    }
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
   })
   return router
 }
