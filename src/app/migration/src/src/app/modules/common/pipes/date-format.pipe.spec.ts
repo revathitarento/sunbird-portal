@@ -11,5 +11,11 @@ describe('DateFormatPipe', () => {
       expect(result).toBe('24th January 2016');
     });
 
+    it('if date is blank', () => {
+      const pipe = new DateFormatPipe();
+      const result = pipe.transform(moment(''));
+      expect(result).toBe('Invalid date');
+    });
+
   });
 });

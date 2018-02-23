@@ -1,11 +1,10 @@
-import { Announcement } from './../../../../interfaces/announcement';
+
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { ResourceService } from '../../../../services/resource/resource.service';
-import { AnnouncementService } from '../../../../services/announcement/announcement.service';
+import { ResourceService, Announcement } from '../../index';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 /**
- * this is a shared component contains announcement inbox list
+ * AnnouncementInboxCard is a shared component contains announcement inbox card
  */
 @Component({
   selector: 'app-announcement-inbox-card',
@@ -15,27 +14,21 @@ import * as moment from 'moment';
 
 export class AnnouncementInboxCardComponent implements OnInit {
   /**
-     * Local reference of ResourceService
-     */
+   * Property of ResourceService used to render resourcebundels
+   */
     resourceService: ResourceService;
-    /**
-     * Local reference of AnnouncementService
-     */
-    announcementService: AnnouncementService;
   /**
-     *  get the values from Announcement
-     */
-  @Input() item: Announcement;
+   * announcement is used to render the Announcement values in the view
+   */
+  @Input() announcement: Announcement;
   /**
-   * the "constructor"
+   * The "constructor"
    *
-   * @param {ResourceService} resourceService  get framelements and messages
-   * @param {AnnouncementService} announcementService get announcement details
+   * @param {ResourceService} resourceService  Resource Service is used to render resourcebundels
    */
 
-  constructor( resourceService: ResourceService, announcementService: AnnouncementService ) {
+  constructor( resourceService: ResourceService) {
     this.resourceService = resourceService;
-    this.announcementService = announcementService;
    }
 
   ngOnInit() {
