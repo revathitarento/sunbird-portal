@@ -1,0 +1,163 @@
+<div class="ui padded grid">
+    <div class="row">
+        <div class="twelve wide column">
+            <div class="ui grid">
+                <div class="one wide column"></div>
+                <div class="eight wide column">
+                    <div class="ui segment">
+                        <div [ngClass]="loading? 'ui active inverted dimmer' : ''">
+                            <div class="ui text loader">Loading</div>
+                        </div>
+                        <div class="ui top padded grid">
+                            <div class="row">
+                                <div class="text-align-left">
+                                    <a class="cursor-pointer go-back-arrow" [routerLink]="['/migration/thread-list', id]">
+                                        <i class="large arrow left icon"></i>
+                                    </a>
+                                </div>
+                                <div class="cardsHeading">
+                                    {{threadDetails.thread.title}}
+                                </div>
+                            </div>
+                            <div class="content description" [innerHtml]="threadDetails.thread.description">
+                            </div>
+                            <div class="ui comments">
+                                <div class="comment">
+                                    <div class="content">
+                                        <div class="metadata">
+                                            <span class="author">vaish</span>
+                                            <span> | </span>
+                                            <span title="like" class="cursor-pointer" (click)="upVote(thread.id)">
+                                                <i class="custom-vote-icon thumbs up icon"></i>{{message.like_count}}
+                                            </span>
+                                            <span title="dislike" class="cursor-pointer" (click)="downVote(thread.id)">
+                                                <i class="custom-vote-icon thumbs down icon"></i>0
+                                            </span>
+                                            <span title="share a link to this thread" class="cursor-pointer">
+                                                <i class="linkify icon"></i>
+                                            </span>
+                                            <span title="delete this thread" class="cursor-pointer">
+                                                <i class="trash outline icon"></i>
+                                            </span>
+                                            <!-- <span *ngIf="lockedId !== thread.id || lockedState == false" title="lock this post" class="cursor-pointer" (click)="onLock(thread.id,false)">
+                                                <i class="lock icon"></i>
+                                            </span>
+                                            <span *ngIf="lockedId == thread.id && lockedState == true" title="unlock this post" class="cursor-pointer" (click)="onLock(thread.id,true)">
+                                                <i class="unlock alternate icon ui red"></i>
+                                            </span> -->
+                                            <span class="date">{{threadDetails.thread.created_at | date : longdate}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui divider"></div>
+                        <div class="ui comments margin-top-0">
+                            <div class="comment" *ngFor="let reply of threadDetails.thread.replies">
+                                <div class="content padding-top-20">
+                                    <div class="metadata">
+                                        <i class="user circle outline black large icon"></i>
+                                        <span class="author">{{reply.username}}</span>
+                                        <span> | </span>
+                                        <div class="date">{{reply.created_at | date : longDate}}</div>
+                                    </div>
+                                    <div class="text margin-left-10" [innerHtml]="reply.cooked"></div>
+                                    <div class="actions metadata">
+                                        <span *ngIf="showAction(reply.id,2) == 'can_act'" title="like" class="cursor-pointer" (click)="actions(reply.id,2)">
+                                            <i class="custom-vote-icon thumbs up icon"></i>
+                                        </span>
+                                        <!-- <span>{{reply[i].count}} | 0 votes</span> -->
+                                        <span *ngIf="showAction(reply.id,2) == 'acted'" title="undo like" class="cursor-pointer" (click)="undoActions(reply.id,2)">
+                                            <i class="custom-vote-icon thumbs up blue icon"></i>
+                                        </span>
+                                        <span *ngIf="showAction(reply.id,5) == 'can_act'" title="dislike" class="cursor-pointer" (click)="actions(reply.id,5)">
+                                            <i class="custom-vote-icon thumbs down icon"></i>
+                                        </span>
+                                        <!-- <span>{{reply[i].count}} | 0 votes</span> -->
+                                        <span *ngIf="showAction(reply.id,5) == 'acted'" title="undo dislike" class="cursor-pointer" (click)="undoActions(reply.id,5)">
+                                            <i class="custom-vote-icon thumbs down blue icon"></i>
+                                        </span>
+                                        <span>
+                                            <span *ngIf="showAction(reply.id,8) == 'can_act'" title="flag as spam" class="cursor-pointer" (click)="actions(reply.id,8)">
+                                                <i class="custom-vote-icon flag icon"></i>
+                                            </span>
+
+                                            <span *ngIf="showAction(reply.id,8) == 'acted'" title="undo spam" class="cursor-pointer" (click)="undoActions(reply.id,8)">
+                                                <i class="custom-vote-icon flag blue icon"></i>
+                                            </span>
+                                        </span>
+                                        <div *ngIf="markRepId !== reply.id || markResValue == false">
+                                            <span title="Mark as Right Answer" class="cursor-pointer" (click)="markAsCorrect(reply.id,false)">
+                                                <i class="custom-vote-icon checkmark icon"></i>
+                                            </span>
+                                        </div>
+
+                                        <div *ngIf="markRepId == reply.id &&  markResValue == true">
+                                            <span title="Undo Marked" (click)="markAsCorrect(reply.id,true)">
+                                                <i class="custom-vote-icon checkmark icon ui green"></i>
+                                            </span>
+                                        </div>
+                                        <span>{{reply.reads}} views</span>
+                                        <!-- <input class="custom-display-none" [value]="href" #copyInput> -->
+                                        <span title="share a link to this post" class="cursor-pointer" [cbContent]="href" ngxClipboard (cbOnSuccess)="linkShare()">
+                                            <i class="linkify icon"></i>
+                                        </span>
+                                        <span *ngIf="deletedId !== reply.id || deletedState == false" title="delete this post" class="cursor-pointer" (click)="onDelete(reply.id,false)">
+                                            <i class="trash outline icon"></i>
+                                        </span>
+                                        <span *ngIf="deletedId == reply.id && deletedState == true" title="undelete this post" class="cursor-pointer" (click)="onDelete(reply.id,true)">
+                                            <i class="trash outline icon ui red"></i>
+                                        </span>
+                                        <span *ngIf="lockedId !== reply.id || lockedState == false" title="lock this post" class="cursor-pointer" (click)="onLock(reply.id,false)">
+                                            <i class="lock icon"></i>
+                                        </span>
+                                        <span *ngIf="lockedId == reply.id && lockedState == true" title="unlock this post" class="cursor-pointer" (click)="onLock(reply.id,true)">
+                                            <i class="unlock alternate icon ui red"></i>
+                                        </span>
+                                        <span title="edit this post" class="cursor-pointer" (click)="onEditReply(reply.id)">
+                                            <i class="write icon"></i>
+                                        </span>
+                                        <span *ngIf="archivedId !== reply.id || archivedState == false" title="archive this post" class="cursor-pointer" (click)="onArchive(reply.id,false)">
+                                            <i class="archive icon"></i>
+                                        </span>
+                                        <span *ngIf="archivedId == reply.id && archivedState == true" title="unarchive this post" class="cursor-pointer" (click)="onArchive(reply.id,true)">
+                                            <i class="archive icon ui brown"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <form class="ui reply form" name="answerForm" (ngSubmit)="submitReply()" novalidate="">
+                                <div *ngIf="successMessage" class="field">
+                                    <div class="ui positive message">
+                                        <div class="header">
+                                            Your answer has been added successfully.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <!-- <div id="custom-toolbar" [froalaEditor] name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer"></div> -->
+                                    <textarea type="text" autocomplete="off" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" required></textarea>
+                                    <div class="padding-top-10">
+                                        <div class="ui negative message">
+                                            <div class="header">
+                                                This is a required field.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-align-right">
+                                    <button class="ui primary submit icon button" [ladda]="isLoading" data-style="slide-right" data-spinner-color="white" [disabled]="discussionsModel.replyAnswer == ''"
+                                        type="submit">
+                                        <span class="ladda-label">Add your reply</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column"></div>
+            </div>
+        </div>
+    </div>
+</div>

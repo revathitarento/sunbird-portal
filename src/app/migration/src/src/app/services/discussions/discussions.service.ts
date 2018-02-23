@@ -1,36 +1,3 @@
-// import * as  urlConfig from './../../config/url.config.json';
-// import { DataService } from '../data/data.service';
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { Response } from '@angular/http/src/static_response';
-// const urlConFig = (<any>urlConfig);
-// @Injectable()
-// export class DiscussionsService extends DataService {
-//     public baseUrl = '';
-//     constructor(public http: HttpClient) {
-//         super(http, urlConFig.URLS.RESOURCEBUNDLES_PREFIX);
-
-//     }
-//     getThreads() {
-//         console.log('inside getThreads()');
-//         return this.http.get(`${this.baseUrl}/discussions/v1/list/do_212390847580487680138`).map((response: Response) => {
-//             return response;
-//         });
-//     }
-//     postThread(model) {
-//         console.log('inside postThread()', model);
-//         const body = {
-//             model: model,
-//             contextId: 'do_212390847580487680138'
-//         };
-//         return this.http.post(`${this.baseUrl}/discussions/v1/thread`, body)
-//             .map((response: Response) => {
-//                 return response;
-//             });
-//     }
-// }
-
-
 import * as  urlConfig from './../../config/url.config.json';
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
@@ -49,9 +16,9 @@ export class DiscussionsApiservice extends DataService {
     private threadsURL = '/discussions/v1/list/do_212390847580487680138';
     public baseUrl = '';
 
-    constructor(public http: HttpClient, private userService: UserService) {
+    constructor(public http: HttpClient) {
         super(http, urlConFig.URLS.RESOURCEBUNDLES_PREFIX);
-        this.userService.getUserProfile();
+        // this.userService.getUserProfile();
     }
     public changeMessage(object) {
         console.log('object from list comp', object);
@@ -110,5 +77,57 @@ export class DiscussionsApiservice extends DataService {
         return this.post(option).map((response: Response) => {
             return response;
         });
+    }
+    markAsCorrects(replyId, isUndo) {
+        console.log('inside mark as correct answer', replyId, isUndo);
+        const body = {
+            'id': replyId,
+            'isUndo': isUndo
+        };
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/replies/marksolution`, body)
+            .map((response: Response) => {
+                return response;
+            });
+    }
+    postReply(threadId, model) {
+        const body = model;
+        console.log('inside postReply()', body, threadId);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/reply/` + threadId, body)
+            .map((response: Response) => {
+                return response;
+            });
+    }
+    lockAction(id, isLocked) {
+        const body = {
+            'id': id,
+            'isLocked': isLocked
+        };
+        console.log('inside lockAction service', id, body);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/lock/` + id, body)
+            .map((response: Response) => {
+                return response;
+            });
+    }
+    deleteAction(id, isDeleted) {
+        const body = {
+            'id': id,
+            'isDeleted': isDeleted
+        };
+        console.log('inside lockAction service', id, body);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/delete/` + id, body)
+            .map((response: Response) => {
+                return response;
+            });
+    }
+    archiveAction(id, isArchived) {
+        const body = {
+            'id': id,
+            'isArchived': isArchived
+        };
+        console.log('inside lockAction service', id, body);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/archive/` + id, body)
+            .map((response: Response) => {
+                return response;
+            });
     }
 }
