@@ -22,13 +22,15 @@ import { MainMenuComponent } from './components/header/main-menu/main-menu.compo
 import { AuthGuard } from './auth-guards/auth-guard.service';
 import { LearnerService } from './services/learner/learner.service';
 import { CommonModule } from '@angular/common';
-import { ThreadDetailsComponent } from '../app/modules/common/components/discussions/thread-details/thread-details.component';
-import { ThreadListComponent } from '../app/modules/common/components/discussions/thread-list/thread-list.component';
-import { CreateThreadComponent } from '../app/modules/common/components/discussions/create-thread/create-thread.component';
+import { ThreadListComponent } from './modules/common/components/discussions/thread-list/thread-list.component';
+import { CreateThreadComponent } from './modules/common/components/discussions/create-thread/create-thread.component';
+import { ThreadDetailsComponent } from './modules/common/components/discussions/thread-details/thread-details.component';
+import { LaddaModule } from 'angular2-ladda';
+import { FormsModule } from '@angular/forms';
 import { DiscussionsApiservice } from './services/discussions/discussions.service';
-import {FormsModule} from '@angular/forms';
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { ClipboardModule } from 'ngx-clipboard';
 import { SortByDatePipe} from '../app/modules/common/components/discussions/sort-by-date.pipe'
-
 
 @NgModule({
   declarations: [
@@ -53,7 +55,15 @@ import { SortByDatePipe} from '../app/modules/common/components/discussions/sort
     SuiModule,
     ProfileModule,
     AppCommonModule,
-    FormsModule
+    FormsModule,
+    LaddaModule.forRoot({
+      spinnerSize: 35,
+      spinnerColor: 'grey',
+      spinnerLines: 12
+    }),
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot(),
+    ClipboardModule
   ],
   providers: [
     RouteResolveService,
@@ -68,7 +78,7 @@ import { SortByDatePipe} from '../app/modules/common/components/discussions/sort
     DiscussionsApiservice,
     {
       provide: 'USER_ID',
-      useFactory: ( ) => {
+      useFactory: () => {
         return (<HTMLInputElement>document.getElementById('userId')).value;
       }
     }

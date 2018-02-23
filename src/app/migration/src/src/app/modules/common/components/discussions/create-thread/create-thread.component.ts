@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DiscussionsObject } from '../interfaces/discussions.interface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DiscussionsApiservice } from '../../../../../services/discussions/discussions.service';
+declare var jquery: any;
+declare var $: any;
 @Component({
     selector: 'app-create-thread',
     templateUrl: './create-thread.component.html',
@@ -19,6 +21,17 @@ export class CreateThreadComponent implements OnInit {
     ngOnInit() {
         this.loading = true;
         this.errorMessage =  false;
+        // $(function () {
+        //     $('div#toolbarContainer').froalaEditor({
+        //       pluginsEnabled: ['wordPaste'],
+        //       heightMin: 300,
+        //       heightMax: 300,
+        //       toolbarButtons: ['bold', 'italic', 'underline', 'undo', 'redo'],
+        //       toolbarButtonsSM: ['bold', 'italic', 'underline', 'undo', 'redo'],
+        //       toolbarButtonsMD: ['bold', 'italic', 'underline', 'undo', 'redo'],
+        //       toolbarButtonsXS: ['bold', 'italic', 'underline', 'undo', 'redo'],
+        //     });
+        //   });
         this.sub = this.route.params.subscribe(params => {
             this.loading = false;           
             this.id = params['id'];

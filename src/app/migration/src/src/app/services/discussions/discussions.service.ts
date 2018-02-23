@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DataService } from '../data/data.service';
-import { Post } from './models/post.model';
+import { UserService } from '../user/user.service';
 const urlConFig = (<any>urlConfig);
 
 @Injectable()
@@ -18,7 +18,6 @@ export class DiscussionsApiservice extends DataService {
 
     constructor(public http: HttpClient) {
         super(http, urlConFig.URLS.RESOURCEBUNDLES_PREFIX);
-
     }
     public changeMessage(object) {
         console.log('object from list comp', object);
@@ -63,15 +62,6 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
-
-    postReply(threadId, model) {
-        const body = model;
-        console.log('inside postReply()', body, threadId);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/reply/` + threadId, body)
-            .map((response: Response) => {
-                return response;
-            });
-    }
     actions(id, actionTypeId) {
         console.log('inside service actions()', id, actionTypeId);
         const option = {
@@ -99,6 +89,47 @@ export class DiscussionsApiservice extends DataService {
             'isUndo': isUndo
         };
         return this.http.post(`${this.baseUrl}/discussions/v1/thread/replies/marksolution`, body)
+            .map((response: Response) => {
+                return response;
+            });
+    }
+    postReply(threadId, model) {
+        const body = model;
+        console.log('inside postReply()', body, threadId);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/reply/` + threadId, body)
+            .map((response: Response) => {
+                return response;
+            });
+    }
+    lockAction(id, isLocked) {
+        const body = {
+            'id': id,
+            'isLocked': isLocked
+        };
+        console.log('inside lockAction service', id, body);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/lock/` + id, body)
+            .map((response: Response) => {
+                return response;
+            });
+    }
+    deleteAction(id, isDeleted) {
+        const body = {
+            'id': id,
+            'isDeleted': isDeleted
+        };
+        console.log('inside lockAction service', id, body);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/delete/` + id, body)
+            .map((response: Response) => {
+                return response;
+            });
+    }
+    archiveAction(id, isArchived) {
+        const body = {
+            'id': id,
+            'isArchived': isArchived
+        };
+        console.log('inside lockAction service', id, body);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/archive/` + id, body)
             .map((response: Response) => {
                 return response;
             });

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DiscussionsObject } from '../interfaces/discussions.interface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { element } from 'protractor';
@@ -11,7 +11,7 @@ import { SortByDatePipe } from '../sort-by-date.pipe';
     styleUrls: ['./thread-list.component.css'],
     providers: [SortByDatePipe]
 })
-export class ThreadListComponent implements OnInit {
+export class ThreadListComponent implements OnInit, OnDestroy {
     public threads: any;
     public result: any;
     public sub: any;
@@ -43,7 +43,7 @@ export class ThreadListComponent implements OnInit {
         this.loading = true;
         this.showErrMessage = false;
         this.displayThreads();
-        this.param = "created_at";
+        this.param = "-created_at";
         this.sub = this.route.params.subscribe(params => {
             console.log('param', params);
             this.id = params['id'];
@@ -62,11 +62,9 @@ export class ThreadListComponent implements OnInit {
     likeSortClick() {
         this.param = "like_count"
     }
-
-
-
-
-
+    ngOnDestroy() {
+        this.sub.unsubscribe();
+    }
     createThread() {
         this.router.navigate(['migration/create-thread', this.id]);
     }
@@ -77,6 +75,4 @@ export class ThreadListComponent implements OnInit {
         console.log('inside gotoThread()', threadId);
         this.discussionService.changeMessage(threadId);
     }
-
-
 }

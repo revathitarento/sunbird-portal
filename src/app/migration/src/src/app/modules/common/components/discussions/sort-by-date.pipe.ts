@@ -18,9 +18,7 @@ export class SortByDatePipe implements PipeTransform {
     }
 
     let direction = args[0][0];
-    console.log("direction", direction);
-    console.log("args: ", args);
-    console.log("param ", param);
+
 
     array.sort((a: any, b: any) => {
       if (args !== 'like_count') {

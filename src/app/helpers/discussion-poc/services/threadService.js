@@ -122,10 +122,10 @@ class ThreadService {
    *
    */
   postActions(actionData) {
-
+    console.log('action data', actionData)
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(actionData.userName).then((success) => {
-
+        console.log('suc',success);
 
         let formData = {
           api_key: this.apiAuth.apiKey,
@@ -144,6 +144,7 @@ class ThreadService {
         }
         this.httpService.call(options).then((data) => {
           let res = JSON.parse(data.body)
+          console.log('res',res);
           if (res.id) {
             resolve(res.id)
           } else {

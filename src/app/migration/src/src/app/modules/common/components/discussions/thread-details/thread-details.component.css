@@ -17,3 +17,11 @@
 .metadata{
     margin-left: 5em;
 }
+.error_notify{
+    width: 170px;
+}
+
+.error_notify .tiny.message{
+    padding: 0.5em;
+    text-align: center;
+}

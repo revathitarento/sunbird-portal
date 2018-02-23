@@ -386,6 +386,9 @@
 .cursor-pointer {
   cursor: pointer !important;
 }
+.custom-display-none {
+  display: none !important;
+}
 .cursor-pointerText {
   cursor: text;
   pointer-events: none !important;
