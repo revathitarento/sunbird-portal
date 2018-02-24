@@ -20,7 +20,7 @@ describe('AnnouncementInboxCardComponent', () => {
         imports: [ HttpClientTestingModule, HttpClientModule ],
       declarations: [ AnnouncementInboxCardComponent, DateFormatPipe],
       providers: [ AnnouncementService, ResourceService ],
-      schemas:      [ NO_ERRORS_SCHEMA ]
+      schemas:   [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();
   }));
@@ -37,16 +37,19 @@ describe('AnnouncementInboxCardComponent', () => {
     from: 'for',
     read: false,
     links: ['hello', ''] ,
-    description: 'hi',
+    description: '',
     attachments: [{'link': 'https://sunbirddev.blob.core.windows.net/attachments/announcement/File-0124190917418598400.png',
-      'mimetype': 'image/png', 'name' : 'ACBuilder css.png', size : '89 KB'}],
+      'mimetype': 'image/png', 'name' : 'ACBuilder css.png', size : '89 KB'},
+      {'link': 'https://sunbirddev.blob.core.windows.net/attachments/announcement/File-01241909174185657.png',
+      'mimetype': 'image/png', 'name' : 'abc css.png', size : '78 KB'}],
     createdDate: '2018-01-15 07:40:11:561+0000'
     };
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('div .announcementHomeCard-header').innerText).toEqual('abc');
     expect(fixture.nativeElement.querySelector('div .annType').innerText).toEqual('circular');
     expect(fixture.nativeElement.querySelector('div .annOrgName').innerText).toEqual('for');
-    expect(fixture.nativeElement.querySelector('div .announcement-description').innerText).toEqual('hi');
+    expect(fixture.nativeElement.querySelector('div .announcement-description').innerText).toEqual('');
+    expect(fixture.nativeElement.querySelector('div.last span.announcement-description').innerText).toEqual('+ 1 more attachment(s)');
     expect(fixture.nativeElement.querySelector('div .annCreatedDate').innerText).toEqual('15th January 2018');
   });
 
@@ -57,7 +60,7 @@ describe('AnnouncementInboxCardComponent', () => {
     from: 'for',
     read: true,
     links: [] ,
-    description: '',
+    description: 'hi',
     attachments: [{}],
     createdDate: ''
     };
@@ -65,30 +68,9 @@ describe('AnnouncementInboxCardComponent', () => {
     expect(fixture.nativeElement.querySelector('div .annType').innerText).toEqual('news');
     expect(fixture.nativeElement.querySelector('div .annUrlLinks')).toEqual(null);
      expect(fixture.nativeElement.querySelector('div .annAttachment').innerText).toEqual('');
-     expect(fixture.nativeElement.querySelector('div .announcement-description').innerText).toEqual('');
+     expect(fixture.nativeElement.querySelector('div .announcement-description').innerText).toEqual('hi');
      expect(fixture.nativeElement.querySelector('div .annCreatedDate').innerText).toEqual('Invalid date');
-
   });
-  it( 'type is not present', () => {
-    component.announcement = {
-      type: '',
-    title: 'abc',
-    from: 'for',
-    read: true,
-    links: [] ,
-    description: '',
-    attachments: [{}],
-    createdDate: ''
-    };
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('div .annType').innerText).toEqual('');
-    // expect(fixture.nativeElement.querySelector('div .annUrlLinks')).toEqual(null);
-    //  expect(fixture.nativeElement.querySelector('div .annAttachment').innerText).toEqual('');
-    //  expect(fixture.nativeElement.querySelector('div .announcement-description').innerText).toEqual('');
-    //  expect(fixture.nativeElement.querySelector('div .annCreatedDate').innerText).toEqual('Invalid date');
-
-  });
-
 
 });
 
