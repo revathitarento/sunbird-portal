@@ -1,5 +1,5 @@
 
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ResourceService, Announcement } from '../../index';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -12,7 +12,7 @@ import * as moment from 'moment';
   styleUrls: ['./announcement-inbox-card.component.css']
 })
 
-export class AnnouncementInboxCardComponent implements OnInit {
+export class AnnouncementInboxCardComponent {
   /**
    * Property of ResourceService used to render resourcebundels
    */
@@ -31,7 +31,5 @@ export class AnnouncementInboxCardComponent implements OnInit {
     this.resourceService = resourceService;
    }
 
-  ngOnInit() {
-  }
 
 }
