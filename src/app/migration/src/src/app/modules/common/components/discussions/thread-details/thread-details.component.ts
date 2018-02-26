@@ -6,10 +6,13 @@ import { DOCUMENT } from '@angular/platform-browser';
 import * as _ from 'lodash';
 declare var jquery: any;
 declare var $: any;
+import { SortByDatePipe } from '../sort-by-date.pipe';
+
 @Component({
   selector: 'app-thread-details',
   templateUrl: './thread-details.component.html',
-  styleUrls: ['./thread-details.component.css']
+  styleUrls: ['./thread-details.component.css'],
+  providers: [SortByDatePipe]
 })
 export class ThreadDetailsComponent implements OnInit {
   public el: HTMLInputElement;
@@ -36,21 +39,32 @@ export class ThreadDetailsComponent implements OnInit {
   public archivedId: number;
   public archivedState: boolean;
   public discussionsModel = new DiscussionsObject('', '', '');
+  public notifyActions: boolean;
+  public replies: any;
+  public replyId: number;
+  public btnloader: boolean;
+  public param: any;
+  public actionResult: any;
+  public repId: any;
+  public actId: number;
+  public repArray: any;
+  public actionType: any;
   ngOnInit() {
+    this.loading = true;
+    this.notifyActions = false;
     // this.href = this.router.url;
     // console.log('href', this.href);
-    // $(function () {
-    //   $('div#custom-toolbar').froalaEditor({
-    //     toolbarContainer: '#toolbarContainer',
-    //     pluginsEnabled: ['wordPaste'],
-    //     heightMin: 300,
-    //     heightMax: 300,
-    //     toolbarButtons: ['bold', 'italic', 'underline', 'undo', 'redo'],
-    //     toolbarButtonsSM: ['bold', 'italic', 'underline', 'undo', 'redo'],
-    //     toolbarButtonsMD: ['bold', 'italic', 'underline', 'undo', 'redo'],
-    //     toolbarButtonsXS: ['bold', 'italic', 'underline', 'undo', 'redo'],
-    //   });
-    // });
+    $(function () {
+      $('div#custom-toolbar').froalaEditor({
+        pluginsEnabled: ['wordPaste'],
+        heightMin: 200,
+        heightMax: 200
+        // toolbarButtons: ['bold', 'italic', 'underline', 'undo', 'redo'],
+        // toolbarButtonsSM: ['bold', 'italic', 'underline', 'undo', 'redo'],
+        // toolbarButtonsMD: ['bold', 'italic', 'underline', 'undo', 'redo'],
+        // toolbarButtonsXS: ['bold', 'italic', 'underline', 'undo', 'redo'],
+      });
+    });
     this.loading = true;
     this.sub = this.route.params.subscribe(params => {
       console.log('param', params);
@@ -62,8 +76,17 @@ export class ThreadDetailsComponent implements OnInit {
       this.threadDetails = data['result'];
       console.log('result', this.threadDetails);
       this.loadReplyActions(this.threadDetails.thread.replies);
+      this.replies = this.threadDetails.thread.replies;
+
+      console.log('result this.replies', this.replies);
+      this.loadReplyActions(this.threadDetails.thread.replies);
     });
+    this.param = '-created_at';
   }
+  showErrfield() {
+    $('.ui.negative.message').show();
+  }
+
   constructor(private router: Router, private elementRef: ElementRef,
     private route: ActivatedRoute, private discussionService: DiscussionsApiservice,
     @Inject(DOCUMENT) document: any) {
@@ -96,46 +119,78 @@ export class ThreadDetailsComponent implements OnInit {
     const action = this.replyActions[id][actionTypeId];
     return action;
   }
+
   public actions(id, actionTypeId) {
     this.showAction(id, actionTypeId);
     this.discussionService.actions(id, actionTypeId).subscribe(data => {
+      this.actionResult = data;
       this.replyActions[id][actionTypeId] = 'acted';
+      // this.notifyActions = true;
+      this.repArray = this.replyActions[id];
+      const repId = this.actionResult.result.id;
+      console.log('this.repArray ', this.repArray, this.repArray[actionTypeId]);
+      console.log('actionTypeId from root ', actionTypeId, id);
+
+      this.showNotify(repId, actionTypeId, this.replyActions[id][actionTypeId]);
     });
+
   }
+
   public undoActions(id, actionTypeId) {
+    console.log('inside undoActions()', id, actionTypeId);
     this.discussionService.undoActions(id, actionTypeId).subscribe(data => {
+
       this.replyActions[id][actionTypeId] = 'can_act';
+      console.log('../', this.replyActions);
+      // this.notifyActions = true;
+      this.showNotify(id, actionTypeId, this.replyActions[id][actionTypeId]);
     });
   }
-  public changeWidget() {
-    this.router.navigate(['migration/thread-list/', this.id]);
+
+  public showNotify(id, actionTypeId, actionType) {
+    this.repId = id;
+    this.actId = actionTypeId;
+    this.actionType = actionType;
+    console.log('shownotify called,repId, actId, actionType: ', this.repId, this.actId, this.actionType);
+    this.notifyActions = true;
+    setTimeout(() => {
+      this.notifyActions = false;
+      console.log('inside settimeout');
+    }, 3000);
   }
+
+  changeWidget() {
+    console.log('inside changeWidget()');
+    this.router.navigate(['migration/thread-list']);
+  }
+  //  ngOnDestroy() {
+  //    this.sub.unsubscribe();
+  //  }
   public submitReply() {
     this.isLoading = true;
     this.reply = {
       'contextId': 'do_212390847580487680138',
       'description': this.discussionsModel.replyAnswer
     };
+    this.btnloader = true;
     this.discussionService.postReply(this.id, this.reply).subscribe(data => {
-      if (data !== undefined) {
-        this.successMessage = true;
-        this.isLoading = !this.isLoading;
-      }
+      this.btnloader = false;
       this.replyData = data;
+      console.log('thread details reponse: ', this.replyData);
       this.replyResult = this.replyData.result.id;
+      this.isLoading = !this.isLoading;
+      if (this.replyResult !== undefined) {
+        this.successMessage = true;
+        setTimeout(() => {
+          this.successMessage = false;
+          console.log('inside settimeout');
+        }, 2000);
+      }
+      console.log('data from post reply is id', this.replyResult);
       this.loadReplies(this.replyResult);
     });
   }
 
-  public loadReplies(threadId) {
-    this.discussionService.getThreadbyId(this.id).subscribe(data => {
-      this.replyData = data;
-      this.replyResult = this.replyData.result.thread.replies;
-      this.threadDetails = this.replyData.result;
-      this.loadReplyActions(this.replyResult);
-      this.discussionsModel.replyAnswer = '';
-    });
-  }
   public markAsCorrect(replyId, state) {
     this.markResValue = false;
     this.discussionService.markAsCorrects(replyId, state).subscribe(data => {
@@ -153,6 +208,19 @@ export class ThreadDetailsComponent implements OnInit {
 
       // }, function(err) {
       //   console.log('error while marking correct answer', err)
+    });
+  }
+
+
+  public loadReplies(threadId) {
+    this.discussionService.getThreadbyId(this.id).subscribe(data => {
+      this.replyData = data;
+      this.replyResult = this.replyData.result.thread.replies;
+      console.log('load replies data, replyResult replies', data, this.replyResult);
+      this.threadDetails = this.replyData.result;
+      this.loadReplyActions(this.replyResult);
+      this.discussionsModel.replyAnswer = '';
+      $('.ui.negative.message').hide();
     });
   }
   public onEditReply(replyId) {
@@ -194,5 +262,12 @@ export class ThreadDetailsComponent implements OnInit {
       this.archivedId = data['result'].id;
       this.archivedState = data['result'].option;
     });
+  }
+
+  ascSortClick() {
+    this.param = 'created_at';
+  }
+  descSortClick() {
+    this.param = '-created_at';
   }
 }

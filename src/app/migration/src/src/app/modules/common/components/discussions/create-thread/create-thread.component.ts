@@ -9,44 +9,43 @@ declare var $: any;
     templateUrl: './create-thread.component.html',
     styleUrls: ['./create-thread.component.css']
 })
-export class CreateThreadComponent implements OnInit, OnDestroy {
+export class CreateThreadComponent implements OnInit {
     public successMessage: boolean;
     public sub: any;
-    public id: any;
+    public id: number;
+    public loading: boolean;
     public isLoading: boolean;
+    public result: any;
+    public errorMessage: boolean;
     public discussionsModel = new DiscussionsObject('', '', '');
     constructor(private router: Router, private route: ActivatedRoute, private discussionService: DiscussionsApiservice) { }
-    public ngOnInit() {
-        $(function () {
-            $('div#toolbarContainer').froalaEditor({
-              pluginsEnabled: ['wordPaste'],
-              heightMin: 300,
-              heightMax: 300,
-              toolbarButtons: ['bold', 'italic', 'underline', 'undo', 'redo'],
-              toolbarButtonsSM: ['bold', 'italic', 'underline', 'undo', 'redo'],
-              toolbarButtonsMD: ['bold', 'italic', 'underline', 'undo', 'redo'],
-              toolbarButtonsXS: ['bold', 'italic', 'underline', 'undo', 'redo'],
-            });
-          });
+    ngOnInit() {
+        this.loading = true;
+        this.errorMessage = false;
         this.sub = this.route.params.subscribe(params => {
-            console.log('param', params);
+            this.loading = false;
             this.id = params['id'];
         });
     }
     public changeWidget() {
-        console.log('inside changeWidget()');
-        this.router.navigate(['migration/thread-list/', this.id]);
-    }
-    public ngOnDestroy() {
-        // this.sub.unsubscribe();
+        this.router.navigate(['/migration/thread-list', this.id]);
     }
     public onCreateThread() {
         this.isLoading = true;
-        this.successMessage = true;
         this.discussionService.postThread(this.discussionsModel).subscribe(data => {
-            console.log('data from creation', data);
+            this.successMessage = false;
+            this.result = data;
             this.isLoading = !this.isLoading;
-            this.changeWidget();
+            if (this.result.result.id != null || this.result.result.id !== undefined) {
+                this.discussionsModel.threadTitle = '';
+                this.discussionsModel.threadDesc = '';
+                this.successMessage = true;
+                setTimeout(() => {
+                    this.changeWidget();
+                }, 1000);
+            } else {
+                this.errorMessage = true;
+            }
         });
     }
 }

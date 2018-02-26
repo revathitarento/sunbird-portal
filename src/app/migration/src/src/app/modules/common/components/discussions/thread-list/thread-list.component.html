@@ -7,26 +7,51 @@
                     <div class="eight wide column">
                         <div class="ui segment">
                             <div class="ui top padded grid">
-                                <div class="cardsHeading discussionHeading">
-                                    Questions
-                                </div>
-                                <div class="text-align-right">
-                                    <a class="cursor-pointer" (click)="createThread()">
-                                        <i class="large add circle icon"></i>
-                                    </a>
-                                </div>
+                                <div class="header courseStructureSectionHeading discussionHeading">Questions</div>
+                                <!-- <div class="ui category search">
+                                    <div class="ui icon input">
+                                        <input class="prompt" type="text" placeholder="Search threads, replies">
+                                        <i class="search icon"></i>
+                                    </div>
+                                    <div class="results"></div>
+                                </div> -->
                             </div>
-                            <div class="ui section divider"></div>
+
+                            <div class="ui right floated mini button margin-top--30">
+                                <a class="cursor-pointer" [routerLink]="['/migration/create-thread', id]">
+                                    <i class="large add circle icon"></i>Create
+                                </a>
+                            </div>
+                            <!-- <span class="badge">{{result.length}}</span> -->
                             <div (click)="checkNewQuestion()" class="cursor-pointer" style="text-align: center"></div>
-                            <div [ngClass]="loading? 'ui relaxed divided list questionList  active inverted dimmer' : 'ui relaxed divided list questionList'">
+                            <div [ngClass]="loading? 'ui relaxed divided list questionList active inverted dimmer' : 'ui relaxed divided list questionList'">
                                 <div class="ui text loader">Loading</div>
-                                <div class="item" *ngFor="let thread of result">
+                                <div *ngIf="showErrMessage">Error in displaying Threads</div>
+                                <div class="ui dropdown right-float" suiDropdown>
+                                    <small class="text">Sort by</small>
+                                    <i class="dropdown icon"></i>
+                                    <div class="menu" suiDropdownMenu>
+                                        <small class="item" (click)="ascSortClick()">
+                                            <!-- <i class="folder icon"></i> -->
+                                            Older
+                                        </small>
+                                        <small class="item" (click)="descSortClick()">
+                                            <!-- <i class="trash icon"></i> -->
+                                            Newer
+                                        </small>
+                                        <small class="item" (click)="likeSortClick()">
+                                            <!-- <i class="trash icon"></i> -->
+                                            Votes
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="item" *ngFor="let thread of result | sortByDate:param">
                                     <div class="content">
-                                        <a (click)="gotoThread(thread.id)" class="header quesHeading">{{thread.title}}</a>
-                                        <div class="ui comments">
-                                            <div class="right floated column comment">
+                                        <a (click)="gotoThread(thread.id)" class="header quesHeading margin-top-10 margin-bottom-10">{{thread.title }}</a>
+                                        <div class=" ">
+                                            <div class="right floated column comment margin-bottom-20">
                                                 <div class="metadata">
-                                                    <div class="right aligned column date">{{thread.created_at | date : longdate}}</div>
+                                                    <div class="right aligned column date">{{thread.created_at | date:"dd/MM/yyyy" }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -38,7 +63,7 @@
                                                 <span>{{thread.last_poster_username}}</span>
                                                 <span title="like" class="cursor-pointer">
                                                     <i class="custom-vote-icon thumbs up icon"></i>
-                                                </span>
+                                                </span> {{thread.like_count}}
                                                 <span title="dislike" class="cursor-pointer">
                                                     <i class="custom-vote-icon thumbs down icon"></i>
                                                 </span>
@@ -54,8 +79,11 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="content description" *ngIf="thread.length == 0">No Questions added</div>
                                 </div>
+
+                                <!-- <div class="content description" *ngIf="threads.length == 0">No Questions added</div> -->
                             </div>
                         </div>
                     </div>

@@ -3,17 +3,23 @@ import { DiscussionsObject } from '../interfaces/discussions.interface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { element } from 'protractor';
 import { DiscussionsApiservice } from '../../../../../services/discussions/discussions.service';
+import { SortByDatePipe } from '../sort-by-date.pipe';
+
 @Component({
     selector: 'app-thread-list',
     templateUrl: './thread-list.component.html',
-    styleUrls: ['./thread-list.component.css']
+    styleUrls: ['./thread-list.component.css'],
+    providers: [SortByDatePipe]
 })
 export class ThreadListComponent implements OnInit, OnDestroy {
     public threads: any;
     public result: any;
     public sub: any;
-    public id: any;
+    public id: number;
     public loading: boolean;
+    showErrMessage: boolean;
+    public msg: any;
+    public param: any;
     public discussionsModel = new DiscussionsObject('', '', '');
     constructor(private router: Router, private route: ActivatedRoute, private discussionService: DiscussionsApiservice) {
     }
@@ -22,22 +28,41 @@ export class ThreadListComponent implements OnInit, OnDestroy {
             console.log('data from getThreads', data);
             this.threads = data;
             this.result = this.threads.result.threads;
+            console.log('result: ', this.result);
+            if (this.result === undefined) {
+                this.showErrMessage = true;
+            }
             this.loading = false;
-            console.log('result: ', this.result, this.result[0].tags);
             this.id = this.result[0].tags[0];
+            console.log(this.id, this.result[0].tags[0]);
         },
             err => {
+                this.showErrMessage = true;
                 console.log('Error occured in Display threads.');
             });
     }
+
+
     ngOnInit(): void {
-        this.displayThreads();
-        // this.id = this.result[0].tags;
         this.loading = true;
+        this.showErrMessage = false;
+        this.displayThreads();
+        this.param = '-created_at';
         this.sub = this.route.params.subscribe(params => {
-            console.log('param', params, this.id);
-            this.id = params['id'];
+            console.log('param', params);
+            // this.id = params['id'];
         });
+
+    }
+
+    ascSortClick() {
+        this.param = 'created_at';
+    }
+    descSortClick() {
+        this.param = '-created_at';
+    }
+    likeSortClick() {
+        this.param = 'like_count';
     }
     ngOnDestroy() {
         this.sub.unsubscribe();
@@ -45,7 +70,9 @@ export class ThreadListComponent implements OnInit, OnDestroy {
     createThread() {
         this.router.navigate(['migration/create-thread', this.id]);
     }
-    gotoThread(threadId) {
+
+
+    gotoThread(threadId: number) {
         this.router.navigate(['migration/thread-details', threadId]);
         console.log('inside gotoThread()', threadId);
         this.discussionService.changeMessage(threadId);

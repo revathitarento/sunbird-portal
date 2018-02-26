@@ -9,6 +9,7 @@ import { ThreadListComponent } from './modules/common/components/discussions/thr
 import { CreateThreadComponent } from './modules/common/components/discussions/create-thread/create-thread.component';
 import { DiscussionsApiservice } from './services/discussions/discussions.service';
 
+
 const appRoutes: Routes = [
     {
         path: 'migration/groups',

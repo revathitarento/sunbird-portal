@@ -9,23 +9,24 @@
                             <div class="ui text loader">Loading</div>
                         </div>
                         <div class="ui top padded grid">
-                            <div class="row">
-                                <div class="text-align-left">
-                                    <a class="cursor-pointer go-back-arrow" [routerLink]="['/migration/thread-list', id]">
-                                        <i class="large arrow left icon"></i>
-                                    </a>
-                                </div>
-                                <div class="cardsHeading">
-                                    {{threadDetails.thread.title}}
-                                </div>
+                            <div class="text-align-left">
+                                <a class="cursor-pointer go-back-arrow" [routerLink]="['/migration/thread-list', id]">
+                                    <i class="large arrow left icon"></i>
+                                </a>
                             </div>
+
+                            <div class="cardsHeading">
+                                {{threadDetails.thread.title}}
+                            </div>
+                            <br/>
                             <div class="content description" [innerHtml]="threadDetails.thread.description">
                             </div>
+
                             <div class="ui comments">
                                 <div class="comment">
                                     <div class="content">
                                         <div class="metadata">
-                                            <span class="author">vaish</span>
+                                            <span class="author">{{threadDetails.thread.created_by}}</span>
                                             <span> | </span>
                                             <span title="like" class="cursor-pointer" (click)="upVote(thread.id)">
                                                 <i class="custom-vote-icon thumbs up icon"></i>{{message.like_count}}
@@ -52,9 +53,25 @@
                             </div>
                         </div>
                         <div class="ui divider"></div>
+                        <div class="ui dropdown float-ContentRight" suiDropdown>
+                            <small class="text">Sort by</small>
+                            <i class="dropdown icon"></i>
+                            <div class="menu" suiDropdownMenu>
+                                <div class="item" (click)="ascSortClick()">
+                                    <!-- <i class="folder icon"></i> -->
+                                    Older
+                                </div>
+                                <div class="item" (click)="descSortClick()">
+                                    <!-- <i class="trash icon"></i> -->
+                                    Newer
+                                </div>
+                            </div>
+                        </div>
                         <div class="ui comments margin-top-0">
-                            <div class="comment" *ngFor="let reply of threadDetails.thread.replies">
+                            <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param">
+
                                 <div class="content padding-top-20">
+
                                     <div class="metadata">
                                         <i class="user circle outline black large icon"></i>
                                         <span class="author">{{reply.username}}</span>
@@ -70,6 +87,9 @@
                                         <span *ngIf="showAction(reply.id,2) == 'acted'" title="undo like" class="cursor-pointer" (click)="undoActions(reply.id,2)">
                                             <i class="custom-vote-icon thumbs up blue icon"></i>
                                         </span>
+
+
+                                        <!-- <div class="notifyAction" *ngIf="notifyActions == true ">showAction {{showAction(reply.id,2) == 'acted'}}</div> -->
                                         <span *ngIf="showAction(reply.id,5) == 'can_act'" title="dislike" class="cursor-pointer" (click)="actions(reply.id,5)">
                                             <i class="custom-vote-icon thumbs down icon"></i>
                                         </span>
@@ -77,6 +97,7 @@
                                         <span *ngIf="showAction(reply.id,5) == 'acted'" title="undo dislike" class="cursor-pointer" (click)="undoActions(reply.id,5)">
                                             <i class="custom-vote-icon thumbs down blue icon"></i>
                                         </span>
+
                                         <span>
                                             <span *ngIf="showAction(reply.id,8) == 'can_act'" title="flag as spam" class="cursor-pointer" (click)="actions(reply.id,8)">
                                                 <i class="custom-vote-icon flag icon"></i>
@@ -86,6 +107,7 @@
                                                 <i class="custom-vote-icon flag blue icon"></i>
                                             </span>
                                         </span>
+
                                         <div *ngIf="markRepId !== reply.id || markResValue == false">
                                             <span title="Mark as Right Answer" class="cursor-pointer" (click)="markAsCorrect(reply.id,false)">
                                                 <i class="custom-vote-icon checkmark icon"></i>
@@ -93,7 +115,7 @@
                                         </div>
 
                                         <div *ngIf="markRepId == reply.id &&  markResValue == true">
-                                            <span title="Undo Marked" (click)="markAsCorrect(reply.id,true)">
+                                            <span title="Undo Marked" class="cursor-pointer" (click)="markAsCorrect(reply.id,true)">
                                                 <i class="custom-vote-icon checkmark icon ui green"></i>
                                             </span>
                                         </div>
@@ -124,6 +146,18 @@
                                             <i class="archive icon ui brown"></i>
                                         </span>
                                     </div>
+                                    <!--Notification-->
+                                    <div class="error_notify margin-top-15">
+                                        <div class="ui tiny green message" *ngIf="actId == 2 && repId == reply.id && notifyActions == true && actionType == 'can_act'">Like removed</div>
+                                        <div class="ui tiny green message" *ngIf="actId == 2 && repId == reply.id && notifyActions == true && actionType == 'acted'">Liked the post </div>
+
+                                        <div class="ui tiny orange message" *ngIf="actId == 5 && repId == reply.id && notifyActions == true && actionType == 'can_act'">Dislike removed</div>
+                                        <div class="ui tiny orange message" *ngIf="actId == 5 && repId == reply.id && notifyActions == true && actionType == 'acted'">Post is disliked</div>
+
+                                        <div class="ui tiny red message" *ngIf="actId == 8 && repId == reply.id && notifyActions == true  && actionType == 'can_act'">Spam removed</div>
+                                        <div class="ui tiny red message" *ngIf="actId == 8 && repId == reply.id && notifyActions == true  && actionType == 'acted'">Post is spammed</div>
+                                    </div>
+                                    <!--Notification ends-->
                                 </div>
                             </div>
 
@@ -136,14 +170,13 @@
                                     </div>
                                 </div>
                                 <div class="field">
-                                    <!-- <div id="custom-toolbar" [froalaEditor] name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer"></div> -->
-                                    <textarea type="text" autocomplete="off" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" required></textarea>
-                                    <div class="padding-top-10">
-                                        <div class="ui negative message">
-                                            <div class="header">
-                                                This is a required field.
-                                            </div>
-                                        </div>
+                                    <div id="custom-toolbar" [froalaEditor] name="replyAnswer" minlength="20" [(ngModel)]="discussionsModel.replyAnswer" #replyAnswer="ngModel"></div>
+                                    <!-- <textarea type="text" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" minlength="20" required #replyAnswer="ngModel"></textarea> {{replyAnswer.className}} -->
+                                    <div class="ui negative message" [hidden]="replyAnswer.valid || replyAnswer.pristine">
+                                        This is a required field.
+                                    </div>
+                                    <div class="ui negative message" *ngIf="replyAnswer.errors?.minlength">
+                                        Your reply must be at least 20 characters long.
                                     </div>
                                 </div>
                                 <div class="text-align-right">

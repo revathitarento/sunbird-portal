@@ -8,6 +8,7 @@ import { CommunityListComponent } from './components/community-list/community-li
 import { SearchComponent } from './components/header/search/search.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpModule } from "@angular/http";
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing';
 import { HttpClientModule } from '@angular/common/http';
@@ -29,6 +30,8 @@ import { FormsModule } from '@angular/forms';
 import { DiscussionsApiservice } from './services/discussions/discussions.service';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { ClipboardModule } from 'ngx-clipboard';
+import { SortByDatePipe} from '../app/modules/common/components/discussions/sort-by-date.pipe'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -39,11 +42,14 @@ import { ClipboardModule } from 'ngx-clipboard';
     AuthGuardComponent,
     ThreadListComponent,
     ThreadDetailsComponent,
-    CreateThreadComponent
+    CreateThreadComponent,
+    SortByDatePipe,
   ],
   imports: [
     CommonModule,
     BrowserModule,
+    FormsModule,
+    HttpModule,
     AppRoutingModule,
     HttpClientModule,
     SuiModule,

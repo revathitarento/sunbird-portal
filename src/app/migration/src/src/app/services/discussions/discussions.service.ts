@@ -18,22 +18,25 @@ export class DiscussionsApiservice extends DataService {
 
     constructor(public http: HttpClient) {
         super(http, urlConFig.URLS.RESOURCEBUNDLES_PREFIX);
-        // this.userService.getUserProfile();
     }
     public changeMessage(object) {
         console.log('object from list comp', object);
         this.messageSource.next(object);
     }
-    public getThreads() {
+
+    getThreads() {
         const option = {
             url: '/discussions/v1/list/do_212390847580487680138'
         };
         return this.get(option)
             .map((response: Response) => {
+                console.log("Response: ", response);
                 return response;
-            });
+            })
+
     }
     public getThreadbyId(threadId) {
+
         const option = {
             url: `/discussions/v1/thread/` + threadId
         };
@@ -41,6 +44,7 @@ export class DiscussionsApiservice extends DataService {
             .map((response: Response) => {
                 return response;
             });
+
     }
 
     private handleError(error: Response) {
