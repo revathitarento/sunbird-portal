@@ -7,6 +7,8 @@ let ApiInterceptor = require('sb_api_interceptor')
 let ThreadService = require('./services/threadService.js')
 let httpWrapper = require('./services/httpWrapper.js')
 let AppError = require('./services/ErrorInterface.js')
+let DiscouseAdapter = require('./services/adapters/discourseAdapter.js')
+
 class ThreadController {
 	constructor({
 		service
@@ -14,8 +16,9 @@ class ThreadController {
 		/**
 		 * @property {instance} httpService - Instance of httpservice which is used to make a http service call
 		 */
+		this.discouseAdapter = new DiscouseAdapter()
 		this.httpService = httpWrapper
-		this.threadService = new ThreadService()
+		this.threadService = new ThreadService(this.discouseAdapter)
 	}
 
 
@@ -153,8 +156,7 @@ class ThreadController {
 	 * @return  {[type]} return transformed data
 	 */
 	createThread(requestObj) {
-		requestObj.topic = true;
-		return this.__postThread()(requestObj)
+		return this.__createThread()(requestObj)
 	}
 
 	/**
@@ -281,7 +283,7 @@ class ThreadController {
 	 *create thread flow
 	 *
 	 */
-	__postThread(requestObj) {
+	__createThread(requestObj) {
 		return async((requestObj) => {
 			try {
 				let authUserToken = await(this.__getToken(requestObj))
@@ -290,18 +292,19 @@ class ThreadController {
 
 				if (userProfile) {
 					return new Promise((resolve, reject) => {
-						let threadData = {
-							userName: userProfile.userName,
+						let threadData = {							
 							title: requestObj.body.title,
-							description: requestObj.body.description,
-							contextId: requestObj.body.contextId
+							body: requestObj.body.body,
+							communityId: requestObj.body.communityId,
+							type: requestObj.body.type
 						}
-						console.log("threadData", threadData)
-						if (requestObj.params.id) {
-							threadData.topic_id = requestObj.params.id
+						let user = {
+							userName: userProfile.userName,
+							firstName: userProfile.firstName,
+							email: userProfile.email
 						}
-
-						this.threadService.postThread(threadData).then((threadResponse) => {
+						
+						this.threadService.createThread(threadData,user).then((threadResponse) => {
 							resolve({
 								id: threadResponse
 							})
@@ -342,7 +345,14 @@ class ThreadController {
 				let userId = await(this.__getLoggedinUserId()(requestObj))
 				if (userId) {
 					return new Promise((resolve, reject) => {
-						this.threadService.getRecentThreads(userProfile.userName, requestObj.params.contextId).then((threadResponse) => {
+						let threadFilters = {
+							communityId : requestObj.body.communityId,
+							type: requestObj.body.type
+						}
+						let user = {
+							userName : userProfile.userName
+						}
+						this.threadService.getThreadsList(threadFilters,user).then((threadResponse) => {
 							resolve({
 								threads: threadResponse
 							})
