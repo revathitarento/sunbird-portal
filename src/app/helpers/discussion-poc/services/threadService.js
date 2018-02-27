@@ -35,7 +35,7 @@ class ThreadService {
     /**
      * @property {string} discourseEndPoint - An endpoint url for discourse api
      */
-    this.discourseEndPoint = 'http://51242de9.ngrok.io'
+    this.discourseEndPoint = 'http://172.17.0.2'
     /**
      * @property {object} discourseUriList - List of discourse uri's
      */
@@ -49,8 +49,8 @@ class ThreadService {
     }
 
     this.apiAuth = {
-      apiKey: '582df0739d5d4503c3eb8a8828bccaaa9d27fdf7be204f47509501717f6857ec',
-      apiUserName: 'loganathan.shanmugam'
+      apiKey: '6d1d27685a7bb8771bc18903d2b980a71b336d7715c28aeb345e3dac65126a47',
+      apiUserName: 'revathipp'
     }
 
   }
