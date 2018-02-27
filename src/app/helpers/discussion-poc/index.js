@@ -24,7 +24,7 @@ let threadController = new ThreadController({
 
 const API_VERSION = '1.0'
 
-function sendSuccessResponse(res, id, result, code = HttpStatus.OK) {
+function sendSuccessResponse (res, id, result, code = HttpStatus.OK) {
   res.status(code)
   res.send({
     'id': API_ID_BASE + '.' + id,
@@ -43,7 +43,7 @@ function sendSuccessResponse(res, id, result, code = HttpStatus.OK) {
   res.end()
 }
 
-function sendErrorRespons(res, id, message, httpCode = HttpStatus.BAD_REQUEST) {
+function sendErrorRespons (res, id, message, httpCode = HttpStatus.BAD_REQUEST) {
   let responseCode = getErrorCode(httpCode)
 
   res.status(httpCode)
@@ -64,7 +64,7 @@ function sendErrorRespons(res, id, message, httpCode = HttpStatus.BAD_REQUEST) {
   res.end()
 }
 
-function getErrorCode(httpCode) {
+function getErrorCode (httpCode) {
   let responseCode = 'UNKNOWN_ERROR'
 
   if (httpCode >= 500) {
@@ -75,14 +75,14 @@ function getErrorCode(httpCode) {
     responseCode = 'CLIENT_ERROR'
   }
 
-  if (httpCode == 404) {
+  if (httpCode === 404) {
     responseCode = 'NOT_FOUND'
   }
 
   return responseCode
 }
 
-function sendErrorResponse(res, id, message, httpCode = HttpStatus.BAD_REQUEST) {
+function sendErrorResponse (res, id, message, httpCode = HttpStatus.BAD_REQUEST) {
   let responseCode = getErrorCode(httpCode)
 
   res.status(httpCode)
@@ -104,7 +104,7 @@ function sendErrorResponse(res, id, message, httpCode = HttpStatus.BAD_REQUEST) 
 }
 
 module.exports = function (keycloak) {
-  router.get('/list/:contextId', (requestObj, responseObj, next) => {
+  router.post('/list', (requestObj, responseObj, next) => {
     threadController.getThreads(requestObj)
       .then((data) => {
         sendSuccessResponse(responseObj, API_IDS.listthreads, data, HttpStatus.OK)
@@ -122,7 +122,7 @@ module.exports = function (keycloak) {
         sendErrorResponse(responseObj, API_IDS.getthreadbyid, err.message, err.status)
       })
   })
-  router.post('/thread/', (requestObj, responseObj, next) => {
+  router.post('/thread/create', (requestObj, responseObj, next) => {
     threadController.createThread(requestObj)
       .then((data) => {
         sendSuccessResponse(responseObj, API_IDS.createthread, data, HttpStatus.OK)
@@ -159,17 +159,16 @@ module.exports = function (keycloak) {
   //     })
   // })
   router.post('/thread/replies/marksolution', (requestObj, responseObj, next) => {
-    console.log("Mark solution body",requestObj.body );
-    var data;
-    if(requestObj.body.isUndo == false){
+    console.log('Mark solution body', requestObj.body)
+    var data
+    if (requestObj.body.isUndo === false) {
       data = {
-        id : requestObj.body.id,
+        id: requestObj.body.id,
         option: true
       }
-    }
-    else{
+    } else {
       data = {
-        id : requestObj.body.id,
+        id: requestObj.body.id,
         option: false
       }
     }
@@ -178,12 +177,12 @@ module.exports = function (keycloak) {
   router.post('/thread/lock/:id', (requestObj, responseObj, next) => {
     console.log('lock', requestObj.body)
     var data
-    if(requestObj.body.isLocked == false){
-    data = {
-      id: requestObj.body.id,
-      option: true
-    }
-    console.log('inside if', data)
+    if (requestObj.body.isLocked === false) {
+      data = {
+        id: requestObj.body.id,
+        option: true
+      }
+      console.log('inside if', data)
     } else {
       data = {
         id: requestObj.body.id,
@@ -196,12 +195,12 @@ module.exports = function (keycloak) {
   router.post('/thread/delete/:id', (requestObj, responseObj, next) => {
     console.log('lock', requestObj.body)
     var data
-    if(requestObj.body.isDeleted == false){
-    data = {
-      id: requestObj.body.id,
-      option: true
-    }
-    console.log('inside if', data)
+    if (requestObj.body.isDeleted === false) {
+      data = {
+        id: requestObj.body.id,
+        option: true
+      }
+      console.log('inside if', data)
     } else {
       data = {
         id: requestObj.body.id,
@@ -214,12 +213,12 @@ module.exports = function (keycloak) {
   router.post('/thread/archive/:id', (requestObj, responseObj, next) => {
     console.log('lock', requestObj.body)
     var data
-    if(requestObj.body.isArchived == false){
-    data = {
-      id: requestObj.body.id,
-      option: true
-    }
-    console.log('inside if', data)
+    if (requestObj.body.isArchived === false) {
+      data = {
+        id: requestObj.body.id,
+        option: true
+      }
+      console.log('inside if', data)
     } else {
       data = {
         id: requestObj.body.id,
