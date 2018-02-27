@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, Inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, Inject } from '@angular/core';
 import { DiscussionsObject } from '../interfaces/discussions.interface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DiscussionsApiservice } from '../../../../../services/discussions/discussions.service';
@@ -7,6 +7,9 @@ import * as _ from 'lodash';
 declare var jquery: any;
 declare var $: any;
 import { SortByDatePipe } from '../sort-by-date.pipe';
+import {PlatformLocation } from '@angular/common';
+
+
 
 @Component({
   selector: 'app-thread-details',
@@ -14,7 +17,7 @@ import { SortByDatePipe } from '../sort-by-date.pipe';
   styleUrls: ['./thread-details.component.css'],
   providers: [SortByDatePipe]
 })
-export class ThreadDetailsComponent implements OnInit {
+export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public el: HTMLInputElement;
   public successMessage: boolean;
   public message: any;
@@ -49,11 +52,14 @@ export class ThreadDetailsComponent implements OnInit {
   public actId: number;
   public repArray: any;
   public actionType: any;
+  public currentLocation: any;
+  public replyHash: any;
   ngOnInit() {
     this.loading = true;
     this.notifyActions = false;
     // this.href = this.router.url;
     // console.log('href', this.href);
+    this.param = '-created_at';
     $(function () {
       $('div#custom-toolbar').froalaEditor({
         pluginsEnabled: ['wordPaste'],
@@ -83,13 +89,39 @@ export class ThreadDetailsComponent implements OnInit {
     });
     this.param = '-created_at';
   }
+
+  ngAfterViewInit(){
+    this.highlightReply(); 
+    this.postDwellTime()
+  }
+
+  private highlightReply() {
+    console.log("replyhash", this.replyHash.hash);
+    var replyPositionId = this.replyHash.hash;
+    var position = $(replyPositionId).offset().top;
+    console.log("position: ", position);
+    $("body, html").animate({
+      scrollTop: position
+    }, 1000);
+    $(replyPositionId).addClass("highlighted");
+    setTimeout(() => {
+      $(replyPositionId).removeClass("highlighted");
+    }, 2000);
+  }
+
+    private postDwellTime(){      
+      let horizontalCenter = Math.floor(window.innerWidth/2);
+      let verticalCener = Math.floor(window.innerHeight/2);
+      console.log("verticalCener", verticalCener);
+    }
+  
   showErrfield() {
     $('.ui.negative.message').show();
   }
 
   constructor(private router: Router, private elementRef: ElementRef,
     private route: ActivatedRoute, private discussionService: DiscussionsApiservice,
-    @Inject(DOCUMENT) document: any) {
+    @Inject(DOCUMENT) document: any, platformLocation: PlatformLocation) {
     this.isCopied = false;
     this.href = document.location.href;
     console.log('href', this.href);
@@ -100,6 +132,9 @@ export class ThreadDetailsComponent implements OnInit {
     //   this.threadDetails = data['result'];
     //   this.loadReplyActions(this.threadDetails.thread.replies);
     // });
+    this.replyHash = (platformLocation as any).location;
+    this.currentLocation = ((platformLocation as any).location.href);
+    console.log((platformLocation as any).location.origin);
   }
   public loadReplyActions(replies) {
     const replyActions = {};
@@ -239,7 +274,7 @@ export class ThreadDetailsComponent implements OnInit {
     this.lockedState = false;
     console.log('inside onLock', id, isLocked);
     this.discussionService.lockAction(id, isLocked).subscribe(data => {
-      this.lockedId = data['result'].id;
+      this.lockedId = data['result'].id
       this.lockedState = data['result'].option;
       console.log('lock response', data, this.lockedId, this.lockedState);
     });
@@ -270,4 +305,11 @@ export class ThreadDetailsComponent implements OnInit {
   descSortClick() {
     this.param = '-created_at';
   }
+
+  //replylinkShare()
+  replylinkShare(params, replyId ) {
+    window.open(this.currentLocation +"#"+replyId, "_blank");
+    console.log("reply id:, currentLocation: ", replyId, this.currentLocation);   
+   
+  } 
 }
