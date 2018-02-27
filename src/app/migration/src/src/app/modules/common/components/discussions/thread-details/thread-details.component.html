@@ -68,7 +68,7 @@
                             </div>
                         </div>
                         <div class="ui comments margin-top-0">
-                            <div class="comment" *ngFor="let reply of threadDetails.thread.replies ">
+                            <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param">
                                 <div class="content padding-top-20 single-reply" id="{{reply.id}}">
                                     <div class="metadata">
                                         <i class="user circle outline black large icon"></i>

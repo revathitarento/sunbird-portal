@@ -92,11 +92,10 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(){
     this.highlightReply(); 
-    this.postDwellTime()
+    this.postDwellTime();
   }
 
-  private highlightReply() {
-    console.log("replyhash", this.replyHash.hash);
+  private highlightReply() {   
     var replyPositionId = this.replyHash.hash;
     var position = $(replyPositionId).offset().top;
     console.log("position: ", position);
