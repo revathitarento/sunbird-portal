@@ -26,6 +26,13 @@ class ThreadService {
   createThread (threadData, user) {
     return this.discussionAdapter.createThread(threadData, user)
   }
+  /*
+   *reply thread
+   *
+   */
+  replyThread (threadData, user) {
+    return this.discussionAdapter.replyThread(threadData, user)
+  }
 
   getThreadsList (threadData, user) {
     return this.discussionAdapter.getThreadsList(threadData, user)
