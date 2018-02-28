@@ -100,9 +100,12 @@ export class DiscussionsApiservice extends DataService {
             });
     }
     postReply(threadId, model) {
-        const body = model;
+        const body = {
+            'threadId': threadId,
+            'body': model.description
+        };
         console.log('inside postReply()', body, threadId);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/reply/` + threadId, body)
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/reply/`, body)
             .map((response: Response) => {
                 return response;
             });

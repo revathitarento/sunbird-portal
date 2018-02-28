@@ -18,20 +18,22 @@
                                 {{threadDetails.thread.title}}
                             </div>
                             <br/>
-                            <div class="content description" [innerHtml]="threadDetails.thread.description">
-                            </div>
+                            <div class="content description">{{threadDetails.thread.body}}</div>
                             <div class="ui comments">
                                 <div class="comment">
                                     <div class="content">
                                         <div class="metadata">
-                                            <span class="author">{{threadDetails.thread.created_by}}</span>
+                                            <span class="author">{{threadDetails.thread.author.userName}}</span>
                                             <span> | </span>
                                             <span>{{replies.length}} replies</span>
-                                            <span title="like" class="cursor-pointer" (click)="upVote(threadDetails.thread.id)">
-                                                <i class="custom-vote-icon thumbs up icon"></i>{{message.like_count}}
+                                            <span *ngIf="threadDetails.thread.actions.vote != undefined && threadDetails.thread.actions.vote >= 0" title="like" class="cursor-pointer" (click)="actions(threadDetails.thread.id)">
+                                                <i class="custom-vote-icon thumbs up icon" [ngClass]="threadDetails.thread.actions.vote == 1?'blue':''"></i>{{message.like_count}}
                                             </span>
-                                            <span title="dislike" class="cursor-pointer" (click)="downVote(threadDetails.thread.id)">
-                                                <i class="custom-vote-icon thumbs down icon"></i>0
+                                            <!-- <span title="like" class="cursor-pointer" (click)="undoActions(threadDetails.thread.id)">
+                                                <i class="custom-vote-icon thumbs up blue icon"></i>{{message.like_count}}
+                                            </span> -->
+                                            <span *ngIf="threadDetails.thread.actions.downVote != undefined && threadDetails.thread.actions.downVote >= 0" title="dislike" class="cursor-pointer" (click)="downVote(threadDetails.thread.id)">
+                                                <i class="custom-vote-icon thumbs down icon" [ngClass]="threadDetails.thread.actions.downVote == 1?'blue':''"></i>0
                                             </span>
                                             <span title="share a link to this thread" class="cursor-pointer" [cbContent]="href" ngxClipboard (cbOnSuccess)="linkShare()">
                                                 <i class="linkify icon"></i>
@@ -39,67 +41,66 @@
                                             <span title="delete this thread" class="cursor-pointer">
                                                 <i class="trash outline icon"></i>
                                             </span>
-                                            <span *ngIf="lockedId !== threadDetails.thread.id || lockedState == false" title="lock this post" class="cursor-pointer" (click)="onLock(threadDetails.thread.id,false)">
+                                            <span *ngIf="lockedId !== threadDetails.thread.id || lockedState == false" title="lock this post" class="cursor-pointer"
+                                                (click)="onLock(threadDetails.thread.id,false)">
                                                 <i class="lock icon"></i>
                                             </span>
-                                            <span *ngIf="lockedId == threadDetails.thread.id && lockedState == true" title="unlock this post" class="cursor-pointer" (click)="onLock(threadDetails.thread.id,true)">
+                                            <span *ngIf="lockedId == threadDetails.thread.id && lockedState == true" title="unlock this post" class="cursor-pointer"
+                                                (click)="onLock(threadDetails.thread.id,true)">
                                                 <i class="unlock alternate icon ui red"></i>
                                             </span>
-                                            <span *ngIf="archivedId !== threadDetails.thread.id || archivedState == false" title="archive this post" class="cursor-pointer" (click)="onArchive(threadDetails.thread.id,false)">
+                                            <span *ngIf="archivedId !== threadDetails.thread.id || archivedState == false" title="archive this post" class="cursor-pointer"
+                                                (click)="onArchive(threadDetails.thread.id,false)">
                                                 <i class="archive icon"></i>
                                             </span>
-                                            <span *ngIf="archivedId == threadDetails.thread.id && archivedState == true" title="unarchive this post" class="cursor-pointer" (click)="onArchive(threadDetails.thread.id,true)">
+                                            <span *ngIf="archivedId == threadDetails.thread.id && archivedState == true" title="unarchive this post" class="cursor-pointer"
+                                                (click)="onArchive(threadDetails.thread.id,true)">
                                                 <i class="archive icon ui brown"></i>
                                             </span>
-                                            <span class="date">{{threadDetails.thread.created_at | date : longdate}}</span>
+                                            <span class="date">{{threadDetails.thread.createdDate | date : longdate}}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="ui divider"></div>
-                        <div class="ui dropdown float-ContentRight" suiDropdown>
+                        <div title="sort" class="ui dropdown" suiDropdown>
                             <small class="text">Sort by</small>
                             <i class="dropdown icon"></i>
                             <div class="menu" suiDropdownMenu>
                                 <div class="item" (click)="ascSortClick()">
-                                    <!-- <i class="folder icon"></i> -->
                                     Older
                                 </div>
                                 <div class="item" (click)="descSortClick()">
-                                    <!-- <i class="trash icon"></i> -->
                                     Newer
                                 </div>
                             </div>
                         </div>
-                        <div class="ui comments margin-top-0">
+                        <div class="ui comments margin-top-10">
                             <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param">
                                 <div class="content padding-top-20">
                                     <div class="metadata">
                                         <i class="user circle outline black large icon"></i>
-                                        <span class="author">{{reply.username}}</span>
+                                        <span class="author">{{reply.author.userName}}</span>
                                         <span> | </span>
-                                        <div class="date">{{reply.created_at | date : longDate}}</div>
+                                        <div class="date">{{reply.createdDate | date : longDate}}</div>
                                     </div>
-                                    <div class="text margin-left-10" contenteditable="true" [innerHtml]="reply.cooked"></div>
+                                    <div class="text margin-left-10" contenteditable="true">{{reply.body}}</div>
                                     <div class="actions metadata">
-                                        <span *ngIf="showAction(reply.id,2) == 'can_act'" title="like" class="cursor-pointer" (click)="actions(reply.id,2)">
-                                            <i class="custom-vote-icon thumbs up icon"></i>
+                                        <span *ngIf="reply.actions.vote != undefined && reply.actions.vote >= 0" title="{{vote}}" class="cursor-pointer" (click)="actions(reply.id,2)">
+                                            <i class="custom-vote-icon thumbs up icon" [ngClass]="reply.actions.like ==1 ?'blue':''"></i>
                                         </span>
-                                        <!-- <span>{{reply[i].count}} | 0 votes</span> -->
-                                        <span *ngIf="showAction(reply.id,2) == 'acted'" title="undo like" class="cursor-pointer" (click)="undoActions(reply.id,2)">
+                                        <!-- <span *ngIf="showAction(reply.id,2) == 'acted'" title="undo like" class="cursor-pointer" (click)="undoActions(reply.id,2)">
                                             <i class="custom-vote-icon thumbs up blue icon"></i>
-                                        </span>
-                                        <!-- <div class="notifyAction" *ngIf="notifyActions == true ">showAction {{showAction(reply.id,2) == 'acted'}}</div> -->
-                                        <span *ngIf="showAction(reply.id,5) == 'can_act'" title="dislike" class="cursor-pointer" (click)="actions(reply.id,5)">
+                                        </span> -->
+                                        <span *ngIf="reply.actions.downVote != undefined && reply.actions.downVote >= 0" title="dislike" class="cursor-pointer" (click)="actions(reply.id,5)">
                                             <i class="custom-vote-icon thumbs down icon"></i>
                                         </span>
-                                        <!-- <span>{{reply[i].count}} | 0 votes</span> -->
                                         <span *ngIf="showAction(reply.id,5) == 'acted'" title="undo dislike" class="cursor-pointer" (click)="undoActions(reply.id,5)">
                                             <i class="custom-vote-icon thumbs down blue icon"></i>
                                         </span>
                                         <span>
-                                            <span *ngIf="showAction(reply.id,8) == 'can_act'" title="flag as spam" class="cursor-pointer" (click)="actions(reply.id,8)">
+                                            <span *ngIf="reply.actions.flag != undefined && reply.actions.flag >= 0" title="flag as spam" class="cursor-pointer" (click)="actions(reply.id,8)">
                                                 <i class="custom-vote-icon flag icon"></i>
                                             </span>
 
@@ -157,33 +158,32 @@
                                     <!--Notification ends-->
                                 </div>
                             </div>
-
-                            <form class="ui reply form" name="answerForm" (ngSubmit)="submitReply()" novalidate="">
-                                <div *ngIf="successMessage" class="field">
-                                    <div class="ui positive message">
-                                        <div class="header">
-                                            Your answer has been added successfully.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="field">
-                                    <div id="custom-toolbar" [froalaEditor] name="replyAnswer" minlength="20" [(ngModel)]="discussionsModel.replyAnswer" #replyAnswer="ngModel"></div>
-                                    <!-- <textarea type="text" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" minlength="20" required #replyAnswer="ngModel"></textarea> {{replyAnswer.className}} -->
-                                    <div class="ui negative message" [hidden]="replyAnswer.valid || replyAnswer.pristine">
-                                        This is a required field.
-                                    </div>
-                                    <div class="ui negative message" *ngIf="replyAnswer.errors?.minlength">
-                                        Your reply must be at least 20 characters long.
-                                    </div>
-                                </div>
-                                <div class="text-align-right">
-                                    <button class="ui primary submit icon button" [ladda]="isLoading" data-style="slide-right" data-spinner-color="white" [disabled]="discussionsModel.replyAnswer == ''"
-                                        type="submit">
-                                        <span class="ladda-label">Add your reply</span>
-                                    </button>
-                                </div>
-                            </form>
                         </div>
+                        <form class="ui reply form" name="answerForm" (ngSubmit)="submitReply()" novalidate="">
+                            <div *ngIf="successMessage" class="field">
+                                <div class="ui positive message">
+                                    <div class="header">
+                                        Your answer has been added successfully.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div id="custom-toolbar" [froalaEditor] name="replyAnswer" minlength="20" [(ngModel)]="discussionsModel.replyAnswer" #replyAnswer="ngModel"></div>
+                                <!-- <textarea type="text" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" minlength="20" required #replyAnswer="ngModel"></textarea> {{replyAnswer.className}} -->
+                                <div class="ui negative message" [hidden]="replyAnswer.valid || replyAnswer.pristine">
+                                    This is a required field.
+                                </div>
+                                <div class="ui negative message" *ngIf="replyAnswer.errors?.minlength">
+                                    Your reply must be at least 20 characters long.
+                                </div>
+                            </div>
+                            <div class="text-align-right">
+                                <button class="ui primary submit icon button" [ladda]="isLoading" data-style="slide-right" data-spinner-color="white" [disabled]="discussionsModel.replyAnswer == ''"
+                                    type="submit">
+                                    <span class="ladda-label">Add your reply</span>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div class="three wide column"></div>

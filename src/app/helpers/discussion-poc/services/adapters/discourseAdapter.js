@@ -15,7 +15,7 @@ class DiscourseAdapter {
    *
    * let discourseAdapter = new DiscourseAdapter()
    */
-  constructor ({
+  constructor({
     userName
   } = {}) {
     /**
@@ -26,7 +26,7 @@ class DiscourseAdapter {
     /**
      * @property {string} discourseEndPoint - An endpoint url for discourse api
      */
-    this.discourseEndPoint = 'http://localhost:3001'
+    this.discourseEndPoint = 'http://f7e62490.ngrok.io'
     /**
      * @property {object} discourseUriList - List of discourse uri's
      */
@@ -41,15 +41,15 @@ class DiscourseAdapter {
 
     this.userName = userName
     this.apiAuth = {
-      apiKey: '582df0739d5d4503c3eb8a8828bccaaa9d27fdf7be204f47509501717f6857ec',
-      apiUserName: 'loganathan.shanmugam'
+      apiKey: '6d1d27685a7bb8771bc18903d2b980a71b336d7715c28aeb345e3dac65126a47',
+      apiUserName: 'revathipp'
     }
   }
 
   /*
    *create discourse user
    */
-  createUser (user) {
+  createUser(user) {
     return new Promise((resolve, reject) => {
       let options = {
         method: 'POST',
@@ -81,7 +81,7 @@ class DiscourseAdapter {
   /*
    *check discourse user and create if not found
    */
-  createUserIfNotExists (user) {
+  createUserIfNotExists(user) {
     return new Promise((resolve, reject) => {
       let options = {
         method: 'GET',
@@ -108,7 +108,7 @@ class DiscourseAdapter {
    *create discourse topic
    *
    */
-  createThread (threadData, user) {
+  createThread(threadData, user) {
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(user).then((success) => {
         let formData = {
@@ -147,7 +147,7 @@ class DiscourseAdapter {
    *reply discourse topic
    *
    */
-  replyThread (threadData, user) {
+  replyThread(threadData, user) {
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(user).then((success) => {
         let formData = {
@@ -181,7 +181,7 @@ class DiscourseAdapter {
     })
   }
 
-  extractThreadList (topics, posts) {
+  extractThreadList(topics, posts) {
     let threadList = []
     _.forEach(topics, function (topic) {
       let postData = _.find(posts, {
@@ -206,7 +206,7 @@ class DiscourseAdapter {
     return threadList
   }
 
-  extractThreadData (topicData) {
+  extractThreadData(topicData) {
     let posts = topicData.post_stream.posts
     let postData = _.find(posts, {
       topic_id: topicData.id,
@@ -259,9 +259,9 @@ class DiscourseAdapter {
     return threadData
   }
 
-  getThreadActions (threadData, isPost) {
+  getThreadActions(threadData, isPost) {
     let actions = {
-      downVote: 0
+      downVote: -1
     }
     _.forEach(threadData.actions_summary, function (action) {
       if (action.id === 2) {
@@ -293,7 +293,7 @@ class DiscourseAdapter {
    *get discourse topics
    *
    */
-  getThreadsList (threadData, user) {
+  getThreadsList(threadData, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(user).then((success) => {
@@ -332,7 +332,7 @@ class DiscourseAdapter {
    *get discourse topics
    *
    */
-  getThreadById (threadId, user) {
+  getThreadById(threadId, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(user).then((success) => {

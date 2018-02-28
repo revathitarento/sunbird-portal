@@ -14,7 +14,7 @@ import { SortByDatePipe } from '../sort-by-date.pipe';
   styleUrls: ['./thread-details.component.css'],
   providers: [SortByDatePipe]
 })
-export class ThreadDetailsComponent implements OnInit {
+export class ThreadDetailsComponent implements OnInit, OnDestroy {
   public el: HTMLInputElement;
   public successMessage: boolean;
   public message: any;
@@ -67,7 +67,7 @@ export class ThreadDetailsComponent implements OnInit {
       console.log('result this.replies', this.replies);
       this.loadReplyActions(this.threadDetails.thread.replies);
     });
-    this.param = 'created_at';
+    this.param = 'createdDate';
   }
   showErrfield() {
     $('.ui.negative.message').show();
@@ -115,7 +115,6 @@ export class ThreadDetailsComponent implements OnInit {
 
       this.showNotify(repId, actionTypeId, this.replyActions[id][actionTypeId]);
     });
-
   }
 
   public undoActions(id, actionTypeId) {
@@ -235,9 +234,13 @@ export class ThreadDetailsComponent implements OnInit {
   }
 
   ascSortClick() {
-    this.param = 'created_at';
+    this.param = 'createdDate';
   }
   descSortClick() {
-    this.param = '-created_at';
+    this.param = '-createdDate';
+  }
+  public ngOnDestroy() {
+    const $editor = $('#custom-toolbar');
+    $editor.froalaEditor('destroy');
   }
 }

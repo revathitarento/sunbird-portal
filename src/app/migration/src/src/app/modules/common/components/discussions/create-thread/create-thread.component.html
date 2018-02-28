@@ -60,7 +60,7 @@
                                 </div>
                                 <div class="field">
                                     <label class="left-class">Description</label>
-                                    <div id="toolbarContainer" [froalaEditor] name="threadDesc" [(ngModel)]="discussionsModel.threadDesc" (ngModelChange)="showErrfield()" #threadDesc="ngModel"></div>
+                                    <div id="custom-toolbar" [froalaEditor] name="threadDesc" [(ngModel)]="discussionsModel.threadDesc" (ngModelChange)="showErrfield()" #threadDesc="ngModel"></div>
                                     <!-- <textarea type="text" autocomplete="off" name="threadDesc" [(ngModel)]="discussionsModel.threadDesc" (ngModelChange)="showErrfield()" #threadDesc="ngModel"></textarea> -->
                                     <div [hidden]="threadDesc.valid || threadDesc.pristine " class="field padding-top-10">
                                         <div class="ui negative message">
