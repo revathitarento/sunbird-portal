@@ -43,7 +43,6 @@ class DiscourseAdapter {
     this.apiAuth = {
       apiKey: '582df0739d5d4503c3eb8a8828bccaaa9d27fdf7be204f47509501717f6857ec',
       apiUserName: 'loganathan.shanmugam'
-
     }
   }
 
@@ -189,6 +188,7 @@ class DiscourseAdapter {
         userName: postData.username,
         name: postData.name
       },
+
       body: postData.cooked.substring(postData.cooked.indexOf('>') + 1, postData.cooked.lastIndexOf('<')),
       title: topicData.title,
       createdDate: topicData.created_at,
@@ -308,6 +308,7 @@ class DiscourseAdapter {
         this.httpService.call(options).then((data) => {
           let res = JSON.parse(data.body)
           console.log(JSON.stringify(res))
+
           if (res) {
             resolve(this.extractThreadData(res))
           } else {
