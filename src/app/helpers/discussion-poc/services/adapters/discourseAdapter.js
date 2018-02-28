@@ -36,7 +36,8 @@ class DiscourseAdapter {
       postThread: '/posts',
       users: '/users',
       postActions: '/post_actions',
-      acceptAsSolution: '/solution/accept'
+      acceptAsSolution: '/solution/accept',
+      retort: '/retorts'
     }
 
     this.userName = userName
@@ -143,6 +144,44 @@ class DiscourseAdapter {
     })
   }
 
+  /*
+   *reply discourse topic
+   *
+   */
+  replyThread (threadData, user) {
+    return new Promise((resolve, reject) => {
+      this.createUserIfNotExists(user).then((success) => {
+        let formData = {
+          api_key: this.apiAuth.apiKey,
+          api_username: user.userName,
+          raw: threadData.body,
+          topic_id: threadData.threadId
+        }
+
+        let options = {
+          method: 'POST',
+          uri: this.discourseEndPoint + this.discourseUris.postThread,
+          form: formData
+        }
+        this.httpService.call(options).then((data) => {
+          let res = JSON.parse(data.body)
+          console.log(res)
+          if (res) {
+            resolve(res.topic_id)
+          } else {
+            reject(res)
+          }
+        }, (error) => {
+          reject(error)
+        })
+      }, (error) => {
+        reject(error)
+      }).catch((error) => {
+        reject(error)
+      })
+    })
+  }
+
   extractThreadList (topics, posts) {
     let threadList = []
     _.forEach(topics, function (topic) {
@@ -193,7 +232,7 @@ class DiscourseAdapter {
       title: topicData.title,
       createdDate: topicData.created_at,
       repliesCount: posts.length - 1,
-      voteCount: postData.like_count,
+      voteCount: topicData.like_count,
       read: postData.read,
       posters: posters,
       replies: [],
@@ -223,7 +262,6 @@ class DiscourseAdapter {
 
   getThreadActions (threadData, isPost) {
     let actions = {
-      downVote: 0
     }
     _.forEach(threadData.actions_summary, function (action) {
       if (action.id === 2) {
@@ -233,18 +271,18 @@ class DiscourseAdapter {
         actions['flag'] = (action.acted === true) ? 1 : (action.can_act === true) ? 0 : -1
       }
     })
-    if (actions['vote'] === -1) {
-      actions['downVote'] = -1
-    } else {
-      if (threadData.retorts) {
-        let downVoteData = _.find(threadData.retorts, {
-          emoji: '-1'
-        })
-        if (downVoteData && downVoteData.usernames) {
-          actions['downVote'] = (downVoteData.usernames.indexOf(this.userName) >= 0) ? 1 : 0
-        }
+
+    if (threadData.retorts) {
+      let downVoteData = _.find(threadData.retorts, {
+        emoji: '-1'
+      })
+      if (downVoteData && downVoteData.usernames && downVoteData.usernames.indexOf(this.userName) >= 0) {
+        actions['downVote'] = 1
+      } else {
+        actions['downVote'] = (threadData.username === this.userName) ? -1 : 0
       }
     }
+
     if (isPost) {
       actions['acceptAnswer'] = (threadData.can_accept_answer && threadData.can_accept_answer === true) ? 0 : (threadData.can_accept_answer === true && threadData.accepted_answer && threadData.accepted_answer === true && threadData.can_unaccept_answer === true) ? 1 : -1
     }
@@ -322,6 +360,82 @@ class DiscourseAdapter {
       }, (error) => {
         reject(error)
       }).catch((error) => {
+        reject(error)
+      })
+    })
+  }
+
+  postAction (actionData, user) {
+    this.userName = user.userName
+    return new Promise((resolve, reject) => {
+      let options = {
+        method: 'POST',
+        uri: this.discourseEndPoint + this.discourseUris.postActions,
+        form: {
+          id: actionData.postId,
+          api_key: this.apiAuth.apiKey,
+          api_username: this.userName,
+          post_action_type_id: actionData.type
+        }
+
+      }
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
+        if (res) {
+          resolve('done')
+        } else {
+          reject(res)
+        }
+      }, (error) => {
+        reject(error)
+      })
+    })
+  }
+  postUndoAction (actionData, user) {
+    this.userName = user.userName
+    return new Promise((resolve, reject) => {
+      let options = {
+        method: 'DELETE',
+        uri: this.discourseEndPoint + this.discourseUris.postActions + '/' + actionData.postId,
+        form: {
+          api_key: this.apiAuth.apiKey,
+          api_username: this.userName,
+          post_action_type_id: actionData.type
+        }
+      }
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
+        if (res) {
+          resolve('done')
+        } else {
+          reject(res)
+        }
+      }, (error) => {
+        reject(error)
+      })
+    })
+  }
+  retort (actionData, user) {
+    this.userName = user.userName
+    return new Promise((resolve, reject) => {
+      let options = {
+        method: 'POST',
+        uri: this.discourseEndPoint + this.discourseUris.retort + '/' + actionData.postId + '.json',
+        form: {
+          api_key: this.apiAuth.apiKey,
+          api_username: this.userName,
+          retort: actionData.type
+        }
+
+      }
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
+        if (res) {
+          resolve('done')
+        } else {
+          reject(res)
+        }
+      }, (error) => {
         reject(error)
       })
     })

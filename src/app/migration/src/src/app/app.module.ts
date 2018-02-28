@@ -30,7 +30,9 @@ import { FormsModule } from '@angular/forms';
 import { DiscussionsApiservice } from './services/discussions/discussions.service';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { ClipboardModule } from 'ngx-clipboard';
-import { SortByDatePipe} from '../app/modules/common/components/discussions/sort-by-date.pipe'
+import { SortByDatePipe } from '../app/modules/common/components/discussions/sort-by-date.pipe';
+import { ShareModule } from '@ngx-share/core';
+
 
 @NgModule({
   declarations: [
@@ -63,7 +65,8 @@ import { SortByDatePipe} from '../app/modules/common/components/discussions/sort
     }),
     FroalaEditorModule.forRoot(),
     FroalaViewModule.forRoot(),
-    ClipboardModule
+    ClipboardModule,
+    ShareModule.forRoot()
   ],
   providers: [
     RouteResolveService,

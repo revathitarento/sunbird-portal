@@ -7,6 +7,7 @@ import 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { DataService } from '../data/data.service';
 import { UserService } from '../user/user.service';
+import { ShareButtons } from '@ngx-share/core';
 const urlConFig = (<any>urlConfig);
 
 @Injectable()
@@ -16,7 +17,7 @@ export class DiscussionsApiservice extends DataService {
     private threadsURL = '/discussions/v1/list';
     public baseUrl = '';
 
-    constructor(public http: HttpClient) {
+    constructor(public http: HttpClient, public share: ShareButtons) {
         super(http, urlConFig.URLS.RESOURCEBUNDLES_PREFIX);
     }
     public changeMessage(object) {
@@ -99,9 +100,12 @@ export class DiscussionsApiservice extends DataService {
             });
     }
     postReply(threadId, model) {
-        const body = model;
+        const body = {
+            'threadId': threadId,
+            'body': model.description
+        };
         console.log('inside postReply()', body, threadId);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/reply/` + threadId, body)
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/reply/`, body)
             .map((response: Response) => {
                 return response;
             });
@@ -139,4 +143,5 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
+    
 }

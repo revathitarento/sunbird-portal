@@ -165,17 +165,25 @@ class ThreadController {
 	 * @return  {[type]} return transformed data
 	 */
 	replyThread(requestObj) {
-		return this.__postThread()(requestObj)
+		return this.__replyThread()(requestObj)
 	}
 	/**
 	 * create thread
 	 *
 	 * @return  {[type]} return transformed data
 	 */
-	postActions(requestObj) {
-		console.log('req', requestObj.body);
-		return this.__postActions()(requestObj)
+	voteThread(requestObj) {
+		return this.__voteThread()(requestObj)
 	}
+	/**
+	 * create thread
+	 *
+	 * @return  {[type]} return transformed data
+	 */
+	flagThread(requestObj) {
+		return this.__flagThread()(requestObj)
+	}
+
 	/**
 	 * create thread
 	 *
@@ -232,11 +240,11 @@ class ThreadController {
 	}
 
 
-	/*
+		/*
 	 *create thread flow
 	 *
 	 */
-	__postActions(requestObj) {
+	__flagThread(requestObj) {
 		return async((requestObj) => {
 			try {
 
@@ -246,14 +254,111 @@ class ThreadController {
 
 				if (userProfile) {
 					return new Promise((resolve, reject) => {
-						let actionData = {
-							userName: userProfile.userName,
-							id: requestObj.params.id,
-							actionTypeId: requestObj.body.actionTypeId,
+						let user = {
+							userName: userProfile.userName
+						}
+						let threadData = {							
+							postId: requestObj.body.postId,
 							undo: requestObj.body.undo
 						}
+						this.threadService.flagThread(threadData,user).then((threadResponse) => {
+							resolve({
+								status: threadResponse
+							})
+						}, function (error) {
+							reject({
+								error: error
+							})
+						})
+					})
+				} else {
+					return {
+						message: 'Unauthorized User',
+						status: HttpStatus.UNAUTHORIZED
+					}
+				}
+			} catch (error) {
 
-						this.threadService.postActions(actionData).then((threadResponse) => {
+				return {
+					message: 'Error',
+					status: HttpStatus.INTERNAL_SERVER_ERROR
+				}
+			}
+		})
+	}
+
+	/*
+	 *create thread flow
+	 *
+	 */
+	__voteThread(requestObj) {
+		return async((requestObj) => {
+			try {
+
+				let authUserToken = await(this.__getToken(requestObj))
+
+				let userProfile = await(this.__getUserProfile(authUserToken))
+
+				if (userProfile) {
+					return new Promise((resolve, reject) => {
+						let user = {
+							userName: userProfile.userName
+						}
+						let threadData = {							
+							postId: requestObj.body.postId,
+							value: requestObj.body.value,
+							undo: requestObj.body.undo
+						}
+						this.threadService.voteThread(threadData,user).then((threadResponse) => {
+							resolve({
+								status: threadResponse
+							})
+						}, function (error) {
+							reject({
+								error: error
+							})
+						})
+					})
+				} else {
+					return {
+						message: 'Unauthorized User',
+						status: HttpStatus.UNAUTHORIZED
+					}
+				}
+			} catch (error) {
+
+				return {
+					message: 'Error',
+					status: HttpStatus.INTERNAL_SERVER_ERROR
+				}
+			}
+		})
+	}
+
+
+	/*
+	 *reply thread flow
+	 *
+	 */
+	__replyThread(requestObj) {
+		return async((requestObj) => {
+			try {
+				let authUserToken = await(this.__getToken(requestObj))
+				// validate request
+				let userProfile = await(this.__getUserProfile(authUserToken))
+
+				if (userProfile) {
+					return new Promise((resolve, reject) => {
+						let threadData = {							
+							threadId: requestObj.body.threadId,
+							body: requestObj.body.body 							
+						}
+						let user = {
+							userName: userProfile.userName,
+							firstName: userProfile.firstName,
+							email: userProfile.email
+						}						
+						this.threadService.replyThread(threadData,user).then((threadResponse) => {
 							resolve({
 								id: threadResponse
 							})

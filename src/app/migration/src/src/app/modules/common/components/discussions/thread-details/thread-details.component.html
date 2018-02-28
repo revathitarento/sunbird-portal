@@ -26,8 +26,11 @@
                                             <span class="author">{{threadDetails.thread.author.userName }}</span>
                                             <span> | </span>
                                             <span>{{replies.length}} replies</span>
-                                            <span title="like" class="cursor-pointer" (click)="upVote(threadDetails.thread.id)">
-                                                <i class="custom-vote-icon thumbs up icon"></i>{{threadDetails.thread.like_count}}
+                                            <span title="like" class="cursor-pointer" (click)="actions(threadDetails.thread.id)">
+                                                <i class="custom-vote-icon thumbs up icon"></i>{{message.like_count}}
+                                            </span>
+                                            <span title="like" class="cursor-pointer" (click)="undoActions(threadDetails.thread.id)">
+                                                <i class="custom-vote-icon thumbs up blue icon"></i>{{message.like_count}}
                                             </span>
                                             <span title="dislike" class="cursor-pointer" (click)="downVote(threadDetails.thread.id)">
                                                 <i class="custom-vote-icon thumbs down icon"></i>0
@@ -35,19 +38,26 @@
                                             <span title="share a link to this thread" class="cursor-pointer" [cbContent]="href" ngxClipboard (cbOnSuccess)="linkShare()">
                                                 <i class="linkify icon"></i>
                                             </span>
+                                          
+                                                 
+                                                
                                             <span title="delete this thread" class="cursor-pointer">
                                                 <i class="trash outline icon"></i>
                                             </span>
-                                            <span *ngIf="lockedId !== threadDetails.thread.id || lockedState == false" title="lock this post" class="cursor-pointer" (click)="onLock(threadDetails.thread.id,false)">
+                                            <span *ngIf="lockedId !== threadDetails.thread.id || lockedState == false" title="lock this post" class="cursor-pointer"
+                                                (click)="onLock(threadDetails.thread.id,false)">
                                                 <i class="lock icon"></i>
                                             </span>
-                                            <span *ngIf="lockedId == threadDetails.thread.id && lockedState == true" title="unlock this post" class="cursor-pointer" (click)="onLock(threadDetails.thread.id,true)">
+                                            <span *ngIf="lockedId == threadDetails.thread.id && lockedState == true" title="unlock this post" class="cursor-pointer"
+                                                (click)="onLock(threadDetails.thread.id,true)">
                                                 <i class="unlock alternate icon ui red"></i>
                                             </span>
-                                            <span *ngIf="archivedId !== threadDetails.thread.id || archivedState == false" title="archive this post" class="cursor-pointer" (click)="onArchive(threadDetails.thread.id,false)">
+                                            <span *ngIf="archivedId !== threadDetails.thread.id || archivedState == false" title="archive this post" class="cursor-pointer"
+                                                (click)="onArchive(threadDetails.thread.id,false)">
                                                 <i class="archive icon"></i>
                                             </span>
-                                            <span *ngIf="archivedId == threadDetails.thread.id && archivedState == true" title="unarchive this post" class="cursor-pointer" (click)="onArchive(threadDetails.thread.id,true)">
+                                            <span *ngIf="archivedId == threadDetails.thread.id && archivedState == true" title="unarchive this post" class="cursor-pointer"
+                                                (click)="onArchive(threadDetails.thread.id,true)">
                                                 <i class="archive icon ui brown"></i>
                                             </span>
                                             <span class="date">{{threadDetails.thread.createdDate | date : longdate}}</span>
@@ -57,7 +67,7 @@
                             </div>
                         </div>
                         <div class="ui divider"></div>
-                        <div class="ui dropdown float-ContentRight" suiDropdown>
+                        <div title="sort" class="ui dropdown" suiDropdown>
                             <small class="text">Sort by</small>
                             <i class="dropdown icon"></i>
                             <div class="menu" suiDropdownMenu>
@@ -71,7 +81,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="ui comments margin-top-0">
+                        <div class="ui comments margin-top-10">
                             <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param">
                                 <div class="content padding-top-20 single-reply" id="{{reply.id}}">
                                     <div class="metadata">
@@ -116,12 +126,24 @@
                                                 <i class="custom-vote-icon checkmark icon ui green"></i>
                                             </span>
                                         </div>
-                                        <span>{{reply.reads}} views</span>
+                                        <!-- <span>{{reply.reads}} views</span> -->
                                         <!-- <input class="custom-display-none" [value]="href" #copyInput> -->
                                         <!--[cbContent]="href + '#' + reply.id" ngxClipboard (cbOnSuccess)="replylinkShare()" -->
                                         <span title="share a link to this post" class="cursor-pointer" (click)="replylinkShare(this.id, reply.id)" >
-                                            <i class="linkify icon"></i>
-                                        </span>
+                                            <i class="linkify icon"></i>                                            
+                                        </span>      
+                                        <span (click)="showPopup(false, reply.id)" class="cursor-pointer">Share</span>
+
+                                        <sui-modal class="closeModal" *ngIf="modalFlag == true && reply.id == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
+                                                
+                                                <div class="content">
+                                                    <p>Modal content</p>
+                                                    <button shareButton="facebook"><i class="fa fa-facebook"></i>Share</button>
+                                                    <button shareButton="twitter" sbUrl="{{shareLink}}"><i class="fa fa-twitter"></i>Tweet</button>
+                                                    <button shareButton="linkedin"><i class="fa fa-linkedin"></i>LinkedIn</button>
+                                                </div>                                               
+                                        </sui-modal>
+
                                         <span *ngIf="deletedId !== reply.id || deletedState == false" title="delete this post" class="cursor-pointer" (click)="onDelete(reply.id,false)">
                                             <i class="trash outline icon"></i>
                                         </span>

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, Inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, Inject,ViewChild } from '@angular/core';
 import { DiscussionsObject } from '../interfaces/discussions.interface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DiscussionsApiservice } from '../../../../../services/discussions/discussions.service';
@@ -8,8 +8,11 @@ declare var jquery: any;
 declare var $: any;
 import { SortByDatePipe } from '../sort-by-date.pipe';
 import {PlatformLocation } from '@angular/common';
+import {SuiModalService, TemplateModalConfig, ModalTemplate, ModalSize} from "ng2-semantic-ui";
 
-
+export interface IContext {
+  data:string;
+}
 
 @Component({
   selector: 'app-thread-details',
@@ -54,11 +57,39 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public actionType: any;
   public currentLocation: any;
   public replyHash: any;
+    public shareLink : any;
+    
+ 
+
+//   public open() {
+//     const config = new TemplateModalConfig<null, string, string>(this.modalTemplate);
+
+//     this.modalService
+//         .open(config)
+//         .onApprove(() => { /* approve callback */ }) 
+//         .onDeny(() => { /* deny callback */});
+// }
+
+@ViewChild('modalTemplate')
+public modalTemplate:ModalTemplate<null, string, string>
+
+public open(dynamicContent:string = "Example") {
+  const config = new TemplateModalConfig<IContext, string, string>(this.modalTemplate);
+
+  config.closeResult = "closed!";
+  config.context = { data: dynamicContent };
+
+  this.modalService
+      .open(config)
+      .onApprove(result => { /* approve callback */ })
+      .onDeny(result => { /* deny callback */});
+}
+  // {{currentLocation + "#" + reply.id}}
   ngOnInit() {
     this.loading = true;
     this.notifyActions = false;
     this.loading = true;
-    this.param = '-created_at';
+    this.param = '-createdDate';
     this.sub = this.route.params.subscribe(params => {
       console.log('param', params);
       this.id = params['threadId'];
@@ -73,6 +104,8 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
       console.log('result this.replies', this.replies);
       this.loadReplyActions(this.threadDetails.thread.replies);
     });
+    
+   
     this.param = 'created_at';
   }
 
@@ -103,20 +136,17 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   showErrfield() {
     $('.ui.negative.message').show();
   }
-
+public size: string;
   constructor(private router: Router, private elementRef: ElementRef,
     private route: ActivatedRoute, private discussionService: DiscussionsApiservice,
-    @Inject(DOCUMENT) document: any, platformLocation: PlatformLocation) {
+    @Inject(DOCUMENT) document: any, platformLocation: PlatformLocation, public modalService:SuiModalService) {
     this.isCopied = false;
     this.href = document.location.href;
     console.log('href', this.href);
     this.discussionService.currentMessage.subscribe(message => this.message = message);
     console.log('getting from service', this.message);
     this.el = this.elementRef.nativeElement.innerHTML;
-    // this.discussionService.getThreadbyId(this.id).subscribe(data => {
-    //   this.threadDetails = data['result'];
-    //   this.loadReplyActions(this.threadDetails.thread.replies);
-    // });
+    this.size = ModalSize.Small;
     this.replyHash = (platformLocation as any).location;
     this.currentLocation = ((platformLocation as any).location.href);
     console.log((platformLocation as any).location.origin);
@@ -273,10 +303,10 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   }
 
   ascSortClick() {
-    this.param = 'created_at';
+    this.param = 'createdDate';
   }
   descSortClick() {
-    this.param = '-created_at';
+    this.param = '-createdDate';
   }
 
   //replylinkShare()
@@ -285,4 +315,13 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     console.log("reply id:, currentLocation: ", replyId, this.currentLocation);   
    
   } 
+  public modalFlag: boolean;
+  public popupId: number;
+  //this.modalFlag = false;
+  showPopup(status, popupReplyId){
+    this.modalFlag = !status;
+    this.popupId = popupReplyId; 
+    this.shareLink = this.currentLocation +"#"+this.popupId;
+    console.log("this.modalflag",this.modalFlag);
+  }
 }

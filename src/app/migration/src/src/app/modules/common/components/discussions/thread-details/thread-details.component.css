@@ -38,3 +38,7 @@
     -ms-transition: background-color 1000ms linear;
     transition: background-color 1000ms linear;
 }
+.closeModal .content .close.icon{
+    background-color: blue;
+    color: #000 !important;
+}
