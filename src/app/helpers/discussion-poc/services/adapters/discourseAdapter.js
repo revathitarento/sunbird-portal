@@ -15,7 +15,9 @@ class DiscourseAdapter {
    *
    * let discourseAdapter = new DiscourseAdapter()
    */
-  constructor () {
+  constructor ({
+    userName
+  } = {}) {
     /**
      * @property {instance} httpService - Instance of httpservice which is used to make a http service call
      */
@@ -24,7 +26,7 @@ class DiscourseAdapter {
     /**
      * @property {string} discourseEndPoint - An endpoint url for discourse api
      */
-    this.discourseEndPoint = 'http://f7e62490.ngrok.io'
+    this.discourseEndPoint = 'http://localhost:3001'
     /**
      * @property {object} discourseUriList - List of discourse uri's
      */
@@ -37,9 +39,10 @@ class DiscourseAdapter {
       acceptAsSolution: '/solution/accept'
     }
 
+    this.userName = userName
     this.apiAuth = {
-      apiKey: '6d1d27685a7bb8771bc18903d2b980a71b336d7715c28aeb345e3dac65126a47',
-      apiUserName: 'revathipp'
+      apiKey: '582df0739d5d4503c3eb8a8828bccaaa9d27fdf7be204f47509501717f6857ec',
+      apiUserName: 'loganathan.shanmugam'
     }
   }
 
@@ -157,7 +160,7 @@ class DiscourseAdapter {
         title: topic.title,
         createdDate: topic.created_at,
         repliesCount: topic.posts_count - 1,
-        likeCount: postData.like_count,
+        voteCount: postData.like_count,
         seen: !topic.unseen
       }
       threadList.push(threadData)
@@ -185,16 +188,65 @@ class DiscourseAdapter {
         userName: postData.username,
         name: postData.name
       },
-      body: postData.blurb,
+
+      body: postData.cooked.substring(postData.cooked.indexOf('>') + 1, postData.cooked.lastIndexOf('<')),
       title: topicData.title,
       createdDate: topicData.created_at,
       repliesCount: posts.length - 1,
-      likeCount: postData.like_count,
-      posters: posters
-
+      voteCount: postData.like_count,
+      posters: posters,
+      replies: [],
+      actions: this.getThreadActions(postData, false)
     }
-
+    let adapter = this
+    _.forEach(posts, function (post, index) {
+      if (post.post_number !== 1) {
+        let replyData = {
+          id: post.id,
+          author: {
+            userName: post.username,
+            name: post.name
+          },
+          body: post.cooked.substring(post.cooked.indexOf('>') + 1, post.cooked.lastIndexOf('<')),
+          actions: adapter.getThreadActions(post, true),
+          createdDate: post.created_at,
+          voteCount: post.like_count,
+          acceptedAnswer: post.accepted_answer
+        }
+        threadData.replies.push(replyData)
+      }
+    })
     return threadData
+  }
+
+  getThreadActions (threadData, isPost) {
+    let actions = {
+      downVote: 0
+    }
+    _.forEach(threadData.actions_summary, function (action) {
+      if (action.id === 2) {
+        actions['vote'] = (action.acted === true) ? 1 : (action.can_act === true) ? 0 : -1
+      }
+      if (action.id === 8) {
+        actions['flag'] = (action.acted === true) ? 1 : (action.can_act === true) ? 0 : -1
+      }
+    })
+    if (actions['vote'] === -1) {
+      actions['downVote'] = -1
+    } else {
+      if (threadData.retorts) {
+        let downVoteData = _.find(threadData.retorts, {
+          emoji: '-1'
+        })
+        if (downVoteData && downVoteData.usernames) {
+          actions['downVote'] = (downVoteData.usernames.indexOf(this.userName) >= 0) ? 1 : 0
+        }
+      }
+    }
+    if (isPost) {
+      actions['acceptAnswer'] = (threadData.can_accept_answer && threadData.can_accept_answer === true) ? 0 : (threadData.can_accept_answer === true && threadData.accepted_answer && threadData.accepted_answer === true && threadData.can_unaccept_answer === true) ? 1 : -1
+    }
+    return actions
   }
 
   /*
@@ -202,6 +254,7 @@ class DiscourseAdapter {
    *
    */
   getThreadsList (threadData, user) {
+    this.userName = user.userName
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(user).then((success) => {
         let filters = {
@@ -240,15 +293,22 @@ class DiscourseAdapter {
    *
    */
   getThreadById (threadId, user) {
+    this.userName = user.userName
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(user).then((success) => {
+        let filters = {
+          api_key: this.apiAuth.apiKey,
+          api_username: this.userName
+        }
         let options = {
           method: 'GET',
-          uri: this.discourseEndPoint + this.discourseUris.getOne + '/' + threadId + '.json'
+          uri: this.discourseEndPoint + this.discourseUris.getOne + '/' + threadId + '.json?' + queryString.stringify(filters)
         }
+
         this.httpService.call(options).then((data) => {
           let res = JSON.parse(data.body)
-          console.log(res)
+          console.log(JSON.stringify(res))
+
           if (res) {
             resolve(this.extractThreadData(res))
           } else {

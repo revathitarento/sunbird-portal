@@ -16,7 +16,7 @@ class ThreadController {
 		/**
 		 * @property {instance} httpService - Instance of httpservice which is used to make a http service call
 		 */
-		this.discouseAdapter = new DiscouseAdapter()
+		this.discouseAdapter = new DiscouseAdapter({})
 		this.httpService = httpWrapper
 		this.threadService = new ThreadService(this.discouseAdapter)
 	}
