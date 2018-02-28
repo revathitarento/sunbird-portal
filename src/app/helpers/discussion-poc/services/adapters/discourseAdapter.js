@@ -194,6 +194,7 @@ class DiscourseAdapter {
       createdDate: topicData.created_at,
       repliesCount: posts.length - 1,
       voteCount: postData.like_count,
+      read: postData.read,
       posters: posters,
       replies: [],
       actions: this.getThreadActions(postData, false)
@@ -211,7 +212,8 @@ class DiscourseAdapter {
           actions: adapter.getThreadActions(post, true),
           createdDate: post.created_at,
           voteCount: post.like_count,
-          acceptedAnswer: post.accepted_answer
+          acceptedAnswer: post.accepted_answer,
+          read: post.read
         }
         threadData.replies.push(replyData)
       }
