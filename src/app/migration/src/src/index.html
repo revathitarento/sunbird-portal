@@ -1,19 +1,36 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>Src</title>
   <base href="/">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+    crossorigin="anonymous">
   <link rel="stylesheet" href="/assets/common/styles/semantic.min.css">
   <link rel="stylesheet" href="/assets/common/styles/ladda-themeless.min.css">
   <link rel="stylesheet" href="/assets/common/styles/froala_style.min.css">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
+
 <body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script>
+    $(function () {
+      $('div#toolbarContainer').froalaEditor({
+        pluginsEnabled: ['wordPaste'],
+        toolbarButtons: ['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', '-', 'insertLink', 'insertImage', 'insertVideo', 'embedly', 'insertFile', '|', 'specialCharacters', 'selectAll', 'clearFormatting', '|', 'spellChecker', 'help', 'html', '|', 'undo', 'redo'],
+        heightMin: 300,
+        heightMax: 300,
+        // toolbarButtons: ['bold', 'italic', 'underline', 'undo', 'redo'],
+        // toolbarButtonsSM: ['bold', 'italic', 'underline', 'undo', 'redo'],
+        // toolbarButtonsMD: ['bold', 'italic', 'underline', 'undo', 'redo'],
+        // toolbarButtonsXS: ['bold', 'italic', 'underline', 'undo', 'redo'],
+      });
+    });
+  </script>
   <script src="/assets/common/js/froala_editor.pkgd.min.js"></script>
   <script>
    $(function () {
@@ -35,4 +52,5 @@
   <input type="hidden" id="defaultPortalLanguage" value="<%=defaultPortalLanguage%>" />
   <app-root></app-root>
 </body>
+
 </html>

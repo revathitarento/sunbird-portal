@@ -13,7 +13,7 @@ const urlConFig = (<any>urlConfig);
 export class DiscussionsApiservice extends DataService {
     public messageSource = new BehaviorSubject<any>([]);
     currentMessage = this.messageSource.asObservable();
-    private threadsURL = '/discussions/v1/list/do_212390847580487680138';
+    private threadsURL = '/discussions/v1/list';
     public baseUrl = '';
 
     constructor(public http: HttpClient) {
@@ -24,15 +24,18 @@ export class DiscussionsApiservice extends DataService {
         this.messageSource.next(object);
     }
 
-    getThreads() {
- 
+    getThreads(communityId) {
+        console.log('com', communityId);
         const option = {
-            communityId: 'do_212390847580487680138',
-            type: 'qna'    
-          }
-      
-            return this.http.post(`${this.baseUrl}/discussions/v1/list/`, option)
+            url: '/discussions/v1/list/',
+            data: {
+                communityId: 'do_212390847580487680138',
+                type: 'qna'
+            }
+        };
+        return this.post(option)
             .map((response: Response) => {
+                console.log('Response: ', response);
                 return response;
             });
 

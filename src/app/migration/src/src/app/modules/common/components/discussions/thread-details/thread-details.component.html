@@ -14,24 +14,23 @@
                                     <i class="large arrow left icon"></i>
                                 </a>
                             </div>
-
                             <div class="cardsHeading">
                                 {{threadDetails.thread.title}}
                             </div>
                             <br/>
                             <div class="content description" [innerHtml]="threadDetails.thread.description">
                             </div>
-
                             <div class="ui comments">
                                 <div class="comment">
                                     <div class="content">
                                         <div class="metadata">
                                             <span class="author">{{threadDetails.thread.created_by}}</span>
                                             <span> | </span>
-                                            <span title="like" class="cursor-pointer" (click)="upVote(thread.id)">
+                                            <span>{{replies.length}} replies</span>
+                                            <span title="like" class="cursor-pointer" (click)="upVote(threadDetails.thread.id)">
                                                 <i class="custom-vote-icon thumbs up icon"></i>{{message.like_count}}
                                             </span>
-                                            <span title="dislike" class="cursor-pointer" (click)="downVote(thread.id)">
+                                            <span title="dislike" class="cursor-pointer" (click)="downVote(threadDetails.thread.id)">
                                                 <i class="custom-vote-icon thumbs down icon"></i>0
                                             </span>
                                             <span title="share a link to this thread" class="cursor-pointer" [cbContent]="href" ngxClipboard (cbOnSuccess)="linkShare()">
@@ -40,12 +39,18 @@
                                             <span title="delete this thread" class="cursor-pointer">
                                                 <i class="trash outline icon"></i>
                                             </span>
-                                            <!-- <span *ngIf="lockedId !== thread.id || lockedState == false" title="lock this post" class="cursor-pointer" (click)="onLock(thread.id,false)">
+                                            <span *ngIf="lockedId !== threadDetails.thread.id || lockedState == false" title="lock this post" class="cursor-pointer" (click)="onLock(threadDetails.thread.id,false)">
                                                 <i class="lock icon"></i>
                                             </span>
-                                            <span *ngIf="lockedId == thread.id && lockedState == true" title="unlock this post" class="cursor-pointer" (click)="onLock(thread.id,true)">
+                                            <span *ngIf="lockedId == threadDetails.thread.id && lockedState == true" title="unlock this post" class="cursor-pointer" (click)="onLock(threadDetails.thread.id,true)">
                                                 <i class="unlock alternate icon ui red"></i>
-                                            </span> -->
+                                            </span>
+                                            <span *ngIf="archivedId !== threadDetails.thread.id || archivedState == false" title="archive this post" class="cursor-pointer" (click)="onArchive(threadDetails.thread.id,false)">
+                                                <i class="archive icon"></i>
+                                            </span>
+                                            <span *ngIf="archivedId == threadDetails.thread.id && archivedState == true" title="unarchive this post" class="cursor-pointer" (click)="onArchive(threadDetails.thread.id,true)">
+                                                <i class="archive icon ui brown"></i>
+                                            </span>
                                             <span class="date">{{threadDetails.thread.created_at | date : longdate}}</span>
                                         </div>
                                     </div>
@@ -76,7 +81,7 @@
                                         <span> | </span>
                                         <div class="date">{{reply.created_at | date : longDate}}</div>
                                     </div>
-                                    <div class="text margin-left-10" [innerHtml]="reply.cooked"></div>
+                                    <div class="text margin-left-10" contenteditable="true" [innerHtml]="reply.cooked"></div>
                                     <div class="actions metadata">
                                         <span *ngIf="showAction(reply.id,2) == 'can_act'" title="like" class="cursor-pointer" (click)="actions(reply.id,2)">
                                             <i class="custom-vote-icon thumbs up icon"></i>
@@ -85,8 +90,6 @@
                                         <span *ngIf="showAction(reply.id,2) == 'acted'" title="undo like" class="cursor-pointer" (click)="undoActions(reply.id,2)">
                                             <i class="custom-vote-icon thumbs up blue icon"></i>
                                         </span>
-
-
                                         <!-- <div class="notifyAction" *ngIf="notifyActions == true ">showAction {{showAction(reply.id,2) == 'acted'}}</div> -->
                                         <span *ngIf="showAction(reply.id,5) == 'can_act'" title="dislike" class="cursor-pointer" (click)="actions(reply.id,5)">
                                             <i class="custom-vote-icon thumbs down icon"></i>
@@ -95,7 +98,6 @@
                                         <span *ngIf="showAction(reply.id,5) == 'acted'" title="undo dislike" class="cursor-pointer" (click)="undoActions(reply.id,5)">
                                             <i class="custom-vote-icon thumbs down blue icon"></i>
                                         </span>
-
                                         <span>
                                             <span *ngIf="showAction(reply.id,8) == 'can_act'" title="flag as spam" class="cursor-pointer" (click)="actions(reply.id,8)">
                                                 <i class="custom-vote-icon flag icon"></i>
@@ -105,13 +107,11 @@
                                                 <i class="custom-vote-icon flag blue icon"></i>
                                             </span>
                                         </span>
-
                                         <div *ngIf="markRepId !== reply.id || markResValue == false">
                                             <span title="Mark as Right Answer" class="cursor-pointer" (click)="markAsCorrect(reply.id,false)">
                                                 <i class="custom-vote-icon checkmark icon"></i>
                                             </span>
                                         </div>
-
                                         <div *ngIf="markRepId == reply.id &&  markResValue == true">
                                             <span title="Undo Marked" class="cursor-pointer" (click)="markAsCorrect(reply.id,true)">
                                                 <i class="custom-vote-icon checkmark icon ui green"></i>
@@ -129,21 +129,21 @@
                                         <span *ngIf="deletedId == reply.id && deletedState == true" title="undelete this post" class="cursor-pointer" (click)="onDelete(reply.id,true)">
                                             <i class="trash outline icon ui red"></i>
                                         </span>
-                                        <span *ngIf="lockedId !== reply.id || lockedState == false" title="lock this post" class="cursor-pointer" (click)="onLock(reply.id,false)">
+                                        <!-- <span *ngIf="lockedId !== reply.id || lockedState == false" title="lock this post" class="cursor-pointer" (click)="onLock(reply.id,false)">
                                             <i class="lock icon"></i>
                                         </span>
                                         <span *ngIf="lockedId == reply.id && lockedState == true" title="unlock this post" class="cursor-pointer" (click)="onLock(reply.id,true)">
                                             <i class="unlock alternate icon ui red"></i>
-                                        </span>
+                                        </span> -->
                                         <span title="edit this post" class="cursor-pointer" (click)="onEditReply(reply.id)">
                                             <i class="write icon"></i>
                                         </span>
-                                        <span *ngIf="archivedId !== reply.id || archivedState == false" title="archive this post" class="cursor-pointer" (click)="onArchive(reply.id,false)">
+                                        <!-- <span *ngIf="archivedId !== reply.id || archivedState == false" title="archive this post" class="cursor-pointer" (click)="onArchive(reply.id,false)">
                                             <i class="archive icon"></i>
                                         </span>
                                         <span *ngIf="archivedId == reply.id && archivedState == true" title="unarchive this post" class="cursor-pointer" (click)="onArchive(reply.id,true)">
                                             <i class="archive icon ui brown"></i>
-                                        </span>
+                                        </span> -->
                                     </div>
                                     <!--Notification-->
                                     <div class="error_notify margin-top-15">

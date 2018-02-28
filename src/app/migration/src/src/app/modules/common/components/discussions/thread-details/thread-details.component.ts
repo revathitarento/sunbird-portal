@@ -57,21 +57,8 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.loading = true;
     this.notifyActions = false;
-    // this.href = this.router.url;
-    // console.log('href', this.href);
-    this.param = '-created_at';
-    $(function () {
-      $('div#custom-toolbar').froalaEditor({
-        pluginsEnabled: ['wordPaste'],
-        heightMin: 200,
-        heightMax: 200
-        // toolbarButtons: ['bold', 'italic', 'underline', 'undo', 'redo'],
-        // toolbarButtonsSM: ['bold', 'italic', 'underline', 'undo', 'redo'],
-        // toolbarButtonsMD: ['bold', 'italic', 'underline', 'undo', 'redo'],
-        // toolbarButtonsXS: ['bold', 'italic', 'underline', 'undo', 'redo'],
-      });
-    });
     this.loading = true;
+    this.param = '-created_at';
     this.sub = this.route.params.subscribe(params => {
       console.log('param', params);
       this.id = params['threadId'];
@@ -83,11 +70,10 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
       console.log('result', this.threadDetails);
       this.loadReplyActions(this.threadDetails.thread.replies);
       this.replies = this.threadDetails.thread.replies;
-
       console.log('result this.replies', this.replies);
       this.loadReplyActions(this.threadDetails.thread.replies);
     });
-    this.param = '-created_at';
+    this.param = 'created_at';
   }
 
   ngAfterViewInit(){
@@ -127,6 +113,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.discussionService.currentMessage.subscribe(message => this.message = message);
     console.log('getting from service', this.message);
     this.el = this.elementRef.nativeElement.innerHTML;
+<<<<<<< HEAD
     // this.discussionService.getThreadbyId(this.id).subscribe(data => {
     //   this.threadDetails = data['result'];
     //   this.loadReplyActions(this.threadDetails.thread.replies);
@@ -134,6 +121,8 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.replyHash = (platformLocation as any).location;
     this.currentLocation = ((platformLocation as any).location.href);
     console.log((platformLocation as any).location.origin);
+=======
+>>>>>>> 6135d9d7ae9437242ea5a6ffafeea95e6ae69827
   }
   public loadReplyActions(replies) {
     const replyActions = {};
@@ -213,6 +202,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
       console.log('thread details reponse: ', this.replyData);
       this.replyResult = this.replyData.result.id;
       this.isLoading = !this.isLoading;
+      this.loadReplies(this.replyResult);
       if (this.replyResult !== undefined) {
         this.successMessage = true;
         setTimeout(() => {
@@ -221,7 +211,6 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
         }, 2000);
       }
       console.log('data from post reply is id', this.replyResult);
-      this.loadReplies(this.replyResult);
     });
   }
 
@@ -235,13 +224,6 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
       if (this.markResult.result === true) {
 
       }
-      //  var replyIndex =  _.indexOf(_.pluck(result.replies, 'id'), replyId);
-
-      //  console.log("replyIndex ",replyIndex)
-      //  this.thread.replies[replyIndex].accepted_answer = true;
-
-      // }, function(err) {
-      //   console.log('error while marking correct answer', err)
     });
   }
 
@@ -261,9 +243,6 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < this.threadDetails.thread.replies.length; i++) {
       if (replyId === this.threadDetails.thread.replies[i].id) {
         this.el = this.threadDetails.thread.replies[i].cooked;
-        // const id: any = '';
-        // this.el = this.threadDetails.thread.replies[i].cooked;
-        // console.log('iddd', this.el.outerHTML, this.el.outerText);
         this.discussionsModel.replyAnswer = this.threadDetails.thread.replies[i].cooked;
       }
     }
@@ -279,9 +258,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     });
   }
   public linkShare() {
-    alert('copied');
-    this.isCopied = true;
-    console.log('link', this.isCopied);
+    alert('copied' + this.href);
   }
   public onDelete(id, isDeleted) {
     console.log('inside onDelete()', id, isDeleted);

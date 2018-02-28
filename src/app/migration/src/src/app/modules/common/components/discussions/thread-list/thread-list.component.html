@@ -10,19 +10,17 @@
                                 <div class="header courseStructureSectionHeading discussionHeading">Questions</div>
                                 <div class="ui category search">
                                     <div class="ui icon input">
-                                        <input class="prompt" type="text" placeholder="Search threads, replies">
+                                        <input class="prompt" type="text" placeholder="Search threads, replies" [(ngModel)]="query" (keyup)="filter()">
                                         <i class="search icon"></i>
                                     </div>
                                     <div class="results"></div>
                                 </div>
                             </div>
-
                             <div class="ui right floated mini button margin-top--30">
                                 <a class="cursor-pointer" [routerLink]="['/migration/create-thread', id]">
                                     <i class="large add circle icon"></i>Create
                                 </a>
                             </div>
-                            <!-- <span class="badge">{{result.length}}</span> -->
                             <div (click)="checkNewQuestion()" class="cursor-pointer" style="text-align: center"></div>
                             <div [ngClass]="loading? 'ui relaxed divided list questionList active inverted dimmer' : 'ui relaxed divided list questionList'">
                                 <div class="ui text loader">Loading</div>
@@ -32,15 +30,12 @@
                                     <i class="dropdown icon"></i>
                                     <div class="menu" suiDropdownMenu>
                                         <small class="item" (click)="ascSortClick()">
-                                            <!-- <i class="folder icon"></i> -->
                                             Older
                                         </small>
                                         <small class="item" (click)="descSortClick()">
-                                            <!-- <i class="trash icon"></i> -->
                                             Newer
                                         </small>
                                         <small class="item" (click)="likeSortClick()">
-                                            <!-- <i class="trash icon"></i> -->
                                             Votes
                                         </small>
                                     </div>
@@ -68,7 +63,7 @@
                                                 <span title="dislike" class="cursor-pointer">
                                                     <i class="custom-vote-icon thumbs down icon"></i>
                                                 </span>
-                                                <span title="share a link to this thread" class="cursor-pointer">
+                                                <span title="share a link to this thread" class="cursor-pointer" [cbContent]="baseUrl + 'migration/thread-details/' + thread.id" ngxClipboard (cbOnSuccess)="linkShare()">
                                                     <i class="linkify icon"></i>
                                                 </span>
                                                 <span title="delete this post" class="cursor-pointer">
