@@ -17,18 +17,17 @@
                             <div class="cardsHeading">
                                 {{threadDetails.thread.title}}
                             </div>
-                            <br/>
-                            <div class="content description" [innerHtml]="threadDetails.thread.description">
+                            <div class="content description">{{threadDetails.thread.body}}
                             </div>
                             <div class="ui comments">
                                 <div class="comment">
                                     <div class="content">
                                         <div class="metadata">
-                                            <span class="author">{{threadDetails.thread.created_by}}</span>
+                                            <span class="author">{{threadDetails.thread.author.userName }}</span>
                                             <span> | </span>
                                             <span>{{replies.length}} replies</span>
                                             <span title="like" class="cursor-pointer" (click)="upVote(threadDetails.thread.id)">
-                                                <i class="custom-vote-icon thumbs up icon"></i>{{message.like_count}}
+                                                <i class="custom-vote-icon thumbs up icon"></i>{{threadDetails.thread.like_count}}
                                             </span>
                                             <span title="dislike" class="cursor-pointer" (click)="downVote(threadDetails.thread.id)">
                                                 <i class="custom-vote-icon thumbs down icon"></i>0
@@ -51,7 +50,7 @@
                                             <span *ngIf="archivedId == threadDetails.thread.id && archivedState == true" title="unarchive this post" class="cursor-pointer" (click)="onArchive(threadDetails.thread.id,true)">
                                                 <i class="archive icon ui brown"></i>
                                             </span>
-                                            <span class="date">{{threadDetails.thread.created_at | date : longdate}}</span>
+                                            <span class="date">{{threadDetails.thread.createdDate | date : longdate}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -77,11 +76,11 @@
                                 <div class="content padding-top-20 single-reply" id="{{reply.id}}">
                                     <div class="metadata">
                                         <i class="user circle outline black large icon"></i>
-                                        <span class="author">{{reply.username}}</span>
+                                        <span class="author">{{reply.author.userName}}</span>
                                         <span> | </span>
-                                        <div class="date">{{reply.created_at | date : longDate}}</div>
+                                        <div class="date">{{reply.createdDate | date : longDate}}</div>
                                     </div>
-                                    <div class="text margin-left-10" contenteditable="true" [innerHtml]="reply.cooked"></div>
+                                    <div class="text margin-left-10" contenteditable="true">{{reply.body}}</div>
                                     <div class="actions metadata">
                                         <span *ngIf="showAction(reply.id,2) == 'can_act'" title="like" class="cursor-pointer" (click)="actions(reply.id,2)">
                                             <i class="custom-vote-icon thumbs up icon"></i>

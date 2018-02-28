@@ -113,7 +113,6 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.discussionService.currentMessage.subscribe(message => this.message = message);
     console.log('getting from service', this.message);
     this.el = this.elementRef.nativeElement.innerHTML;
-<<<<<<< HEAD
     // this.discussionService.getThreadbyId(this.id).subscribe(data => {
     //   this.threadDetails = data['result'];
     //   this.loadReplyActions(this.threadDetails.thread.replies);
@@ -121,8 +120,6 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.replyHash = (platformLocation as any).location;
     this.currentLocation = ((platformLocation as any).location.href);
     console.log((platformLocation as any).location.origin);
-=======
->>>>>>> 6135d9d7ae9437242ea5a6ffafeea95e6ae69827
   }
   public loadReplyActions(replies) {
     const replyActions = {};

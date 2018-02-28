@@ -44,8 +44,9 @@ export class DiscussionsApiservice extends DataService {
         const option = {
             url: `/discussions/v1/thread/` + threadId
         };
-        return this.get(option)
+        return this.get(option)       
             .map((response: Response) => {
+                console.log("inside getthread by id in dis service");
                 return response;
             });
     }

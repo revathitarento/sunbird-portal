@@ -26,6 +26,7 @@
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/router": "^5.2.1",
+    "@ngx-share/core": "^5.0.1",
     "angular-froala-wysiwyg": "^2.7.5",
     "angular2-ladda": "^1.2.3",
     "angular2-uuid": "^1.1.1",
