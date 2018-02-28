@@ -54,7 +54,9 @@ if (envHelper.PORTAL_SESSION_STORE_TYPE === 'in-memory') {
   }, function () {})
 }
 
-let keycloak = new Keycloak({ store: memoryStore }, {
+let keycloak = new Keycloak({
+  store: memoryStore
+}, {
   'realm': realm,
   'auth-server-url': authServerUrl,
   'ssl-required': 'none',
@@ -71,7 +73,10 @@ app.use(session({
   store: memoryStore
 }))
 
-app.use(keycloak.middleware({ admin: '/callback', logout: '/logout' }))
+app.use(keycloak.middleware({
+  admin: '/callback',
+  logout: '/logout'
+}))
 
 /* the below line will be replaced while creating the deployment package. this line must not be deleted */
 // app.use(staticGzip(/(invalid)/));
@@ -96,14 +101,25 @@ if (defaultTenant) {
 }
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.static(path.join(__dirname, 'private')))
-app.use(express.static(path.join(__dirname, 'migration/dist'), { extensions: ['ejs'], index: false }))
+app.use(express.static(path.join(__dirname, 'migration/dist'), {
+  extensions: ['ejs'],
+  index: false
+}))
 // Announcement routing
-app.use('/announcement/v1', bodyParser.urlencoded({ extended: false }),
-  bodyParser.json({ limit: '10mb' }), require('./helpers/announcement')(keycloak))
+app.use('/announcement/v1', bodyParser.urlencoded({
+  extended: false
+}),
+bodyParser.json({
+  limit: '10mb'
+}), require('./helpers/announcement')(keycloak))
 
 // Discussions routing
-app.use('/discussions/v1', bodyParser.urlencoded({ extended: false }),
- bodyParser.json({ limit: '10mb' }), require('./helpers/discussion-poc')(keycloak))
+app.use('/discussions/v1', bodyParser.urlencoded({
+  extended: false
+}),
+bodyParser.json({
+  limit: '10mb'
+}), require('./helpers/discussion-poc')(keycloak))
 
 app.use('/private/index', function (req, res, next) {
   res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
@@ -119,11 +135,19 @@ app.all('/', function (req, res) {
   res.render(path.join(__dirname, 'public', 'index.ejs'))
 })
 
-app.all('/content-editor/telemetry', bodyParser.urlencoded({ extended: false }),
-  bodyParser.json({ limit: reqDataLimitOfContentEditor }), keycloak.protect(), telemetryHelper.logSessionEvents)
+app.all('/content-editor/telemetry', bodyParser.urlencoded({
+  extended: false
+}),
+bodyParser.json({
+  limit: reqDataLimitOfContentEditor
+}), keycloak.protect(), telemetryHelper.logSessionEvents)
 
-app.all('/collection-editor/telemetry', bodyParser.urlencoded({ extended: false }),
-  bodyParser.json({ limit: reqDataLimitOfContentEditor }), keycloak.protect(), telemetryHelper.logSessionEvents)
+app.all('/collection-editor/telemetry', bodyParser.urlencoded({
+  extended: false
+}),
+bodyParser.json({
+  limit: reqDataLimitOfContentEditor
+}), keycloak.protect(), telemetryHelper.logSessionEvents)
 
 app.all('/public/service/v1/learner/*', proxy(learnerURL, {
   proxyReqOptDecorator: proxyUtils.decoratePublicRequestHeaders(),
@@ -276,7 +300,10 @@ app.all('/migration/*', keycloak.protect(), permissionsHelper.checkPermission(),
 
 app.get('/get/envData', keycloak.protect(), function (req, res) {
   res.status(200)
-  res.send({ appId: appId, ekstep_env: ekstepEnv })
+  res.send({
+    appId: appId,
+    ekstep_env: ekstepEnv
+  })
   res.end()
 })
 
@@ -306,8 +333,12 @@ require('./helpers/shareUrlHelper.js')(app)
 
 // Resource bundles apis
 
-app.use('/resourcebundles/v1', bodyParser.urlencoded({ extended: false }),
-  bodyParser.json({ limit: '50mb' }), require('./helpers/resourceBundles')(express))
+app.use('/resourcebundles/v1', bodyParser.urlencoded({
+  extended: false
+}),
+bodyParser.json({
+  limit: '50mb'
+}), require('./helpers/resourceBundles')(express))
 
 // redirect to home if nothing found
 app.all('*', function (req, res) {

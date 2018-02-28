@@ -3,8 +3,6 @@ let router = express.Router()
 let HttpStatus = require('http-status-codes')
 let ThreadController = require('./threadController.js')
 let httpService = require('./services/httpWrapper.js')
-let path = require('path')
-const _ = require('lodash')
 let dateFormat = require('dateformat')
 let uuidv1 = require('uuid/v1')
 
@@ -39,27 +37,6 @@ function sendSuccessResponse (res, id, result, code = HttpStatus.OK) {
     },
     'responseCode': 'OK',
     'result': result
-  })
-  res.end()
-}
-
-function sendErrorRespons (res, id, message, httpCode = HttpStatus.BAD_REQUEST) {
-  let responseCode = getErrorCode(httpCode)
-
-  res.status(httpCode)
-  res.send({
-    'id': API_ID_BASE + '.' + id,
-    'ver': API_VERSION,
-    'ts': dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss:lo', true),
-    'params': {
-      'resmsgid': uuidv1(),
-      'msgid': null,
-      'status': 'failed',
-      'err': '',
-      'errmsg': message
-    },
-    'responseCode': responseCode,
-    'result': {}
   })
   res.end()
 }
