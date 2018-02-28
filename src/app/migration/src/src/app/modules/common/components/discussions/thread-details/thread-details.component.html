@@ -137,10 +137,10 @@
                                         <sui-modal class="closeModal" *ngIf="modalFlag == true && reply.id == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
                                                 
                                                 <div class="content">
-                                                    <p>Modal content</p>
-                                                    <button shareButton="facebook"><i class="fa fa-facebook"></i>Share</button>
+                                                    <p>Social share</p>
+                                                    <button shareButton="facebook" sbUrl="{{shareLink}}"><i class="fa fa-facebook"></i>Share</button>
                                                     <button shareButton="twitter" sbUrl="{{shareLink}}"><i class="fa fa-twitter"></i>Tweet</button>
-                                                    <button shareButton="linkedin"><i class="fa fa-linkedin"></i>LinkedIn</button>
+                                                    <button shareButton="linkedin" sbUrl="{{shareLink}}"><i class="fa fa-linkedin"></i>LinkedIn</button>
                                                 </div>                                               
                                         </sui-modal>
 
