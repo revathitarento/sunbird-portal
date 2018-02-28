@@ -72,7 +72,6 @@ export class ThreadDetailsComponent implements OnInit, OnDestroy {
   showErrfield() {
     $('.ui.negative.message').show();
   }
-
   constructor(private router: Router, private elementRef: ElementRef,
     private route: ActivatedRoute, private discussionService: DiscussionsApiservice,
     @Inject(DOCUMENT) document: any) {
@@ -100,6 +99,25 @@ export class ThreadDetailsComponent implements OnInit, OnDestroy {
   public showAction(id, actionTypeId) {
     const action = this.replyActions[id][actionTypeId];
     return action;
+  }
+  public upVoteAction(id, undo) {
+    console.log('inside uvoteAction()', id);
+    this.discussionService.upvoteAction(id, undo).subscribe(data => {
+      console.log('data from voting', data);
+      if (data['result'].responseCode === 'OK' && data['result'].status === 'done') {
+        if (undo === true) {
+          this.threadDetails['thread']['actions'].vote = 0;
+        } else {
+          this.threadDetails['thread']['actions'].vote = 1;
+        }
+      }
+    });
+  }
+  public downVoteAction(id, undo) {
+    console.log('inside dvoteAction()', id);
+    this.discussionService.downvoteAction(id, undo).subscribe(data => {
+      console.log('data from voting', data);
+    });
   }
 
   public actions(id, actionTypeId) {

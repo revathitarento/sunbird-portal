@@ -117,8 +117,17 @@ module.exports = function (keycloak) {
         sendErrorResponse(responseObj, API_IDS.replythread, err.message, err.status)
       })
   })
-  router.post('/thread/actions/:id', (requestObj, responseObj, next) => {
-    threadController.postActions(requestObj)
+  router.post('/thread/vote', (requestObj, responseObj, next) => {
+    threadController.voteThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.post('/thread/flag', (requestObj, responseObj, next) => {
+    threadController.flagThread(requestObj)
       .then((data) => {
         sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
       })

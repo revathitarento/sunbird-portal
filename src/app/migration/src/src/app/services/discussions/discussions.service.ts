@@ -68,6 +68,34 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
+    upvoteAction(id, undo) {
+        console.log('inside service actions()', id);
+        const option = {
+            url: `/discussions/v1/thread/vote`,
+            data: {
+                'postId': id,
+                'value': 'up',
+                'undo': undo
+            }
+        };
+        return this.post(option).map((response: Response) => {
+            return response;
+        });
+    }
+    downvoteAction(id, undo) {
+        console.log('inside service actions()', id);
+        const option = {
+            url: `/discussions/v1/thread/vote`,
+            data: {
+                'postId': id,
+                'value': 'down',
+                'undo': undo
+            }
+        };
+        return this.post(option).map((response: Response) => {
+            return response;
+        });
+    }
     actions(id, actionTypeId) {
         console.log('inside service actions()', id, actionTypeId);
         const option = {
