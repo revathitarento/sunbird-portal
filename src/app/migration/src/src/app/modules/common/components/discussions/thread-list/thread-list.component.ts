@@ -24,7 +24,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
     constructor(private router: Router, private route: ActivatedRoute, private discussionService: DiscussionsApiservice) {
     }
     public displayThreads() {
-        this.discussionService.getThreads().subscribe(data => {
+        this.discussionService.getThreads().subscribe(data => {            
             console.log('data from getThreads', data);
             this.threads = data;
             this.result = this.threads.result.threads;
@@ -33,8 +33,8 @@ export class ThreadListComponent implements OnInit, OnDestroy {
                 this.showErrMessage = true;
             }
             this.loading = false;
-            this.id = this.result[0].tags[0];
-            console.log(this.id, this.result[0].tags[0]);
+           // this.id = this.result[0].tags[0];
+          //  console.log(this.id, this.result[0].tags[0]);
         },
             err => {
                 this.showErrMessage = true;
@@ -47,7 +47,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.showErrMessage = false;
         this.displayThreads();
-        this.param = '-created_at';
+        this.param = '-createdDate';
         this.sub = this.route.params.subscribe(params => {
             console.log('param', params);
             // this.id = params['id'];
@@ -56,10 +56,10 @@ export class ThreadListComponent implements OnInit, OnDestroy {
     }
 
     ascSortClick() {
-        this.param = 'created_at';
+        this.param = 'createdDate';
     }
     descSortClick() {
-        this.param = '-created_at';
+        this.param = '-createdDate';
     }
     likeSortClick() {
         this.param = 'like_count';

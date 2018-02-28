@@ -25,18 +25,19 @@ export class DiscussionsApiservice extends DataService {
     }
 
     getThreads() {
+ 
         const option = {
-            url: '/discussions/v1/list/do_212390847580487680138'
-        };
-        return this.get(option)
+            communityId: 'do_212390847580487680138',
+            type: 'qna'    
+          }
+      
+            return this.http.post(`${this.baseUrl}/discussions/v1/list/`, option)
             .map((response: Response) => {
-                console.log("Response: ", response);
                 return response;
-            })
+            });
 
     }
     public getThreadbyId(threadId) {
-
         const option = {
             url: `/discussions/v1/thread/` + threadId
         };
@@ -44,7 +45,6 @@ export class DiscussionsApiservice extends DataService {
             .map((response: Response) => {
                 return response;
             });
-
     }
 
     private handleError(error: Response) {
@@ -53,11 +53,12 @@ export class DiscussionsApiservice extends DataService {
     postThread(model) {
         const body = {
             title: model.threadTitle,
-            description: model.threadDesc,
-            contextId: 'do_212390847580487680138'
+            body: model.threadDesc,
+            communityId: 'do_212390847580487680138',
+            type: 'qna'
         };
         console.log('inside postThread()', body);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread`, body)
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/create`, body)
             .map((response: Response) => {
                 return response;
             });

@@ -24,7 +24,7 @@ class DiscourseAdapter {
     /**
      * @property {string} discourseEndPoint - An endpoint url for discourse api
      */
-    this.discourseEndPoint = 'http://localhost:3001'
+    this.discourseEndPoint = 'http://172.17.0.2'
     /**
      * @property {object} discourseUriList - List of discourse uri's
      */
@@ -38,8 +38,8 @@ class DiscourseAdapter {
     }
 
     this.apiAuth = {
-      apiKey: '582df0739d5d4503c3eb8a8828bccaaa9d27fdf7be204f47509501717f6857ec',
-      apiUserName: 'loganathan.shanmugam'
+      apiKey: '6d1d27685a7bb8771bc18903d2b980a71b336d7715c28aeb345e3dac65126a47',
+      apiUserName: 'revathipp'
     }
   }
 
@@ -113,8 +113,7 @@ class DiscourseAdapter {
           api_username: user.userName,
           title: threadData.title,
           raw: threadData.body,
-          category: threadData.type,
-          topic_id: 2181185
+          category: threadData.type
         }
         formData['tags[]'] = 'course__' + threadData.communityId
         let options = {
@@ -144,22 +143,58 @@ class DiscourseAdapter {
   extractThreadList (topics, posts) {
     let threadList = []
     _.forEach(topics, function (topic) {
-      let postData = _.find(posts, {topic_id: topic.id, post_number: 1})
+      let postData = _.find(posts, {
+        topic_id: topic.id,
+        post_number: 1
+      })
       let threadData = {
         id: topic.id,
         author: {
           userName: postData.username,
           name: postData.name
         },
-        body: postData.cooked.substring(postData.cooked.indexOf('>') + 1, postData.cooked.lastIndexOf('<')),
+        body: postData.blurb,
         title: topic.title,
         createdDate: topic.created_at,
-        replyCount: topic.reply_count,
-        likeCount: postData.like_count
+        repliesCount: topic.posts_count - 1,
+        likeCount: postData.like_count,
+        seen: !topic.unseen
       }
       threadList.push(threadData)
     })
     return threadList
+  }
+
+  extractThreadData (topicData) {
+    let posts = topicData.post_stream.posts
+    let postData = _.find(posts, {
+      topic_id: topicData.id,
+      post_number: 1
+    })
+    let posters = []
+    _.forEach(topicData.details.participants, function (participant) {
+      posters.push({
+        userId: participant.id,
+        userName: participant.username
+      })
+    })
+
+    let threadData = {
+      id: topicData.id,
+      author: {
+        userName: postData.username,
+        name: postData.name
+      },
+      body: postData.blurb,
+      title: topicData.title,
+      createdDate: topicData.created_at,
+      repliesCount: posts.length - 1,
+      likeCount: postData.like_count,
+      posters: posters
+
+    }
+
+    return threadData
   }
 
   /*
@@ -186,6 +221,36 @@ class DiscourseAdapter {
           console.log(res)
           if (res) {
             resolve(this.extractThreadList(res.topics, res.posts))
+          } else {
+            reject(res)
+          }
+        }, (error) => {
+          reject(error)
+        })
+      }, (error) => {
+        reject(error)
+      }).catch((error) => {
+        reject(error)
+      })
+    })
+  }
+
+  /*
+   *get discourse topics
+   *
+   */
+  getThreadById (threadId, user) {
+    return new Promise((resolve, reject) => {
+      this.createUserIfNotExists(user).then((success) => {
+        let options = {
+          method: 'GET',
+          uri: this.discourseEndPoint + this.discourseUris.getOne + '/' + threadId + '.json'
+        }
+        this.httpService.call(options).then((data) => {
+          let res = JSON.parse(data.body)
+          console.log(res)
+          if (res) {
+            resolve(this.extractThreadData(res))
           } else {
             reject(res)
           }
