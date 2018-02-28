@@ -143,6 +143,44 @@ class DiscourseAdapter {
     })
   }
 
+  /*
+   *reply discourse topic
+   *
+   */
+  replyThread (threadData, user) {
+    return new Promise((resolve, reject) => {
+      this.createUserIfNotExists(user).then((success) => {
+        let formData = {
+          api_key: this.apiAuth.apiKey,
+          api_username: user.userName,
+          raw: threadData.body,
+          topic_id: threadData.threadId
+        }
+
+        let options = {
+          method: 'POST',
+          uri: this.discourseEndPoint + this.discourseUris.postThread,
+          form: formData
+        }
+        this.httpService.call(options).then((data) => {
+          let res = JSON.parse(data.body)
+          console.log(res)
+          if (res) {
+            resolve(res.topic_id)
+          } else {
+            reject(res)
+          }
+        }, (error) => {
+          reject(error)
+        })
+      }, (error) => {
+        reject(error)
+      }).catch((error) => {
+        reject(error)
+      })
+    })
+  }
+
   extractThreadList (topics, posts) {
     let threadList = []
     _.forEach(topics, function (topic) {
@@ -193,7 +231,7 @@ class DiscourseAdapter {
       title: topicData.title,
       createdDate: topicData.created_at,
       repliesCount: posts.length - 1,
-      voteCount: postData.like_count,
+      voteCount: topicData.like_count,
       read: postData.read,
       posters: posters,
       replies: [],

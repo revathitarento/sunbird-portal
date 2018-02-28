@@ -165,7 +165,7 @@ class ThreadController {
 	 * @return  {[type]} return transformed data
 	 */
 	replyThread(requestObj) {
-		return this.__postThread()(requestObj)
+		return this.__replyThread()(requestObj)
 	}
 	/**
 	 * create thread
@@ -254,6 +254,55 @@ class ThreadController {
 						}
 
 						this.threadService.postActions(actionData).then((threadResponse) => {
+							resolve({
+								id: threadResponse
+							})
+						}, function (error) {
+							reject({
+								error: error
+							})
+						})
+					})
+				} else {
+					return {
+						message: 'Unauthorized User',
+						status: HttpStatus.UNAUTHORIZED
+					}
+				}
+			} catch (error) {
+
+				return {
+					message: 'Error',
+					status: HttpStatus.INTERNAL_SERVER_ERROR
+				}
+			}
+		})
+	}
+
+
+	/*
+	 *reply thread flow
+	 *
+	 */
+	__replyThread(requestObj) {
+		return async((requestObj) => {
+			try {
+				let authUserToken = await(this.__getToken(requestObj))
+				// validate request
+				let userProfile = await(this.__getUserProfile(authUserToken))
+
+				if (userProfile) {
+					return new Promise((resolve, reject) => {
+						let threadData = {							
+							threadId: requestObj.body.threadId,
+							body: requestObj.body.body 							
+						}
+						let user = {
+							userName: userProfile.userName,
+							firstName: userProfile.firstName,
+							email: userProfile.email
+						}						
+						this.threadService.replyThread(threadData,user).then((threadResponse) => {
 							resolve({
 								id: threadResponse
 							})
