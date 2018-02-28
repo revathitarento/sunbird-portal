@@ -13,7 +13,7 @@ const urlConFig = (<any>urlConfig);
 export class DiscussionsApiservice extends DataService {
     public messageSource = new BehaviorSubject<any>([]);
     currentMessage = this.messageSource.asObservable();
-    private threadsURL = '/discussions/v1/list/do_212390847580487680138';
+    private threadsURL = '/discussions/v1/list';
     public baseUrl = '';
 
     constructor(public http: HttpClient) {
@@ -24,15 +24,20 @@ export class DiscussionsApiservice extends DataService {
         this.messageSource.next(object);
     }
 
-    getThreads() {
+    getThreads(communityId) {
+        console.log('com', communityId);
         const option = {
-            url: '/discussions/v1/list/do_212390847580487680138'
+            url: '/discussions/v1/list/',
+            data: {
+                communityId: 'do_212390847580487680138',
+                type: 'qna'
+            }
         };
-        return this.get(option)
+        return this.post(option)
             .map((response: Response) => {
-                console.log("Response: ", response);
+                console.log('Response: ', response);
                 return response;
-            })
+            });
 
     }
     public getThreadbyId(threadId) {
@@ -53,11 +58,12 @@ export class DiscussionsApiservice extends DataService {
     postThread(model) {
         const body = {
             title: model.threadTitle,
-            description: model.threadDesc,
-            contextId: 'do_212390847580487680138'
+            body: model.threadDesc,
+            communityId: 'do_212390847580487680138',
+            type: 'qna'
         };
         console.log('inside postThread()', body);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread`, body)
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/create`, body)
             .map((response: Response) => {
                 return response;
             });

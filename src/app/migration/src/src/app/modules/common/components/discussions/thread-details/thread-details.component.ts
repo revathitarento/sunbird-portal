@@ -52,19 +52,6 @@ export class ThreadDetailsComponent implements OnInit {
   ngOnInit() {
     this.loading = true;
     this.notifyActions = false;
-    // this.href = this.router.url;
-    // console.log('href', this.href);
-    $(function () {
-      $('div#custom-toolbar').froalaEditor({
-        pluginsEnabled: ['wordPaste'],
-        heightMin: 200,
-        heightMax: 200
-        // toolbarButtons: ['bold', 'italic', 'underline', 'undo', 'redo'],
-        // toolbarButtonsSM: ['bold', 'italic', 'underline', 'undo', 'redo'],
-        // toolbarButtonsMD: ['bold', 'italic', 'underline', 'undo', 'redo'],
-        // toolbarButtonsXS: ['bold', 'italic', 'underline', 'undo', 'redo'],
-      });
-    });
     this.loading = true;
     this.sub = this.route.params.subscribe(params => {
       console.log('param', params);
@@ -77,11 +64,10 @@ export class ThreadDetailsComponent implements OnInit {
       console.log('result', this.threadDetails);
       this.loadReplyActions(this.threadDetails.thread.replies);
       this.replies = this.threadDetails.thread.replies;
-
       console.log('result this.replies', this.replies);
       this.loadReplyActions(this.threadDetails.thread.replies);
     });
-    this.param = '-created_at';
+    this.param = 'created_at';
   }
   showErrfield() {
     $('.ui.negative.message').show();
@@ -96,10 +82,6 @@ export class ThreadDetailsComponent implements OnInit {
     this.discussionService.currentMessage.subscribe(message => this.message = message);
     console.log('getting from service', this.message);
     this.el = this.elementRef.nativeElement.innerHTML;
-    // this.discussionService.getThreadbyId(this.id).subscribe(data => {
-    //   this.threadDetails = data['result'];
-    //   this.loadReplyActions(this.threadDetails.thread.replies);
-    // });
   }
   public loadReplyActions(replies) {
     const replyActions = {};
@@ -179,6 +161,7 @@ export class ThreadDetailsComponent implements OnInit {
       console.log('thread details reponse: ', this.replyData);
       this.replyResult = this.replyData.result.id;
       this.isLoading = !this.isLoading;
+      this.loadReplies(this.replyResult);
       if (this.replyResult !== undefined) {
         this.successMessage = true;
         setTimeout(() => {
@@ -187,7 +170,6 @@ export class ThreadDetailsComponent implements OnInit {
         }, 2000);
       }
       console.log('data from post reply is id', this.replyResult);
-      this.loadReplies(this.replyResult);
     });
   }
 
@@ -201,13 +183,6 @@ export class ThreadDetailsComponent implements OnInit {
       if (this.markResult.result === true) {
 
       }
-      //  var replyIndex =  _.indexOf(_.pluck(result.replies, 'id'), replyId);
-
-      //  console.log("replyIndex ",replyIndex)
-      //  this.thread.replies[replyIndex].accepted_answer = true;
-
-      // }, function(err) {
-      //   console.log('error while marking correct answer', err)
     });
   }
 
@@ -227,9 +202,6 @@ export class ThreadDetailsComponent implements OnInit {
     for (let i = 0; i < this.threadDetails.thread.replies.length; i++) {
       if (replyId === this.threadDetails.thread.replies[i].id) {
         this.el = this.threadDetails.thread.replies[i].cooked;
-        // const id: any = '';
-        // this.el = this.threadDetails.thread.replies[i].cooked;
-        // console.log('iddd', this.el.outerHTML, this.el.outerText);
         this.discussionsModel.replyAnswer = this.threadDetails.thread.replies[i].cooked;
       }
     }
@@ -245,9 +217,7 @@ export class ThreadDetailsComponent implements OnInit {
     });
   }
   public linkShare() {
-    alert('copied');
-    this.isCopied = true;
-    console.log('link', this.isCopied);
+    alert('copied' + this.href);
   }
   public onDelete(id, isDeleted) {
     console.log('inside onDelete()', id, isDeleted);

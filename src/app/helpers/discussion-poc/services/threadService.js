@@ -30,6 +30,9 @@ class ThreadService {
   getThreadsList (threadData, user) {
     return this.discussionAdapter.getThreadsList(threadData, user)
   }
+  getThreadById (threadId, user) {
+    return this.discussionAdapter.getThreadById(threadId, user)
+  }
 }
 
 module.exports = ThreadService

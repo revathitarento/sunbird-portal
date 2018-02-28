@@ -1,6 +1,6 @@
 const _ = require('lodash')
 let async = require('asyncawait/async')
-let await = require('asyncawait/await')
+let await = require('asyncawait/await') //eslint-disable-line
 let envVariables = require('../environmentVariablesHelper.js')
 let HttpStatus = require('http-status-codes')
 let ApiInterceptor = require('sb_api_interceptor')
@@ -393,7 +393,10 @@ class ThreadController {
 				let userId = await(this.__getLoggedinUserId()(requestObj))
 				if (userId) {
 					return new Promise((resolve, reject) => {
-						this.threadService.getThreadById(requestObj.params.id, userProfile.userName).then((threadResponse) => {
+						let user = {
+							userName : userProfile.userName
+						}
+						this.threadService.getThreadById(requestObj.params.id, user).then((threadResponse) => {
 							resolve({
 								thread: threadResponse
 							})

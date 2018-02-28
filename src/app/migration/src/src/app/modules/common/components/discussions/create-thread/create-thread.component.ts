@@ -30,6 +30,9 @@ export class CreateThreadComponent implements OnInit {
     public changeWidget() {
         this.router.navigate(['/migration/thread-list', this.id]);
     }
+    showErrfield() {
+        $('.ui.negative.message').show();
+      }
     public onCreateThread() {
         this.isLoading = true;
         this.discussionService.postThread(this.discussionsModel).subscribe(data => {
