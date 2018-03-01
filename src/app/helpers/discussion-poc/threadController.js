@@ -105,7 +105,8 @@ class ThreadController {
               userName: userProfile.userName,
             }
             let answerData = {
-              postId: requestObj.body.postId
+              postId: requestObj.body.postId,
+              undo:requestObj.body.undo
             }
 
             this.threadService.markAsAnswer(answerData, user).then((threadResponse) => {
