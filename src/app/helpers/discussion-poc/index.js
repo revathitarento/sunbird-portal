@@ -13,7 +13,8 @@ const API_IDS = {
   replythread: 'reply-thread',
   getthreadbyid: 'get-thread-by-id',
   actions: 'actions',
-  markassolution: 'markassolution'
+  markassolution: 'markassolution',
+  creategroup: 'create-group'
 }
 
 let threadController = new ThreadController({
@@ -135,31 +136,41 @@ module.exports = function (keycloak) {
         sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
       })
   })
-  // router.post('/thread/replies/marksolution', (requestObj, responseObj, next) => {
-  //   threadController.markAsSolution(requestObj)
-  //     .then((data) => {
-  //       sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
-  //     })
-  //     .catch((err) => {
-  //       sendErrorResponse(responseObj, API_IDS.markassolution, err.message, err.status)
-  //     })
-  // })
-  router.post('/thread/replies/marksolution', (requestObj, responseObj, next) => {
-    console.log('Mark solution body', requestObj.body)
-    var data
-    if (requestObj.body.isUndo === false) {
-      data = {
-        id: requestObj.body.id,
-        option: true
-      }
-    } else {
-      data = {
-        id: requestObj.body.id,
-        option: false
-      }
-    }
-    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  router.post('/thread/markanswer', (requestObj, responseObj, next) => {
+    threadController.markAsAnswer(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.markassolution, err.message, err.status)
+      })
   })
+  router.post('/group/create', (requestObj, responseObj, next) => {
+    threadController.createGroup(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.creategroup, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.creategroup, err.message, err.status)
+      })
+  })
+
+  // router.post('/thread/replies/marksolution', (requestObj, responseObj, next) => {
+  //   console.log('Mark solution body', requestObj.body)
+  //   var data
+  //   if (requestObj.body.isUndo === false) {
+  //     data = {
+  //       id: requestObj.body.id,
+  //       option: true
+  //     }
+  //   } else {
+  //     data = {
+  //       id: requestObj.body.id,
+  //       option: false
+  //     }
+  //   }
+  //   sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  // })
   router.post('/thread/lock/:id', (requestObj, responseObj, next) => {
     console.log('lock', requestObj.body)
     var data
