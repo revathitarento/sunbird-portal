@@ -178,10 +178,10 @@ module.exports = function (keycloak) {
     }
     sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
   })
-  router.post('/thread/delete/:id', (requestObj, responseObj, next) => {
+  router.post('/thread/spam/:id', (requestObj, responseObj, next) => {
     console.log('lock', requestObj.body)
     var data
-    if (requestObj.body.isDeleted === false) {
+    if (requestObj.body.isSpam === false) {
       data = {
         id: requestObj.body.id,
         option: true

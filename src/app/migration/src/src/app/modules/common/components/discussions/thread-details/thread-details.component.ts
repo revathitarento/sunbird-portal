@@ -11,7 +11,7 @@ import {PlatformLocation } from '@angular/common';
 import {SuiModalService, TemplateModalConfig, ModalTemplate, ModalSize} from "ng2-semantic-ui";
 
 export interface IContext {
-  data:string;
+  data:boolean;
 }
 
 @Component({
@@ -58,22 +58,12 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public currentLocation: any;
   public replyHash: any;
     public shareLink : any;
-    
- 
 
-//   public open() {
-//     const config = new TemplateModalConfig<null, string, string>(this.modalTemplate);
-
-//     this.modalService
-//         .open(config)
-//         .onApprove(() => { /* approve callback */ }) 
-//         .onDeny(() => { /* deny callback */});
-// }
 
 @ViewChild('modalTemplate')
 public modalTemplate:ModalTemplate<null, string, string>
 
-public open(dynamicContent:string = "Example") {
+public open(dynamicContent:boolean = true) {
   const config = new TemplateModalConfig<IContext, string, string>(this.modalTemplate);
 
   config.closeResult = "closed!";
@@ -90,6 +80,7 @@ public open(dynamicContent:string = "Example") {
     this.notifyActions = false;
     this.loading = true;
     this.param = '-createdDate';
+    this.modalFlag = false;
     this.sub = this.route.params.subscribe(params => {
       console.log('param', params);
       this.id = params['threadId'];
@@ -104,9 +95,7 @@ public open(dynamicContent:string = "Example") {
       console.log('result this.replies', this.replies);
       this.loadReplyActions(this.threadDetails.thread.replies);
     });
-    
-   
-    this.param = 'created_at';
+    this.param = 'createdDate';
   }
 
   ngAfterViewInit(){
@@ -116,6 +105,7 @@ public open(dynamicContent:string = "Example") {
 
   private highlightReply() {   
     var replyPositionId = this.replyHash.hash;
+    if(replyPositionId.val !== undefined){
     var position = $(replyPositionId).offset().top;
     console.log("position: ", position);
     $("body, html").animate({
@@ -125,6 +115,7 @@ public open(dynamicContent:string = "Example") {
     setTimeout(() => {
       $(replyPositionId).removeClass("highlighted");
     }, 2000);
+  }
   }
 
     private postDwellTime(){      
@@ -169,6 +160,76 @@ public size: string;
     const action = this.replyActions[id][actionTypeId];
     return action;
   }
+  public upVoteAction(id, undo, status) {
+    console.log('inside uvoteAction() id', id);
+    console.log('inside uvoteAction() undo', undo);
+    console.log('inside uvoteAction() status', status);
+    this.discussionService.upvoteAction(id, undo).subscribe(data => {
+      console.log('data from voting', data);
+      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+        if (status === 'thread' ) {
+          if(undo === true){
+          console.log("thread action", this.threadDetails)
+          this.threadDetails['thread']['actions'].vote = 0;
+        } else {
+          this.threadDetails['thread']['actions'].vote = 1;
+        }
+      }
+
+        if (status === 'reply') {          
+          this.repId = id;         
+          console.log("reply replies",this.threadDetails['thread']['replies']);
+         console.log("findindex", _.findIndex(this.threadDetails['thread']['replies'], { 'id': id }));
+         let index  = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
+         if( undo === true){
+              this.threadDetails['thread']['replies'][index]['actions'].vote = 0;              
+            }
+            else {
+              this.threadDetails['thread']['replies'][index]['actions'].vote = 1;              
+            }        
+        } 
+      }
+    });
+  }
+
+  public downVoteAction(id, undo) { 
+    console.log('inside dvoteAction()', id);
+    this.discussionService.downvoteAction(id, undo).subscribe(data => {
+      console.log('data from voting', data);
+    });
+  }
+
+  public flagAction(id, undo, status){
+    console.log('inside flagAction() id', id);
+    console.log('inside glagAction() undo', undo);
+    console.log('inside flagAction() status', status);
+    this.discussionService.flagAction(id,undo).subscribe(data => {
+      console.log("flag result", data);
+      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+        if (status === 'thread' ) {
+          if(undo === true){
+          console.log("thread action", this.threadDetails)
+          this.threadDetails['thread']['actions'].flag = 0;
+        } else {
+          this.threadDetails['thread']['actions'].flag = 1;
+        }
+      }
+
+      if (status === 'reply'){
+        this.repId = id;         
+        console.log("reply replies",this.threadDetails['thread']['replies']);
+       console.log("findindex", _.findIndex(this.threadDetails['thread']['replies'], { 'id': id }));
+       let index  = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
+       if( undo === true){
+            this.threadDetails['thread']['replies'][index]['actions'].flag = 0;              
+          }
+          else {
+            this.threadDetails['thread']['replies'][index]['actions'].flag = 1;              
+          } 
+      }
+    }
+    }); 
+  }
 
   public actions(id, actionTypeId) {
     this.showAction(id, actionTypeId);
@@ -183,7 +244,6 @@ public size: string;
 
       this.showNotify(repId, actionTypeId, this.replyActions[id][actionTypeId]);
     });
-
   }
 
   public undoActions(id, actionTypeId) {
@@ -287,12 +347,20 @@ public size: string;
   public linkShare() {
     alert('copied' + this.href);
   }
-  public onDelete(id, isDeleted) {
-    console.log('inside onDelete()', id, isDeleted);
-    this.discussionService.deleteAction(id, isDeleted).subscribe(data => {
+  public spamAction(id, isSpam) {
+    console.log("isSpam: ", isSpam);
+    if(isSpam === undefined){
+      isSpam = true; 
+    };
+    console.log('inside onDelete()', id, isSpam);
+    this.discussionService.spamAction(id, isSpam).subscribe(data => {
       this.deletedId = data['result'].id;
-      this.deletedState = data['result'].option;
-    });
+      this.deletedState = data['result'].option;      
+      isSpam = this.deletedState;
+      console.log(" isSpam",  isSpam);
+      console.log(" deletedState",  this.deletedState);
+    });   
+    isSpam = this.deletedState;
   }
   public onArchive(id, isArchived) {
     console.log('inside onArchive()', id, isArchived);
@@ -317,11 +385,13 @@ public size: string;
   } 
   public modalFlag: boolean;
   public popupId: number;
+  //isFoo:boolean ;
   //this.modalFlag = false;
-  showPopup(status, popupReplyId){
-    this.modalFlag = !status;
+  showPopup( isFoo, popupReplyId){
+    this.modalFlag = true;
+   //isFoo = false;
     this.popupId = popupReplyId; 
     this.shareLink = this.currentLocation +"#"+this.popupId;
-    console.log("this.modalflag",this.modalFlag);
+    console.log("isFoo",isFoo);
   }
 }

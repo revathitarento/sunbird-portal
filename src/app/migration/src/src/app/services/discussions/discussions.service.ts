@@ -68,6 +68,46 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
+    upvoteAction(id, undo) {
+        console.log('inside service actions()', id);
+        const option = {
+            url: `/discussions/v1/thread/vote`,
+            data: {
+                'postId': id,
+                'value': 'up',
+                'undo': undo
+            }
+        };
+        return this.post(option).map((response: Response) => {
+            return response;
+        });
+    }
+    downvoteAction(id, undo) {
+        console.log('inside service actions()', id);
+        const option = {
+            url: `/discussions/v1/thread/vote`,
+            data: {
+                'postId': id,
+                'value': 'down',
+                'undo': undo
+            }
+        };
+        return this.post(option).map((response: Response) => {
+            return response;
+        });
+    }
+    flagAction(id, undo){
+        const option ={
+            url: `/discussions/v1/thread/flag`,
+            data: {
+                'postId': id               
+            }
+        };
+        return this.post(option).map((response) => {
+            return response;
+        });
+
+    }
     actions(id, actionTypeId) {
         console.log('inside service actions()', id, actionTypeId);
         const option = {
@@ -121,13 +161,13 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
-    deleteAction(id, isDeleted) {
+    spamAction(id, isSpam) {
         const body = {
             'id': id,
-            'isDeleted': isDeleted
+            'isSpam': isSpam
         };
-        console.log('inside lockAction service', id, body);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/delete/` + id, body)
+        console.log('inside spam action service', id, body);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/spam/` + id, body)
             .map((response: Response) => {
                 return response;
             });

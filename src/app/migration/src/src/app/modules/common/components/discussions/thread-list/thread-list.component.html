@@ -25,7 +25,7 @@
                             <div [ngClass]="loading? 'ui relaxed divided list questionList active inverted dimmer' : 'ui relaxed divided list questionList'">
                                 <div class="ui text loader">Loading</div>
                                 <div *ngIf="showErrMessage">Error in displaying Threads</div>
-                                <div class="ui dropdown right-float" suiDropdown>
+                                <div title="sort" class="ui dropdown right-float" suiDropdown>
                                     <small class="text">Sort by</small>
                                     <i class="dropdown icon"></i>
                                     <div class="menu" suiDropdownMenu>
