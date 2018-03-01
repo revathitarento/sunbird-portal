@@ -128,13 +128,12 @@ export class DiscussionsApiservice extends DataService {
             return response;
         });
     }
-    markAsCorrects(replyId, isUndo) {
+    markAsCorrect(replyId, isUndo) {
         console.log('inside mark as correct answer', replyId, isUndo);
         const body = {
-            'id': replyId,
-            'isUndo': isUndo
+            'postId': replyId
         };
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/replies/marksolution`, body)
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/markanswer`, body)
             .map((response: Response) => {
                 return response;
             });

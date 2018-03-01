@@ -192,13 +192,38 @@ public size: string;
     });
   }
 
-  public downVoteAction(id, undo) { 
+  //Down Vote thread and replies
+  public downVoteAction(id, undo, status) { 
     console.log('inside dvoteAction()', id);
     this.discussionService.downvoteAction(id, undo).subscribe(data => {
-      console.log('data from voting', data);
+      console.log('data from downvoting', data);
+      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+        if (status === 'thread' ) {
+          if(undo === true){
+          console.log("thread action", this.threadDetails)
+          this.threadDetails['thread']['actions'].downVote = 0;
+        } else {
+          this.threadDetails['thread']['actions'].downVote = 1;
+        }
+      }
+
+        if (status === 'reply') {          
+          this.repId = id;         
+          console.log("reply replies",this.threadDetails['thread']['replies']);
+         console.log("findindex", _.findIndex(this.threadDetails['thread']['replies'], { 'id': id }));
+         let index  = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
+         if( undo === true){
+              this.threadDetails['thread']['replies'][index]['actions'].downVote = 0;              
+            }
+            else {
+              this.threadDetails['thread']['replies'][index]['actions'].downVote = 1;              
+            }        
+        } 
+      }
     });
   }
 
+  //Flag Action for Thread and Replies
   public flagAction(id, undo, status){
     console.log('inside flagAction() id', id);
     console.log('inside glagAction() undo', undo);
@@ -231,31 +256,31 @@ public size: string;
     }); 
   }
 
-  public actions(id, actionTypeId) {
-    this.showAction(id, actionTypeId);
-    this.discussionService.actions(id, actionTypeId).subscribe(data => {
-      this.actionResult = data;
-      this.replyActions[id][actionTypeId] = 'acted';
-      // this.notifyActions = true;
-      this.repArray = this.replyActions[id];
-      const repId = this.actionResult.result.id;
-      console.log('this.repArray ', this.repArray, this.repArray[actionTypeId]);
-      console.log('actionTypeId from root ', actionTypeId, id);
+  // public actions(id, actionTypeId) {
+  //   this.showAction(id, actionTypeId);
+  //   this.discussionService.actions(id, actionTypeId).subscribe(data => {
+  //     this.actionResult = data;
+  //     this.replyActions[id][actionTypeId] = 'acted';
+  //     // this.notifyActions = true;
+  //     this.repArray = this.replyActions[id];
+  //     const repId = this.actionResult.result.id;
+  //     console.log('this.repArray ', this.repArray, this.repArray[actionTypeId]);
+  //     console.log('actionTypeId from root ', actionTypeId, id);
 
-      this.showNotify(repId, actionTypeId, this.replyActions[id][actionTypeId]);
-    });
-  }
+  //     this.showNotify(repId, actionTypeId, this.replyActions[id][actionTypeId]);
+  //   });
+  // }
 
-  public undoActions(id, actionTypeId) {
-    console.log('inside undoActions()', id, actionTypeId);
-    this.discussionService.undoActions(id, actionTypeId).subscribe(data => {
+  // public undoActions(id, actionTypeId) {
+  //   console.log('inside undoActions()', id, actionTypeId);
+  //   this.discussionService.undoActions(id, actionTypeId).subscribe(data => {
 
-      this.replyActions[id][actionTypeId] = 'can_act';
-      console.log('../', this.replyActions);
-      // this.notifyActions = true;
-      this.showNotify(id, actionTypeId, this.replyActions[id][actionTypeId]);
-    });
-  }
+  //     this.replyActions[id][actionTypeId] = 'can_act';
+  //     console.log('../', this.replyActions);
+  //     // this.notifyActions = true;
+  //     this.showNotify(id, actionTypeId, this.replyActions[id][actionTypeId]);
+  //   });
+  // }
 
   public showNotify(id, actionTypeId, actionType) {
     this.repId = id;
@@ -302,14 +327,26 @@ public size: string;
   }
 
   public markAsCorrect(replyId, state) {
-    this.markResValue = false;
-    this.discussionService.markAsCorrects(replyId, state).subscribe(data => {
-      this.markRepId = replyId;
-      this.markResult = data;
-      this.markResValue = this.markResult.result.option;
-      console.log('Result of markAsCorrect: ', this.markResValue);
-      if (this.markResult.result === true) {
-
+   // state = !state;
+   console.log("mark state", state);
+    this.discussionService.markAsCorrect(replyId, state).subscribe(data => {
+      //this.markRepId = replyId;
+      // this.markResult = data;
+      // this.markResValue = this.markResult.result.option;
+      console.log('Result of markAsCorrect: ', data);
+      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+        console.log("findindex", _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId }));
+        let index  = _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId });
+        if(state === true){         
+          console.log("thread action inside true", this.threadDetails)
+          this.threadDetails['thread']['replies'][index]['actions'].acceptAnswer = 1;
+          this.threadDetails['thread']['replies'][index].acceptedAnswer = true;
+        } 
+        else {
+          console.log("thread action inside false");
+          this.threadDetails['thread']['replies'][index]['actions'].acceptAnswer = 0;
+          this.threadDetails['thread']['replies'][index].acceptedAnswer = false;
+        }
       }
     });
   }

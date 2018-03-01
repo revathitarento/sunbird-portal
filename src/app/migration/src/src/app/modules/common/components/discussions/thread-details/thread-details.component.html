@@ -27,11 +27,11 @@
                                             <span class="author">{{threadDetails.thread.author.userName}}</span>
                                             <span> | </span>
                                             <span>{{replies.length}} replies</span>
-                                            <span *ngIf="threadDetails.thread.actions.vote != undefined && threadDetails.thread.actions.vote >= 0" title="like" class="cursor-pointer" (click)="upVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.vote === 1, type = 'thread' )">
+                                            <span *ngIf="threadDetails.thread.actions.vote != undefined && threadDetails.thread.actions.vote >= 0" title="Vote" class="cursor-pointer" (click)="upVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.vote === 1, type = 'thread' )">
                                                 <i class="custom-vote-icon thumbs up icon" [ngClass]="threadDetails.thread.actions.vote == 1?'blue':''"></i>{{message.like_count}}
                                             </span>
                                            
-                                            <span *ngIf="threadDetails.thread.actions.downVote != undefined && threadDetails.thread.actions.downVote >= 0" title="dislike" class="cursor-pointer" (click)="downVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.downVote === 1)">
+                                            <span *ngIf="threadDetails.thread.actions.downVote != undefined && threadDetails.thread.actions.downVote >= 0" title="Down Vote" class="cursor-pointer" (click)="downVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.downVote === 1, type = 'thread')">
                                                 <i class="custom-vote-icon thumbs down icon" [ngClass]="threadDetails.thread.actions.downVote == 1?'blue':''"></i>0
                                             </span>
                                             <span title="share a link to this thread" class="cursor-pointer" [cbContent]="href" ngxClipboard (cbOnSuccess)="linkShare()">
@@ -100,41 +100,29 @@
                                     <div class="actions metadata">
                                         <span *ngIf="reply.actions.vote != undefined && reply.actions.vote >= 0 " title="Vote" class="cursor-pointer" (click)="upVoteAction(reply.id,reply.actions.vote === 1, type = 'reply')">
                                             <i class="custom-vote-icon thumbs up icon" [ngClass]=" repId == reply.id && reply.actions.vote ==1 ?'blue':''"></i>
-                                        </span>{{reply.actions.vote == 1}}
+                                        </span>
                                         
                                        
-                                        <span *ngIf="reply.actions.downVote != undefined && reply.actions.downVote >= 0" title="dislike" class="cursor-pointer" (click)="downVoteAction(reply.id,reply.actions.downVote === 1)">
+                                        <span *ngIf="reply.actions.downVote != undefined && reply.actions.downVote >= 0" title="dislike" class="cursor-pointer" (click)="downVoteAction(reply.id,reply.actions.downVote === 1, type = 'reply')">
                                             <i class="custom-vote-icon thumbs down icon" [ngClass]="reply.actions.downVote ==1?'blue':''"></i>
                                         </span>
-                                        <span *ngIf="showAction(reply.id,5) == 'acted'" title="undo dislike" class="cursor-pointer" (click)="undoActions(reply.id,5)">
-                                            <i class="custom-vote-icon thumbs down blue icon"></i>
-                                        </span>
-                                        <!-- <span>
-                                            <span *ngIf="reply.actions.flag != undefined && reply.actions.flag >= 0" title="flag as spam" class="cursor-pointer" (click)="actions(reply.id,8)">
-                                                <i class="custom-vote-icon flag icon"></i>
-                                            </span>
-                                            <span *ngIf="showAction(reply.id,8) == 'acted'" title="undo spam" class="cursor-pointer" (click)="undoActions(reply.id,8)">
-                                                <i class="custom-vote-icon flag blue icon"></i>
-                                            </span>
-                                        </span> -->
 
-
+                                     
                                         <span *ngIf="reply.actions.flag != undefined && reply.actions.flag >= 0" title="flag as spam" class="cursor-pointer"
                                                 (click)="flagAction(reply.id,reply.actions.flag === 1, type= 'reply')">
                                                   <i class="custom-vote-icon flag icon"  [ngClass]="reply.actions.flag == 1?'blue':''"></i>
                                             </span>
 
 
-                                        <div *ngIf="markRepId !== reply.id || markResValue == false">
-                                            <span title="Mark as Right Answer" class="cursor-pointer" (click)="markAsCorrect(reply.id,false)">
-                                                <i class="custom-vote-icon checkmark icon"></i>
-                                            </span>
-                                        </div>
-                                        <div *ngIf="markRepId == reply.id &&  markResValue == true">
+                                        <span title="Mark as Right Answer" class="cursor-pointer" (click)="markAsCorrect(reply.id, reply.actions.acceptAnswer === 0)" >                                            
+                                                <i class="custom-vote-icon checkmark icon" [ngClass]="reply.actions.acceptAnswer == 1?'green':''"></i>                                            
+                                        </span>
+
+                                        <!-- <div *ngIf="markRepId == reply.id &&  markResValue == true">
                                             <span title="Undo Marked" class="cursor-pointer" (click)="markAsCorrect(reply.id,true)">
                                                 <i class="custom-vote-icon checkmark icon ui green"></i>
                                             </span>
-                                        </div>
+                                        </div> -->
                                         <!-- <span>{{reply.reads}} views</span> -->
                                         <!-- <input class="custom-display-none" [value]="href" #copyInput> -->
                                         <!--[cbContent]="href + '#' + reply.id" ngxClipboard (cbOnSuccess)="replylinkShare()" -->
