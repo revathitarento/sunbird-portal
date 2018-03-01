@@ -32,6 +32,19 @@
     });
   </script>
   <script src="/assets/common/js/froala_editor.pkgd.min.js"></script>
+  <script>
+   $(function () {
+     $('div#toolbarContainer').froalaEditor({
+       pluginsEnabled: ['wordPaste'],
+       heightMin: 300,
+       heightMax: 300,
+       // toolbarButtons: ['bold', 'italic', 'underline', 'undo', 'redo'],
+       // toolbarButtonsSM: ['bold', 'italic', 'underline', 'undo', 'redo'],
+       // toolbarButtonsMD: ['bold', 'italic', 'underline', 'undo', 'redo'],
+       // toolbarButtonsXS: ['bold', 'italic', 'underline', 'undo', 'redo'],
+     });
+   });
+ </script>
   <input type="hidden" id="userId" value="<%=userId%>" />
   <input type="hidden" id="sessionId" value="<%=sessionId%>" />
   <input type="hidden" id="cdnUrl" value="<%=cdnUrl%>" />

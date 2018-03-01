@@ -41,6 +41,7 @@
                                     </div>
                                 </div>
                                 <div class="item" *ngFor="let thread of result | sortByDate:param">
+                                   <!-- Full thread {{thread | json}} -->
                                     <div class="content">
                                         <a (click)="gotoThread(thread.id)" [ngClass]="(thread.seen == true)?'seenClass':''" class="header quesHeading margin-top-10 margin-bottom-10">{{thread.title }}</a>
                                         <div class=" ">
@@ -55,10 +56,10 @@
                                         <div class="comment">
                                             <div class="content metadata margin-left-right-0">
                                                 <i class="user circle outline icon"></i>
-                                                <span>{{thread.last_poster_username}}</span>
+                                                <span>{{thread.author.name}}</span>
                                                 <span title="like" class="cursor-pointer">
                                                     <i class="custom-vote-icon thumbs up icon"></i>
-                                                </span> {{thread.like_count}}
+                                                </span> {{thread.likeCount}}
                                                 <span title="dislike" class="cursor-pointer">
                                                     <i class="custom-vote-icon thumbs down icon"></i>
                                                 </span>

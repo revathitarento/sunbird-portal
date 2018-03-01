@@ -41,7 +41,6 @@ export class DiscussionsApiservice extends DataService {
 
     }
     public getThreadbyId(threadId) {
-
         const option = {
             url: `/discussions/v1/thread/` + threadId
         };
@@ -49,7 +48,6 @@ export class DiscussionsApiservice extends DataService {
             .map((response: Response) => {
                 return response;
             });
-
     }
 
     private handleError(error: Response) {

@@ -74,7 +74,7 @@
                         </div>
                         <div class="ui comments margin-top-0">
                             <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param">
-                                <div class="content padding-top-20">
+                                <div class="content padding-top-20 single-reply" id="{{reply.id}}">
                                     <div class="metadata">
                                         <i class="user circle outline black large icon"></i>
                                         <span class="author">{{reply.username}}</span>
@@ -118,7 +118,9 @@
                                             </span>
                                         </div>
                                         <span>{{reply.reads}} views</span>
-                                        <span title="share a link to this post" class="cursor-pointer" [cbContent]="href + '#' + reply.id" ngxClipboard (cbOnSuccess)="linkShare()">
+                                        <!-- <input class="custom-display-none" [value]="href" #copyInput> -->
+                                        <!--[cbContent]="href + '#' + reply.id" ngxClipboard (cbOnSuccess)="replylinkShare()" -->
+                                        <span title="share a link to this post" class="cursor-pointer" (click)="replylinkShare(this.id, reply.id)" >
                                             <i class="linkify icon"></i>
                                         </span>
                                         <span *ngIf="deletedId !== reply.id || deletedState == false" title="delete this post" class="cursor-pointer" (click)="onDelete(reply.id,false)">
@@ -167,8 +169,8 @@
                                     </div>
                                 </div>
                                 <div class="field">
-                                    <div id="custom-toolbar" [froalaEditor] name="replyAnswer" minlength="20" [(ngModel)]="discussionsModel.replyAnswer" #replyAnswer="ngModel"></div>
-                                    <!-- <textarea type="text" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" minlength="20" required #replyAnswer="ngModel"></textarea> {{replyAnswer.className}} -->
+                                    <!-- <div id="custom-toolbar" [froalaEditor] name="replyAnswer" minlength="20" [(ngModel)]="discussionsModel.replyAnswer" #replyAnswer="ngModel"></div> -->
+                                    <textarea type="text" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" minlength="20" required #replyAnswer="ngModel"></textarea> {{replyAnswer.className}}
                                     <div class="ui negative message" [hidden]="replyAnswer.valid || replyAnswer.pristine">
                                         This is a required field.
                                     </div>
