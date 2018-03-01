@@ -111,34 +111,28 @@ class DiscourseAdapter {
    */
   createThread (threadData, user) {
     return new Promise((resolve, reject) => {
-      this.createUserIfNotExists(user).then((success) => {
-        let formData = {
-          api_key: this.apiAuth.apiKey,
-          api_username: user.userName,
-          title: threadData.title,
-          raw: threadData.body,
-          category: threadData.type
+      let formData = {
+        api_key: this.apiAuth.apiKey,
+        api_username: user.userName,
+        title: threadData.title,
+        raw: threadData.body,
+        category: threadData.type
+      }
+      formData['tags[]'] = 'course__' + threadData.communityId
+      let options = {
+        method: 'POST',
+        uri: this.discourseEndPoint + this.discourseUris.postThread,
+        form: formData
+      }
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
+        console.log(res)
+        if (res) {
+          resolve(res.topic_id)
+        } else {
+          reject(res)
         }
-        formData['tags[]'] = 'course__' + threadData.communityId
-        let options = {
-          method: 'POST',
-          uri: this.discourseEndPoint + this.discourseUris.postThread,
-          form: formData
-        }
-        this.httpService.call(options).then((data) => {
-          let res = JSON.parse(data.body)
-          console.log(res)
-          if (res) {
-            resolve(res.topic_id)
-          } else {
-            reject(res)
-          }
-        }, (error) => {
-          reject(error)
-        })
       }, (error) => {
-        reject(error)
-      }).catch((error) => {
         reject(error)
       })
     })
@@ -150,33 +144,27 @@ class DiscourseAdapter {
    */
   replyThread (threadData, user) {
     return new Promise((resolve, reject) => {
-      this.createUserIfNotExists(user).then((success) => {
-        let formData = {
-          api_key: this.apiAuth.apiKey,
-          api_username: user.userName,
-          raw: threadData.body,
-          topic_id: threadData.threadId
-        }
+      let formData = {
+        api_key: this.apiAuth.apiKey,
+        api_username: user.userName,
+        raw: threadData.body,
+        topic_id: threadData.threadId
+      }
 
-        let options = {
-          method: 'POST',
-          uri: this.discourseEndPoint + this.discourseUris.postThread,
-          form: formData
+      let options = {
+        method: 'POST',
+        uri: this.discourseEndPoint + this.discourseUris.postThread,
+        form: formData
+      }
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
+        console.log(res)
+        if (res) {
+          resolve(res.topic_id)
+        } else {
+          reject(res)
         }
-        this.httpService.call(options).then((data) => {
-          let res = JSON.parse(data.body)
-          console.log(res)
-          if (res) {
-            resolve(res.topic_id)
-          } else {
-            reject(res)
-          }
-        }, (error) => {
-          reject(error)
-        })
       }, (error) => {
-        reject(error)
-      }).catch((error) => {
         reject(error)
       })
     })
@@ -236,7 +224,8 @@ class DiscourseAdapter {
       read: postData.read,
       posters: posters,
       replies: [],
-      actions: this.getThreadActions(postData, false)
+      actions: this.getThreadActions(postData, false),
+      descId: postData.id
     }
     let adapter = this
     _.forEach(posts, function (post, index) {
@@ -261,8 +250,7 @@ class DiscourseAdapter {
   }
 
   getThreadActions (threadData, isPost) {
-    let actions = {
-    }
+    let actions = {}
     _.forEach(threadData.actions_summary, function (action) {
       if (action.id === 2) {
         actions['vote'] = (action.acted === true) ? 1 : (action.can_act === true) ? 0 : -1
@@ -284,7 +272,7 @@ class DiscourseAdapter {
     }
 
     if (isPost) {
-      actions['acceptAnswer'] = (threadData.can_accept_answer && threadData.can_accept_answer === true) ? 0 : (threadData.can_accept_answer === true && threadData.accepted_answer && threadData.accepted_answer === true && threadData.can_unaccept_answer === true) ? 1 : -1
+      actions['acceptAnswer'] = (threadData.can_accept_answer && threadData.can_accept_answer === true) ? 0 : (threadData.accepted_answer === true && threadData.can_unaccept_answer === true) ? 1 : -1
     }
     return actions
   }
@@ -427,6 +415,30 @@ class DiscourseAdapter {
           retort: actionData.type
         }
 
+      }
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
+        if (res) {
+          resolve('done')
+        } else {
+          reject(res)
+        }
+      }, (error) => {
+        reject(error)
+      })
+    })
+  }
+  acceptSoution (answerData, user) {
+    this.userName = user.userName
+    return new Promise((resolve, reject) => {
+      let options = {
+        method: 'POST',
+        uri: this.discourseEndPoint + this.discourseUris.acceptAsSolution,
+        form: {
+          api_key: this.apiAuth.apiKey,
+          api_username: this.userName,
+          id: answerData.postId
+        }
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)

@@ -75,6 +75,9 @@ class ThreadService {
       return this.discussionAdapter.postUndoAction(actionData, user)
     }
   }
+  markAsAnswer (answerData, user) {
+    return this.discussionAdapter.acceptSoution(answerData, user)
+  }
 }
 
 module.exports = ThreadService
