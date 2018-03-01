@@ -1,6 +1,7 @@
 
 let ApiInterceptor = require('sb_api_interceptor')
 let envVariables = require('../../environmentVariablesHelper.js')
+let AppError = require('./ErrorInterface.js')
 let httpWrapper = require('./httpWrapper.js')
 let HttpStatus = require('http-status-codes')
 const _ = require('lodash')
@@ -23,7 +24,7 @@ class UserService {
   getUserProfile(authUserToken) {
     return new Promise((resolve, reject) => {
       try {
-        let tokenDetails = await (this.__getTokenDetails(authUserToken))
+        let tokenDetails = await (this.getTokenDetails(authUserToken))
 
         if (!tokenDetails) {
           throw {
@@ -76,8 +77,8 @@ class UserService {
    */
   getLoggedinUserId() {
     return async ((requestObj) => {
-      let authUserToken = this.__getToken(requestObj)
-      let tokenDetails = await (this.__getTokenDetails(authUserToken))
+      let authUserToken = this.getToken(requestObj)
+      let tokenDetails = await (this.getTokenDetails(authUserToken))
       if (tokenDetails) {
         return tokenDetails.userId
       }
