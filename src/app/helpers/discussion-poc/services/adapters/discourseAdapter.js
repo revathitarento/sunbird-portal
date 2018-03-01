@@ -26,7 +26,7 @@ class DiscourseAdapter {
     /**
      * @property {string} discourseEndPoint - An endpoint url for discourse api
      */
-    this.discourseEndPoint = 'http://172.17.0.2'
+    this.discourseEndPoint = 'http://localhost:3001'
     /**
      * @property {object} discourseUriList - List of discourse uri's
      */
@@ -42,8 +42,8 @@ class DiscourseAdapter {
 
     this.userName = userName
     this.apiAuth = {
-      apiKey: '6d1d27685a7bb8771bc18903d2b980a71b336d7715c28aeb345e3dac65126a47',
-      apiUserName: 'revathipp'
+      apiKey: '1dfdb2bf7b8c21aee7dbffb0fb2afbd72f2cc21c32bd20f17e056faeac247ce5',
+      apiUserName: 'revathi'
     }
   }
 
@@ -58,8 +58,8 @@ class DiscourseAdapter {
         form: {
           api_key: this.apiAuth.apiKey,
           api_username: this.apiAuth.apiUserName,
-          name: user.firstName,
-          email: user.email,
+          name: user.firstName || user.userName,
+          email: user.email || user.userName +"@sunbird.org",
           password: 'testU1234567890',
           username: user.userName,
           active: 'true',
@@ -249,14 +249,8 @@ class DiscourseAdapter {
     return threadData
   }
 
-<<<<<<< HEAD
-  getThreadActions(threadData, isPost) {
-    let actions = {
-    }
-=======
   getThreadActions (threadData, isPost) {
     let actions = {}
->>>>>>> 1e5673925822f6ef7b7dc0e0a962387f4b746cb4
     _.forEach(threadData.actions_summary, function (action) {
       if (action.id === 2) {
         actions['vote'] = (action.acted === true) ? 1 : (action.can_act === true) ? 0 : -1
