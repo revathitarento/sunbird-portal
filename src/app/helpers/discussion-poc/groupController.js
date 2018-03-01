@@ -24,8 +24,7 @@ class GroupController {
               }
               let answerData = {
                 postId: requestObj.body.postId
-              }
-  
+              }  
               this.threadService.markAsAnswer(answerData, user).then((threadResponse) => {
                 resolve({
                   status: threadResponse

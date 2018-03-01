@@ -15,7 +15,7 @@ class DiscourseAdapter {
    *
    * let discourseAdapter = new DiscourseAdapter()
    */
-  constructor({
+  constructor ({
     userName
   } = {}) {
     /**
@@ -37,20 +37,21 @@ class DiscourseAdapter {
       users: '/users',
       postActions: '/post_actions',
       acceptAsSolution: '/solution/accept',
+      unAcceptSolution: '/solution/unaccept',
       retort: '/retorts'
     }
 
     this.userName = userName
     this.apiAuth = {
-      apiKey: '1dfdb2bf7b8c21aee7dbffb0fb2afbd72f2cc21c32bd20f17e056faeac247ce5',
-      apiUserName: 'revathi'
+      apiKey: '582df0739d5d4503c3eb8a8828bccaaa9d27fdf7be204f47509501717f6857ec',
+      apiUserName: 'loganathan.shanmugam'
     }
   }
 
   /*
    *create discourse user
    */
-  createUser(user) {
+  createUser (user) {
     return new Promise((resolve, reject) => {
       let options = {
         method: 'POST',
@@ -59,7 +60,7 @@ class DiscourseAdapter {
           api_key: this.apiAuth.apiKey,
           api_username: this.apiAuth.apiUserName,
           name: user.firstName || user.userName,
-          email: user.email || user.userName +"@sunbird.org",
+          email: user.email || user.userName + '@sunbird.org',
           password: 'testU1234567890',
           username: user.userName,
           active: 'true',
@@ -82,7 +83,7 @@ class DiscourseAdapter {
   /*
    *check discourse user and create if not found
    */
-  createUserIfNotExists(user) {
+  createUserIfNotExists (user) {
     return new Promise((resolve, reject) => {
       let options = {
         method: 'GET',
@@ -109,7 +110,7 @@ class DiscourseAdapter {
    *create discourse topic
    *
    */
-  createThread(threadData, user) {
+  createThread (threadData, user) {
     return new Promise((resolve, reject) => {
       let formData = {
         api_key: this.apiAuth.apiKey,
@@ -142,7 +143,7 @@ class DiscourseAdapter {
    *reply discourse topic
    *
    */
-  replyThread(threadData, user) {
+  replyThread (threadData, user) {
     return new Promise((resolve, reject) => {
       let formData = {
         api_key: this.apiAuth.apiKey,
@@ -170,7 +171,7 @@ class DiscourseAdapter {
     })
   }
 
-  extractThreadList(topics, posts) {
+  extractThreadList (topics, posts) {
     let threadList = []
     _.forEach(topics, function (topic) {
       let postData = _.find(posts, {
@@ -195,7 +196,7 @@ class DiscourseAdapter {
     return threadList
   }
 
-  extractThreadData(topicData) {
+  extractThreadData (topicData) {
     let posts = topicData.post_stream.posts
     let postData = _.find(posts, {
       topic_id: topicData.id,
@@ -281,7 +282,7 @@ class DiscourseAdapter {
    *get discourse topics
    *
    */
-  getThreadsList(threadData, user) {
+  getThreadsList (threadData, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(user).then((success) => {
@@ -320,7 +321,7 @@ class DiscourseAdapter {
    *get discourse topics
    *
    */
-  getThreadById(threadId, user) {
+  getThreadById (threadId, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(user).then((success) => {
@@ -353,7 +354,7 @@ class DiscourseAdapter {
     })
   }
 
-  postAction(actionData, user) {
+  postAction (actionData, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
       let options = {
@@ -379,7 +380,7 @@ class DiscourseAdapter {
       })
     })
   }
-  postUndoAction(actionData, user) {
+  postUndoAction (actionData, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
       let options = {
@@ -403,7 +404,7 @@ class DiscourseAdapter {
       })
     })
   }
-  retort(actionData, user) {
+  retort (actionData, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
       let options = {
@@ -439,6 +440,9 @@ class DiscourseAdapter {
           api_username: this.userName,
           id: answerData.postId
         }
+      }
+      if (answerData.undo) {
+        options.uri = this.discourseEndPoint + this.discourseUris.unAcceptSolution
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
