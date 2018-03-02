@@ -60,7 +60,8 @@ export class DiscussionsApiservice extends DataService {
             title: model.threadTitle,
             body: model.threadDesc,
             communityId: 'do_212390847580487680138',
-            type: 'qna'
+            contentType: model.contentType,
+            type: 'qna' 
         };
         console.log('inside postThread()', body);
         return this.http.post(`${this.baseUrl}/discussions/v1/thread/create`, body)
@@ -131,7 +132,8 @@ export class DiscussionsApiservice extends DataService {
     markAsCorrect(replyId, isUndo) {
         console.log('inside mark as correct answer', replyId, isUndo);
         const body = {
-            'postId': replyId
+            'postId': replyId,
+            'undo': isUndo
         };
         return this.http.post(`${this.baseUrl}/discussions/v1/thread/markanswer`, body)
             .map((response: Response) => {
@@ -171,13 +173,13 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
-    archiveAction(id, isArchived) {
-        const body = {
-            'id': id,
-            'isArchived': isArchived
-        };
-        console.log('inside lockAction service', id, body);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/archive/` + id, body)
+    archiveAction(id, userId, isArchived) {
+        const  request = {
+            "threadId": id, // Mandatory, unique ID of the thread to archive
+            "userId": '874ed8a5-782e-4f6c-8f36-e0288455901e' // Mandatory, unique ID of the user archiving the thread
+            }
+        console.log('inside lockAction service', id, request);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/archive/` + id, request)
             .map((response: Response) => {
                 return response;
             });

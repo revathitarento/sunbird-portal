@@ -327,9 +327,9 @@ public size: string;
   }
 
   public markAsCorrect(replyId, state) {
-   // state = !state;
+  
    console.log("mark state", state);
-    this.discussionService.markAsCorrect(replyId, state).subscribe(data => {
+    this.discussionService.markAsCorrect(replyId, !state).subscribe(data => {
       //this.markRepId = replyId;
       // this.markResult = data;
       // this.markResValue = this.markResult.result.option;
@@ -338,12 +338,12 @@ public size: string;
         console.log("findindex", _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId }));
         let index  = _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId });
         if(state === true){         
-          console.log("thread action inside true", this.threadDetails)
+          console.log("thread action inside true state", this.threadDetails)
           this.threadDetails['thread']['replies'][index]['actions'].acceptAnswer = 1;
           this.threadDetails['thread']['replies'][index].acceptedAnswer = true;
         } 
         else {
-          console.log("thread action inside false");
+          console.log("thread action inside flase state", this.threadDetails);
           this.threadDetails['thread']['replies'][index]['actions'].acceptAnswer = 0;
           this.threadDetails['thread']['replies'][index].acceptedAnswer = false;
         }

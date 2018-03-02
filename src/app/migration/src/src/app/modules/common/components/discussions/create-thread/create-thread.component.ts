@@ -17,8 +17,10 @@ export class CreateThreadComponent implements OnInit {
     public isLoading: boolean;
     public result: any;
     public errorMessage: boolean;
-    public discussionsModel = new DiscussionsObject('', '', '');
-    constructor(private router: Router, private route: ActivatedRoute, private discussionService: DiscussionsApiservice) { }
+    public discussionsModel = new DiscussionsObject('', '', '');    
+    constructor(private router: Router, private route: ActivatedRoute, private discussionService: DiscussionsApiservice) { 
+        this.discussionsModel.contentType = 'ENROLLED_COURSE';
+    }
     ngOnInit() {
         this.loading = true;
         this.errorMessage = false;
@@ -40,12 +42,12 @@ export class CreateThreadComponent implements OnInit {
             this.result = data;
             this.isLoading = !this.isLoading;
             if (this.result.result.id != null || this.result.result.id !== undefined) {
-                this.discussionsModel.threadTitle = '';
-                this.discussionsModel.threadDesc = '';
+               // this.discussionsModel.threadTitle = '';
+               // this.discussionsModel.threadDesc = '';              
                 this.successMessage = true;
                 setTimeout(() => {
                     this.changeWidget();
-                }, 1000);
+                }, 3000);
             } else {
                 this.errorMessage = true;
             }

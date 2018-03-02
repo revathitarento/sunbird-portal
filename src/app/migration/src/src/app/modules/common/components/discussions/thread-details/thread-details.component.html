@@ -14,7 +14,7 @@
                                     <i class="large arrow left icon"></i>
                                 </a>
                             </div>
-                            full thread details: {{threadDetails | json}}
+                            <!-- full thread details: {{threadDetails | json}} -->
                             <div class="cardsHeading">
                                 {{threadDetails.thread.title}}
                             </div>
@@ -74,7 +74,7 @@
                             </div>
                         </div>
                         <div class="ui divider"></div>
-                        <div title="sort" class="ui dropdown" suiDropdown>
+                        <div  title="sort" class="ui dropdown" suiDropdown>
                             <small class="text">Sort by</small>
                             <i class="dropdown icon"></i>
                             <div class="menu" suiDropdownMenu>
@@ -88,7 +88,7 @@
                         </div>
                         <div class="ui comments margin-top-10">
                             <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param">
-                                    full reply details: {{reply | json}}
+                                    <!-- full reply details: {{reply | json}} -->
                                 <div class="content padding-top-20 single-reply" id="{{reply.id}}">
                                     <div class="metadata">
                                         <i class="user circle outline black large icon"></i>
@@ -115,7 +115,7 @@
 
 
                                         <span title="Mark as Right Answer" class="cursor-pointer" (click)="markAsCorrect(reply.id, reply.actions.acceptAnswer === 0)" >                                            
-                                                <i class="custom-vote-icon checkmark icon" [ngClass]="reply.actions.acceptAnswer == 1?'green':''"></i>                                            
+                                                <i class="custom-vote-icon checkmark icon" [ngClass]="reply.actions.acceptAnswer === 0 ?'':'green'"></i>                                            
                                         </span>
 
                                         <!-- <div *ngIf="markRepId == reply.id &&  markResValue == true">
@@ -182,8 +182,8 @@
                                     </div>
                                 </div>
                                 <div class="field">
-                                    <!-- <div id="custom-toolbar" [froalaEditor] name="replyAnswer" minlength="20" [(ngModel)]="discussionsModel.replyAnswer" #replyAnswer="ngModel"></div> -->
-                                    <textarea type="text" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" minlength="20" required #replyAnswer="ngModel"></textarea>
+                                    <div id="custom-toolbar" [froalaEditor] name="replyAnswer" minlength="20" [(ngModel)]="discussionsModel.replyAnswer" #replyAnswer="ngModel"></div>
+                                    <!-- <textarea type="text" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" minlength="20" required #replyAnswer="ngModel"></textarea> -->
                                     <div class="ui negative message" [hidden]="replyAnswer.valid || replyAnswer.pristine">
                                         This is a required field.
                           

@@ -22,12 +22,14 @@ export class ThreadListComponent implements OnInit, OnDestroy {
     public msg: any;
     public param: any;
     public baseUrl: string;
+    public courseType: string;
     public query: string;
     public filteredList: any;
     public discussionsModel = new DiscussionsObject('', '', '');
     constructor(private router: Router, private route: ActivatedRoute,
         private discussionService: DiscussionsApiservice, @Inject(DOCUMENT) document: any) {
         this.baseUrl = 'http://localhost:4200/';
+        this.courseType = 'ENROLLED_COURSE';
     }
     public displayThreads() {
         this.discussionService.getThreads(this.id).subscribe(data => {
@@ -57,7 +59,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
         this.displayThreads();
         this.param = '-createdDate';
         this.sub = this.route.params.subscribe(params => {
-            console.log('param', params);
+            console.log('params', params);
             this.id = params['id'];
         });
 
