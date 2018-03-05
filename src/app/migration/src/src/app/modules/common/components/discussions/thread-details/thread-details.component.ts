@@ -410,11 +410,11 @@ this.threadUrl = '/migration/thread-details';
  //this.openThreadEdit = false;
   
   public onEditThread(id, title, openThreadEdit){
-    this.discussionsModel.threadTitle = title;
+    this.discussionsModel.threadTitle =  this.threadDetails.thread.newTitle;
     this.discussionsModel.threadId = id;
     console.log("openThreadEdit", openThreadEdit);
     this.discussionService.editThread(this.discussionsModel).subscribe(data => {    
-     console.log("Edit thread",data);
+     console.log("Edit thread ",data);
      if (data['responseCode'] === 'OK' && data['result'].status === 'done'){
         this.threadDetails.thread.title = this.threadDetails.thread.newTitle;           
         this.openThreadEdit = false;
@@ -453,15 +453,18 @@ this.threadUrl = '/migration/thread-details';
     public onEditReply(threadId,replyId, replyBody, openReplyEdit) {
       this.replyObject.threadId = threadId;
       this.replyObject.replyId = replyId;
-      this.replyObject.replyAnswer = replyBody;
      
-      this.discussionService.editReply(this.replyObject).subscribe(data => {    
-        console.log("Edit Reply",data);
-        if (data['responseCode'] === 'OK' && data['result'].status === 'done'){
+     
+      
+       
           let index  = _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId });
           if (replyId === this.threadDetails.thread.replies[index].id) {
              this.threadDetails.thread.replies[index].body = this.threadDetails.thread.replies[index].newBody  ;    
+             this.replyObject.replyAnswer = this.threadDetails.thread.replies[index].newBody;
           }
+          this.discussionService.editReply(this.replyObject).subscribe(data => {    
+            console.log("Edit Reply",data);
+          if (data['responseCode'] === 'OK' && data['result'].status === 'done'){
           // this.threadDetails.thread.title = this.threadDetails.thread.newTitle;           
           this.openReplyEdit = false;
           console.log("reply  after,", this.threadDetails.thread.replies[index].newBody);
@@ -472,13 +475,16 @@ this.threadUrl = '/migration/thread-details';
       });
     }
 
-  public onLock(id, isLocked) {
+  public onLock(id) {
     this.lockedState = false;
-    console.log('inside onLock', id, isLocked);
-    this.discussionService.lockAction(id, isLocked).subscribe(data => {
+    console.log('inside onLock', id);
+    this.discussionService.lockAction(id).subscribe(data => {
+      console.log("locked data", data);
+      if (data['responseCode'] === 'OK' && data['result'].status === 'successful'){
       this.lockedId = data['result'].id
-      this.lockedState = data['result'].option;
+      this.lockedState = true;
       console.log('lock response', data, this.lockedId, this.lockedState);
+      }
     });
   }
   public linkShare() {

@@ -57,14 +57,11 @@
                                             <span title="delete this thread" class="cursor-pointer">
                                                 <i class="trash outline icon"></i>
                                             </span> -->
-                                            <span *ngIf="lockedId !== threadDetails.thread.id || lockedState == false" title="lock this post" class="cursor-pointer"
-                                                (click)="onLock(threadDetails.thread.id,false)">
-                                                <i class="lock icon"></i>
+                                            <span  title="lock this post" class="cursor-pointer"
+                                                (click)="onLock(threadDetails.thread.id)">
+                                                <i class="lock icon" [ngClass]="lockecState == true? 'unlock alternate icon ui red':''"></i>
                                             </span>
-                                            <span *ngIf="lockedId == threadDetails.thread.id && lockedState == true" title="unlock this post" class="cursor-pointer"
-                                                (click)="onLock(threadDetails.thread.id,true)">
-                                                <i class="unlock alternate icon ui red"></i>
-                                            </span>
+                                           
                                             <span title="archive this post" class="cursor-pointer"
                                                 (click)="onArchive(threadDetails.thread.id,false)">
                                                 <i class="archive icon"  [ngClass]="archivedState == true?'ui brown':''" ></i>

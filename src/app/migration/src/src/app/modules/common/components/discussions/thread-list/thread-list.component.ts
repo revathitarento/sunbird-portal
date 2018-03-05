@@ -91,7 +91,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
     public index : any;
   public onArchive(id, state) {
     console.log('inside onArchive()', id, state);
-    this.discussionService.archiveAction(id, state).subscribe(data => {
+    this.discussionService.archiveAction(id).subscribe(data => {
       console.log("Archive data", data);
       if (data['responseCode'] === 'OK' && data['result'].status === 'archived') {
           console.log("this.threads,", this.threads.result.threads);

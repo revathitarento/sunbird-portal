@@ -76,31 +76,31 @@ export class DiscussionsApiservice extends DataService {
     }
     editThread(model) {
         const body = {
-            url: '/discussions/v1/thread/edit',
+            //url: '/discussions/v1/thread/edit',
             title: model.threadTitle,
-            id: model.threadId,
-            communityId: 'do_212390847580487680138',
-            contentType: 'ENROLLED',
-            type: 'qna' 
+            threadId: model.threadId           
         };
-        return this.post(body)
-        .map((response: Response ) => {
-            return response;
-        })
+        console.log('inside postThread()', body);
+        return this.http.put(`${this.baseUrl}/discussions/v1/thread/edit`, body)       
+            .map((response: Response) => {
+                console.log("Response of edit thread", response);
+                return response;
+            });    
     }
 
     editReply(model) {
         const body = {
-            url: '/discussions/v1/reply/edit',
-            threadId: model.threadId,
-            replyAnswer: model.replyAnswer,
+           // url: '/discussions/v1/reply/edit',
+           postId: model.threadId,
+           body: model.replyAnswer,
           
         };
-        console.log("editrreply in service", body);
-        return this.post(body)
-        .map((response: Response ) => {
-            return response;
-        })
+        console.log("edit reply in service", body);
+        return this.http.post(`${this.baseUrl}/discussions/v1/reply/edit`, body)       
+            .map((response: Response) => {
+                console.log("Response of edit reply", response);
+                return response;
+            });    
     }
 
     upvoteAction(id, undo) {
@@ -185,13 +185,12 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
-    lockAction(id, isLocked) {
+    lockAction(id) {
         const body = {
-            'id': id,
-            'isLocked': isLocked
+            'threadId': id
         };
         console.log('inside lockAction service', id, body);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/lock/` + id, body)
+        return this.http.delete(`${this.baseUrl}/discussions/v1/thread/lock/`, body)
             .map((response: Response) => {
                 return response;
             });
@@ -207,27 +206,35 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
-    // archiveAction(id: string) {
-    //     let body = 
-    //         {
-    //             'id': id                 
-    //       };
-    //     let headers = new Headers({ 'Content-Type': 'application/json' });
-    //     let options = new RequestOptions({
-    //       headers: headers,
-    //       body : body
-    //     });
+    archiveAction(id: string) {
+        let obj = 
+            {
+                'threadId': id                 
+          };
+          let jsonObj = JSON.stringify(obj);
+        // let headers = new Headers({ 'Content-Type': 'application/json' });
+        // let options = new RequestOptions({
+        //   headers: headers,
+        //   body : body
+        // });
       
-    //     return this.http.delete("/discussions/v1/thread/archive/", options)
-    //           .map(res => this.extractData(res))
-    //           .catch(this.handleError);
+        // return this.http.delete("/discussions/v1/thread/archive/", options)
+        //       .map(res => this.extractData(res))
+        //       .catch(this.handleError);
 
-
-
-        
+        return this.http
+        .request('DELETE', '/discussions/v1/thread/archive/', { body: jsonObj })
+        .map((response: Response) => {
+            return response;
+        })
+        .catch(this.handleError);       
 
 
        
-    // }
+    }
     
 }
+
+// this._http.delete('/discussions/v1/thread/archive/'+id)
+//             .map(res => res.json());
+//     }
