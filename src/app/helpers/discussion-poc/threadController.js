@@ -96,6 +96,54 @@ class ThreadController {
   editReply(requestObj) {
     return this.__editReply()(requestObj)
   }
+  checkModeration(requestObj) {
+    return this.__checkModeration()(requestObj)
+  }
+  
+  __checkModeration(requestObj) {
+    return async ((requestObj) => {
+      try {
+
+        let authUserToken = await (this.userService.getToken(requestObj))
+
+        let userProfile = await (this.userService.getUserProfile(authUserToken))
+
+        if (userProfile) {
+          return new Promise((resolve, reject) => {
+            let user = {
+              userName: userProfile.userName,
+              userId:userProfile.userId
+            }
+            let threadData = {
+              threadId: requestObj.body.threadId
+            }
+            this.threadService.checkModerationAccess(threadData, user).then((threadResponse) => {
+              resolve(
+                threadResponse
+              )
+            }, function (error) {
+              reject({
+                error: error
+              })
+            })
+          })
+        } else {
+          return {
+            message: 'Unauthorized User',
+            status: HttpStatus.UNAUTHORIZED
+          }
+        }
+      } catch (error) {
+
+        return {
+          message: 'Error',
+          status: HttpStatus.INTERNAL_SERVER_ERROR
+        }
+      }
+    })
+  }
+
+
   /*
    *create thread flow
    *

@@ -47,8 +47,8 @@ class DiscourseAdapter {
 
     this.userName = userName
     this.apiAuth = {
-      apiKey: '1dfdb2bf7b8c21aee7dbffb0fb2afbd72f2cc21c32bd20f17e056faeac247ce5',
-      apiUserName: 'revathi'
+      apiKey: '582df0739d5d4503c3eb8a8828bccaaa9d27fdf7be204f47509501717f6857ec',
+      apiUserName: 'loganathan.shanmugam'
     }
   }
 
@@ -278,7 +278,9 @@ class DiscourseAdapter {
       posters: posters,
       replies: [],
       actions: this.getThreadActions(postData, false),
-      descId: postData.id
+      descId: postData.id,
+      archived: topicData.archived,
+      locked: topicData.closed
     }
     let adapter = this
     _.forEach(posts, function (post, index) {

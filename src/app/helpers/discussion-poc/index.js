@@ -154,6 +154,17 @@ module.exports = function (keycloak) {
         sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
       })
   })
+
+  router.post('/thread/checkmoderation', (requestObj, responseObj, next) => {
+    threadController.checkModeration(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+
   router.put('/reply/edit', (requestObj, responseObj, next) => {
     threadController.replyThread(requestObj)
       .then((data) => {
