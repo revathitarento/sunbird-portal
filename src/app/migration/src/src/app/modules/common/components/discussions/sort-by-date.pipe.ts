@@ -21,13 +21,13 @@ export class SortByDatePipe implements PipeTransform {
 
 
     array.sort((a: any, b: any) => {
-      if (args !== 'like_count') {
+      if (args !== 'voteCount') {
         const column = args.replace('-', '');
         const left = Number(new Date(a[column]));
         const right = Number(new Date(b[column]));
         return (direction === '-') ? right - left : left - right;
       }
-      if (args === 'like_count') {
+      if (args === 'voteCount') {
         // return (sortOrder === "asc") ? a[args] - b[args] : b[args] - a[args];
         return b[args] - a[args];
       }

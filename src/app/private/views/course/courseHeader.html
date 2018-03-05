@@ -11,7 +11,7 @@
           <content-flag type=" 'course' " ng-if="toc.courseType === 'ENROLLED_COURSE'" contentid="toc.courseId" contentname="toc.courseHierarchy.name" versionkey="toc.courseHierarchy.versionKey" redirect=" 'Courses' "></content-flag>
           <h6 class="ui small negative message" ng-if="toc.courseHierarchy.status === 'Flagged'">{{$root.messages.imsg.m0001}}</h6>
         </div>
-        <a class="item" ng-href="{{'http://localhost:4200/migration/thread-list/' + toc.courseId }}">Click here to see discussions
+        <a class="item" ng-href="{{'http://localhost:4200/migration/thread-list/' + toc.courseId + '#' + toc.courseType }}">Click here to see discussions
         </a>
         <div class="four wide column margin-top-Negative30" ng-if="toc.courseType === 'ENROLLED_COURSE'">
           <span ng-if="toc.courseTotal"><p class="text-align-center">Your Progress {{(toc.courseProgress * 100 / toc.courseTotal)| number: 0 || 0}}%</p></span>

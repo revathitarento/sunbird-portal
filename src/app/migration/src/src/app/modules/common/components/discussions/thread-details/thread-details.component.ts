@@ -1,5 +1,7 @@
+
 import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef, Inject,ViewChild } from '@angular/core';
 import { DiscussionsObject } from '../interfaces/discussions.interface';
+import { replyObject } from './../interfaces/reply.interface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DiscussionsApiservice } from '../../../../../services/discussions/discussions.service';
 import { DOCUMENT } from '@angular/platform-browser';
@@ -45,6 +47,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public archivedId: number;
   public archivedState: boolean;
   public discussionsModel = new DiscussionsObject('', '', '');
+  public replyObject = new replyObject('', '', '');
   public notifyActions: boolean;
   public replies: any;
   public replyId: number;
@@ -58,7 +61,8 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public currentLocation: any;
   public replyHash: any;
     public shareLink : any;
-
+public location : any
+public threadUrl : any;
 
 @ViewChild('modalTemplate')
 public modalTemplate:ModalTemplate<null, string, string>
@@ -74,59 +78,6 @@ public open(dynamicContent:boolean = true) {
       .onApprove(result => { /* approve callback */ })
       .onDeny(result => { /* deny callback */});
 }
-  // {{currentLocation + "#" + reply.id}}
-  ngOnInit() {
-    this.loading = true;
-    this.notifyActions = false;
-    this.loading = true;
-    this.param = '-createdDate';
-    this.modalFlag = false;
-    this.sub = this.route.params.subscribe(params => {
-      console.log('param', params);
-      this.id = params['threadId'];
-      console.log('id.', params['threadId'], this.id);
-    });
-    this.discussionService.getThreadbyId(this.id).subscribe(data => {
-      this.loading = false;
-      this.threadDetails = data['result'];
-      console.log('result', this.threadDetails);
-      this.loadReplyActions(this.threadDetails.thread.replies);
-      this.replies = this.threadDetails.thread.replies;
-      console.log('result this.replies', this.replies);
-      this.loadReplyActions(this.threadDetails.thread.replies);
-    });
-    this.param = 'createdDate';
-  }
-
-  ngAfterViewInit(){
-    this.highlightReply(); 
-    this.postDwellTime();
-  }
-
-  private highlightReply() {   
-    var replyPositionId = this.replyHash.hash;
-    if(replyPositionId.val !== undefined){
-    var position = $(replyPositionId).offset().top;
-    console.log("position: ", position);
-    $("body, html").animate({
-      scrollTop: position
-    }, 1000);
-    $(replyPositionId).addClass("highlighted");
-    setTimeout(() => {
-      $(replyPositionId).removeClass("highlighted");
-    }, 2000);
-  }
-  }
-
-    private postDwellTime(){      
-      let horizontalCenter = Math.floor(window.innerWidth/2);
-      let verticalCener = Math.floor(window.innerHeight/2);
-      console.log("verticalCener", verticalCener);
-    }
-  
-  showErrfield() {
-    $('.ui.negative.message').show();
-  }
 public size: string;
   constructor(private router: Router, private elementRef: ElementRef,
     private route: ActivatedRoute, private discussionService: DiscussionsApiservice,
@@ -140,26 +91,97 @@ public size: string;
     this.size = ModalSize.Small;
     this.replyHash = (platformLocation as any).location;
     this.currentLocation = ((platformLocation as any).location.href);
-    console.log((platformLocation as any).location.origin);
+    //let hash = this._platformLocation.onHashChange(fn);
+this.location = ((platformLocation as any).location.origin);
+this.threadUrl = '/migration/thread-details';
+    console.log("location.origin: ",(platformLocation as any).location.origin);
   }
-  public loadReplyActions(replies) {
-    const replyActions = {};
-    _.forEach(replies, function (reply) {
-      replyActions[reply.id] = {};
-      const actions = _.filter(reply.actions_summary, function (action) {
-        if (action.acted === true && action.can_undo === true) {
-          replyActions[reply.id][action.id] = 'acted';
-        } else {
-          replyActions[reply.id][action.id] = 'can_act';
-        }
-      });
+ 
+  ngOnInit() {
+    this.loading = true;
+    this.notifyActions = false;
+    this.loading = true;
+    this.param = '-createdDate';
+    this.modalFlag = false;
+    
+    this.sub = this.route.params.subscribe(params => {
+      console.log('param', params);
+      this.id = params['threadId'];
+      console.log('id.', params['threadId'], this.id);
     });
-    this.replyActions = replyActions;
+    this.discussionService.getThreadbyId(this.id).subscribe(data => {
+      this.loading = false;
+      this.threadDetails = data['result'];
+      console.log('result', this.threadDetails);
+
+      
+      //this.loadReplyActions(this.threadDetails.thread.replies);
+      this.replies = this.threadDetails.thread.replies;
+      console.log('result this.replies', this.replies);
+      this.highlightReply(); 
+      console.log("called on init");
+      //this.loadReplyActions(this.threadDetails.thread.replies);
+    });
+    this.param = 'createdDate';
+   
+    
   }
-  public showAction(id, actionTypeId) {
-    const action = this.replyActions[id][actionTypeId];
-    return action;
+
+  ngAfterViewInit(){
+    this.postDwellTime();
+    this.threadDetails.thread.newTitle =  this.threadDetails.thread.title;
+    this.highlightReply(); 
   }
+
+  private highlightReply() {  
+    console.log("called");
+    //alert();
+   
+    var replyPositionId = this.replyHash.hash;
+    replyPositionId.split('#').join('');
+    console.log("reply hash", replyPositionId);
+    if(replyPositionId !== undefined){
+    var position = $(replyPositionId).offset().top;
+    console.log("position: ", position);
+    $("body, html").animate({
+      scrollTop: position
+    }, 1000);
+    $(replyPositionId).addClass("highlighted");
+    setTimeout(() => {
+      $(replyPositionId).removeClass("highlighted");
+    }, 2000);
+  }
+  window.location.href = this.currentLocation; 
+  }
+
+    private postDwellTime(){      
+      let horizontalCenter = Math.floor(window.innerWidth/2);
+      let verticalCener = Math.floor(window.innerHeight/2);
+      console.log("verticalCener", verticalCener);
+    }
+  
+  showErrfield() {
+    $('.ui.negative.message').show();
+  }
+
+  // public loadReplyActions(replies) {
+  //   const replyActions = {};
+  //   _.forEach(replies, function (reply) {
+  //     replyActions[reply.id] = {};
+  //     const actions = _.filter(reply.actions_summary, function (action) {
+  //       if (action.acted === true && action.can_undo === true) {
+  //         replyActions[reply.id][action.id] = 'acted';
+  //       } else {
+  //         replyActions[reply.id][action.id] = 'can_act';
+  //       }
+  //     });
+  //   });
+  //   this.replyActions = replyActions;
+  // }
+  // public showAction(id, actionTypeId) {
+  //   const action = this.replyActions[id][actionTypeId];
+  //   return action;
+  // }
   public upVoteAction(id, undo, status) {
     console.log('inside uvoteAction() id', id);
     console.log('inside uvoteAction() undo', undo);
@@ -192,13 +214,38 @@ public size: string;
     });
   }
 
-  public downVoteAction(id, undo) { 
+  //Down Vote thread and replies
+  public downVoteAction(id, undo, status) { 
     console.log('inside dvoteAction()', id);
     this.discussionService.downvoteAction(id, undo).subscribe(data => {
-      console.log('data from voting', data);
+      console.log('data from downvoting', data);
+      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+        if (status === 'thread' ) {
+          if(undo === true){
+          console.log("thread action", this.threadDetails)
+          this.threadDetails['thread']['actions'].downVote = 0;
+        } else {
+          this.threadDetails['thread']['actions'].downVote = 1;
+        }
+      }
+
+        if (status === 'reply') {          
+          this.repId = id;         
+          console.log("reply replies",this.threadDetails['thread']['replies']);
+         console.log("findindex", _.findIndex(this.threadDetails['thread']['replies'], { 'id': id }));
+         let index  = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
+         if( undo === true){
+              this.threadDetails['thread']['replies'][index]['actions'].downVote = 0;              
+            }
+            else {
+              this.threadDetails['thread']['replies'][index]['actions'].downVote = 1;              
+            }        
+        } 
+      }
     });
   }
 
+  //Flag Action for Thread and Replies
   public flagAction(id, undo, status){
     console.log('inside flagAction() id', id);
     console.log('inside glagAction() undo', undo);
@@ -231,31 +278,31 @@ public size: string;
     }); 
   }
 
-  public actions(id, actionTypeId) {
-    this.showAction(id, actionTypeId);
-    this.discussionService.actions(id, actionTypeId).subscribe(data => {
-      this.actionResult = data;
-      this.replyActions[id][actionTypeId] = 'acted';
-      // this.notifyActions = true;
-      this.repArray = this.replyActions[id];
-      const repId = this.actionResult.result.id;
-      console.log('this.repArray ', this.repArray, this.repArray[actionTypeId]);
-      console.log('actionTypeId from root ', actionTypeId, id);
+  // public actions(id, actionTypeId) {
+  //   this.showAction(id, actionTypeId);
+  //   this.discussionService.actions(id, actionTypeId).subscribe(data => {
+  //     this.actionResult = data;
+  //     this.replyActions[id][actionTypeId] = 'acted';
+  //     // this.notifyActions = true;
+  //     this.repArray = this.replyActions[id];
+  //     const repId = this.actionResult.result.id;
+  //     console.log('this.repArray ', this.repArray, this.repArray[actionTypeId]);
+  //     console.log('actionTypeId from root ', actionTypeId, id);
 
-      this.showNotify(repId, actionTypeId, this.replyActions[id][actionTypeId]);
-    });
-  }
+  //     this.showNotify(repId, actionTypeId, this.replyActions[id][actionTypeId]);
+  //   });
+  // }
 
-  public undoActions(id, actionTypeId) {
-    console.log('inside undoActions()', id, actionTypeId);
-    this.discussionService.undoActions(id, actionTypeId).subscribe(data => {
+  // public undoActions(id, actionTypeId) {
+  //   console.log('inside undoActions()', id, actionTypeId);
+  //   this.discussionService.undoActions(id, actionTypeId).subscribe(data => {
 
-      this.replyActions[id][actionTypeId] = 'can_act';
-      console.log('../', this.replyActions);
-      // this.notifyActions = true;
-      this.showNotify(id, actionTypeId, this.replyActions[id][actionTypeId]);
-    });
-  }
+  //     this.replyActions[id][actionTypeId] = 'can_act';
+  //     console.log('../', this.replyActions);
+  //     // this.notifyActions = true;
+  //     this.showNotify(id, actionTypeId, this.replyActions[id][actionTypeId]);
+  //   });
+  // }
 
   public showNotify(id, actionTypeId, actionType) {
     this.repId = id;
@@ -289,7 +336,7 @@ public size: string;
       console.log('thread details reponse: ', this.replyData);
       this.replyResult = this.replyData.result.id;
       this.isLoading = !this.isLoading;
-      this.loadReplies(this.replyResult);
+      // this.loadReplies(this.replyResult);
       if (this.replyResult !== undefined) {
         this.successMessage = true;
         setTimeout(() => {
@@ -301,40 +348,130 @@ public size: string;
     });
   }
 
+  //Mark as correct answer for replies
   public markAsCorrect(replyId, state) {
-    this.markResValue = false;
-    this.discussionService.markAsCorrects(replyId, state).subscribe(data => {
-      this.markRepId = replyId;
-      this.markResult = data;
-      this.markResValue = this.markResult.result.option;
-      console.log('Result of markAsCorrect: ', this.markResValue);
-      if (this.markResult.result === true) {
-
+    console.log("mark state", state);
+    this.discussionService.markAsCorrect(replyId, !state).subscribe(data => {
+      console.log('Result of markAsCorrect: ', data);
+      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+        console.log("findindex", _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId }));
+        let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId });
+        if (state === true) {
+          console.log("thread action inside true state", this.threadDetails)
+          this.threadDetails['thread']['replies'][index]['actions'].acceptAnswer = 1;
+          this.threadDetails['thread']['replies'][index].acceptedAnswer = true;
+        }
+        else {
+          console.log("thread action inside flase state", this.threadDetails);
+          this.threadDetails['thread']['replies'][index]['actions'].acceptAnswer = 0;
+          this.threadDetails['thread']['replies'][index].acceptedAnswer = false;
+        }
       }
     });
   }
 
-
-  public loadReplies(threadId) {
-    this.discussionService.getThreadbyId(this.id).subscribe(data => {
-      this.replyData = data;
-      this.replyResult = this.replyData.result.thread.replies;
-      console.log('load replies data, replyResult replies', data, this.replyResult);
-      this.threadDetails = this.replyData.result;
-      this.loadReplyActions(this.replyResult);
-      this.discussionsModel.replyAnswer = '';
-      $('.ui.negative.message').hide();
+//On Archive of Thread function
+  public onArchive(id, state) {
+    console.log('inside onArchive()', id, state);
+    this.discussionService.archiveAction(id, state).subscribe(data => {
+      console.log("Archive data", data);
+      if (data['responseCode'] === 'OK' && data['result'].status === 'archived') {
+      let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
+      if(state === true){
+        this.archivedId = data['result'].id;
+        this.archivedState = false;
+       // this.threadDetails['thread']['replies'][index]['actions'].archived = 1;
+      }
+      else{
+        this.archivedId = data['result'].id;
+        this.archivedState = data['result'].isUndo;
+       // this.threadDetails['thread']['replies'][index]['actions'].archived = 0;
+      } 
+      }
     });
   }
-  public onEditReply(replyId) {
-    for (let i = 0; i < this.threadDetails.thread.replies.length; i++) {
-      if (replyId === this.threadDetails.thread.replies[i].id) {
-        this.el = this.threadDetails.thread.replies[i].cooked;
-        this.discussionsModel.replyAnswer = this.threadDetails.thread.replies[i].cooked;
-      }
+
+  // public loadReplies(threadId) {
+  //   this.discussionService.getThreadbyId(this.id).subscribe(data => {
+  //     this.replyData = data;
+  //     this.replyResult = this.replyData.result.thread.replies;
+  //     console.log('load replies data, replyResult replies', data, this.replyResult);
+  //     this.threadDetails = this.replyData.result;
+  //     this.loadReplyActions(this.replyResult);
+  //     this.discussionsModel.replyAnswer = '';
+  //     $('.ui.negative.message').hide();
+  //   });
+  // }
+
+
+
+  //On Edit Thread()
+  public openThreadEdit: boolean = false;
+ //this.openThreadEdit = false;
+  
+  public onEditThread(id, title, openThreadEdit){
+    this.discussionsModel.threadTitle = title;
+    this.discussionsModel.threadId = id;
+    console.log("openThreadEdit", openThreadEdit);
+    this.discussionService.editThread(this.discussionsModel).subscribe(data => {    
+     console.log("Edit thread",data);
+     if (data['responseCode'] === 'OK' && data['result'].status === 'done'){
+        this.threadDetails.thread.title = this.threadDetails.thread.newTitle;           
+        this.openThreadEdit = false;
+        console.log("openThreadEdit after,", this.openThreadEdit);
+     }   
+     else{
+       console.log("Error in Editing thread");
+     }
+  });    
+  }
+
+
+  writeIconClick(openThreadEdit){
+    this.openThreadEdit = true;
+    console.log("openthread write",this.openThreadEdit);
+  }
+
+  public openReplyEdit : boolean = false;
+  public index: number;
+  writeReplyIconClick(replyId, i){
+   
+    this.index  = _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId });
+    if (replyId === this.threadDetails.thread.replies[this.index].id) {
+      this.threadDetails.thread.replies[this.index].newBody = this.threadDetails.thread.replies[this.index].body  ;    
+      this.openReplyEdit = true;
+      this.threadDetails.thread.replies[this.index]
+   }
+   else{
+    //inline-edit-form.
+    this.openReplyEdit = false;
+    console.log("else of write rply icon");
+   }
+   //this.openReplyEdit = false;
+  }
+    //On Edit Reply()
+    public onEditReply(threadId,replyId, replyBody, openReplyEdit) {
+      this.replyObject.threadId = threadId;
+      this.replyObject.replyId = replyId;
+      this.replyObject.replyAnswer = replyBody;
+     
+      this.discussionService.editReply(this.replyObject).subscribe(data => {    
+        console.log("Edit Reply",data);
+        if (data['responseCode'] === 'OK' && data['result'].status === 'done'){
+          let index  = _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId });
+          if (replyId === this.threadDetails.thread.replies[index].id) {
+             this.threadDetails.thread.replies[index].body = this.threadDetails.thread.replies[index].newBody  ;    
+          }
+          // this.threadDetails.thread.title = this.threadDetails.thread.newTitle;           
+          this.openReplyEdit = false;
+          console.log("reply  after,", this.threadDetails.thread.replies[index].newBody);
+       }   
+       else{
+         console.log("Error in Editing reply");
+       }
+      });
     }
-    console.log('inside ', this.threadDetails, this.discussionsModel.replyAnswer);
-  }
+
   public onLock(id, isLocked) {
     this.lockedState = false;
     console.log('inside onLock', id, isLocked);
@@ -362,13 +499,8 @@ public size: string;
     });   
     isSpam = this.deletedState;
   }
-  public onArchive(id, isArchived) {
-    console.log('inside onArchive()', id, isArchived);
-    this.discussionService.archiveAction(id, isArchived).subscribe(data => {
-      this.archivedId = data['result'].id;
-      this.archivedState = data['result'].option;
-    });
-  }
+
+
 
   ascSortClick() {
     this.param = 'createdDate';
@@ -379,17 +511,16 @@ public size: string;
 
   //replylinkShare()
   replylinkShare(params, replyId ) {
-    window.open(this.currentLocation +"#"+replyId, "_blank");
+   //window.open(this.location+this.threadUrl+"#"+replyId, "_blank");
+   //this._platformLocation.onHashChange(fn);
     console.log("reply id:, currentLocation: ", replyId, this.currentLocation);   
+    console.log("location",this.location+this.threadUrl+"#"+replyId);
    
   } 
   public modalFlag: boolean;
   public popupId: number;
-  //isFoo:boolean ;
-  //this.modalFlag = false;
   showPopup( isFoo, popupReplyId){
-    this.modalFlag = true;
-   //isFoo = false;
+    this.modalFlag = true;   
     this.popupId = popupReplyId; 
     this.shareLink = this.currentLocation +"#"+this.popupId;
     console.log("isFoo",isFoo);

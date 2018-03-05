@@ -55,19 +55,51 @@ export class DiscussionsApiservice extends DataService {
     private handleError(error: Response) {
         return Observable.throw(error.statusText);
     }
+
     postThread(model) {
         const body = {
+            url: '/discussions/v1/thread/create',
             title: model.threadTitle,
             body: model.threadDesc,
             communityId: 'do_212390847580487680138',
-            type: 'qna'
+            contentType: model.contentType,
+            type: 'qna' 
         };
         console.log('inside postThread()', body);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/create`, body)
+        return this.post(body)
             .map((response: Response) => {
                 return response;
             });
     }
+    editThread(model) {
+        const body = {
+            url: '/discussions/v1/thread/edit',
+            title: model.threadTitle,
+            id: model.threadId,
+            communityId: 'do_212390847580487680138',
+            contentType: 'ENROLLED',
+            type: 'qna' 
+        };
+        return this.post(body)
+        .map((response: Response ) => {
+            return response;
+        })
+    }
+
+    editReply(model) {
+        const body = {
+            url: '/discussions/v1/reply/edit',
+            threadId: model.threadId,
+            replyAnswer: model.replyAnswer,
+          
+        };
+        console.log("editrreply in service", body);
+        return this.post(body)
+        .map((response: Response ) => {
+            return response;
+        })
+    }
+
     upvoteAction(id, undo) {
         console.log('inside service actions()', id);
         const option = {
@@ -128,13 +160,13 @@ export class DiscussionsApiservice extends DataService {
             return response;
         });
     }
-    markAsCorrects(replyId, isUndo) {
+    markAsCorrect(replyId, isUndo) {
         console.log('inside mark as correct answer', replyId, isUndo);
         const body = {
-            'id': replyId,
-            'isUndo': isUndo
+            'postId': replyId,
+            'undo': isUndo
         };
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/replies/marksolution`, body)
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/markanswer`, body)
             .map((response: Response) => {
                 return response;
             });
@@ -176,8 +208,9 @@ export class DiscussionsApiservice extends DataService {
         const body = {
             'id': id,
             'isArchived': isArchived
+           
         };
-        console.log('inside lockAction service', id, body);
+        console.log('inside archive of service', id, body);
         return this.http.post(`${this.baseUrl}/discussions/v1/thread/archive/` + id, body)
             .map((response: Response) => {
                 return response;
