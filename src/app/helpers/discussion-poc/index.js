@@ -13,7 +13,6 @@ const API_IDS = {
   getthreadbyid: 'get-thread-by-id',
   actions: 'actions',
   markassolution: 'markassolution',
-  archive: 'archive',
   creategroup: 'create-group'
 }
 
@@ -155,9 +154,113 @@ module.exports = function (keycloak) {
       })
   })
 
+  // router.post('/thread/replies/marksolution', (requestObj, responseObj, next) => {
+  //   console.log('Mark solution body', requestObj.body)
+  //   var data
+  //   if (requestObj.body.isUndo === false) {
+  //     data = {
+  //       id: requestObj.body.id,
+  //       option: true
+  //     }
+  //   } else {
+  //     data = {
+  //       id: requestObj.body.id,
+  //       option: false
+  //     }
+  //   }
+  //   sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  // })
+  router.post('/thread/lock/:id', (requestObj, responseObj, next) => {
+    console.log('lock', requestObj.body)
+    var data
+    if (requestObj.body.isLocked === false) {
+      data = {
+        id: requestObj.body.id,
+        option: true
+      }
+      console.log('inside if', data)
+    } else {
+      data = {
+        id: requestObj.body.id,
+        option: false
+      }
+      console.log('inside else', data)
+    }
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+  router.post('/thread/spam/:id', (requestObj, responseObj, next) => {
+    console.log('lock', requestObj.body)
+    var data
+    if (requestObj.body.isSpam === false) {
+      data = {
+        id: requestObj.body.id,
+        option: true
+      }
+      console.log('inside if', data)
+    } else {
+      data = {
+        id: requestObj.body.id,
+        option: false
+      }
+      console.log('inside else', data)
+    }
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+  router.post('/thread/archive/:id', (requestObj, responseObj, next) => {
+    console.log('lock', requestObj.body)
+    var data
+    if (requestObj.body.isArchived === false) {
+      data = {
+        id: requestObj.body.id,
+        option: true
+      }
+      console.log('inside if', data)
+    } else {
+      data = {
+        id: requestObj.body.id,
+        option: false
+      }
+      console.log('inside else', data)
+    }
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+  /// /////////////////////////////////////////////////////////////////
+  router.put('/thread/edit', (requestObj, responseObj, next) => {
+    threadController.editThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.put('/reply/edit', (requestObj, responseObj, next) => {
+    threadController.replyThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.delete('/thread/lock', (requestObj, responseObj, next) => {
+    threadController.lockThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.delete('/thread/archive', (requestObj, responseObj, next) => {
+    threadController.archiveThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
   return router
 }
-
-
-
 // module.exports = router
