@@ -78,6 +78,24 @@ class ThreadService {
       }
     })
   }
+  
+  checkModerationAccess(threadData, user) {
+    return new Promise((resolve, reject) => {
+      try {
+        let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId, user.userId))
+        if (moderationAllowed === true) {          
+          resolve({access:true})
+        } else {
+          resolve({access:false})
+        }
+      } catch (error) {
+        reject({
+          message: 'Error in checking moderation rights',
+          status: HttpStatus.INTERNAL_SERVER_ERROR
+        })
+      }
+    })
+  }
 
   archiveThread(threadData, user) {
     return new Promise((resolve, reject) => {
