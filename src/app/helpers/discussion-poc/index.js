@@ -5,7 +5,6 @@ let ThreadController = require('./threadController.js')
 let httpService = require('./services/httpWrapper.js')
 let dateFormat = require('dateformat')
 let uuidv1 = require('uuid/v1')
-
 const API_ID_BASE = 'api.plugin.discussions'
 const API_IDS = {
   createthread: 'create-thread',

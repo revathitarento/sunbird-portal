@@ -17,12 +17,12 @@ class ThreadController {
      */
     this.discouseAdapter = new DiscouseAdapter({})
     this.httpService = httpWrapper
-	this.threadService = new ThreadService(this.discouseAdapter)
-	this.userService = new UserService()
+    this.threadService = new ThreadService(this.discouseAdapter)
+    this.userService = new UserService()
   }
 
 
-  
+
   /**
    * Get threads list
    *
@@ -84,9 +84,18 @@ class ThreadController {
     return this.__markAsAnswer()(requestObj)
   }
 
-
-
-
+  archiveThread(requestObj) {
+    return this.__archiveThread()(requestObj)
+  }
+  lockThread(requestObj) {
+    return this.__lockThread()(requestObj)
+  }
+  editThread(requestObj) {
+    return this.__editThread()(requestObj)
+  }
+  editReply(requestObj) {
+    return this.__editReply()(requestObj)
+  }
   /*
    *create thread flow
    *
@@ -106,7 +115,7 @@ class ThreadController {
             }
             let answerData = {
               postId: requestObj.body.postId,
-              undo:requestObj.body.undo
+              undo: requestObj.body.undo
             }
 
             this.threadService.markAsAnswer(answerData, user).then((threadResponse) => {
@@ -134,6 +143,135 @@ class ThreadController {
     })
   }
 
+  __archiveThread(requestObj) {
+    return async ((requestObj) => {
+      try {
+
+        let authUserToken = await (this.userService.getToken(requestObj))
+
+        let userProfile = await (this.userService.getUserProfile(authUserToken))
+
+        if (userProfile) {
+          return new Promise((resolve, reject) => {
+            let user = {
+              userName: userProfile.userName,
+              userId:userProfile.userId
+            }
+            let threadData = {
+              threadId: requestObj.body.threadId
+            }
+            this.threadService.archiveThread(threadData, user).then((threadResponse) => {
+              resolve({
+                status: threadResponse
+              })
+            }, function (error) {
+              reject({
+                error: error
+              })
+            })
+          })
+        } else {
+          return {
+            message: 'Unauthorized User',
+            status: HttpStatus.UNAUTHORIZED
+          }
+        }
+      } catch (error) {
+
+        return {
+          message: 'Error',
+          status: HttpStatus.INTERNAL_SERVER_ERROR
+        }
+      }
+    })
+  }
+
+  __lockThread(requestObj) {
+    return async ((requestObj) => {
+      try {
+
+        let authUserToken = await (this.userService.getToken(requestObj))
+
+        let userProfile = await (this.userService.getUserProfile(authUserToken))
+
+        if (userProfile) {
+          return new Promise((resolve, reject) => {
+            let user = {
+              userName: userProfile.userName,
+              userId:userProfile.userId
+            }
+            let threadData = {
+              threadId: requestObj.body.threadId
+            }
+            this.threadService.lockThread(threadData, user).then((threadResponse) => {
+              resolve({
+                status: threadResponse
+              })
+            }, function (error) {
+              reject({
+                error: error
+              })
+            })
+          })
+        } else {
+          return {
+            message: 'Unauthorized User',
+            status: HttpStatus.UNAUTHORIZED
+          }
+        }
+      } catch (error) {
+
+        return {
+          message: 'Error',
+          status: HttpStatus.INTERNAL_SERVER_ERROR
+        }
+      }
+    })
+  }
+
+  __editThread(requestObj) {
+    return async ((requestObj) => {
+      try {
+
+        let authUserToken = await (this.userService.getToken(requestObj))
+
+        let userProfile = await (this.userService.getUserProfile(authUserToken))
+
+        if (userProfile) {
+          return new Promise((resolve, reject) => {
+            let user = {
+              userName: userProfile.userName,
+              userId:userProfile.userId
+            }
+            let threadData = {
+              threadId: requestObj.body.threadId,
+              title: requestObj.body.title
+            }
+            this.threadService.editThread(threadData, user).then((threadResponse) => {
+              resolve({
+                status: threadResponse
+              })
+            }, function (error) {
+              reject({
+                error: error
+              })
+            })
+          })
+        } else {
+          return {
+            message: 'Unauthorized User',
+            status: HttpStatus.UNAUTHORIZED
+          }
+        }
+      } catch (error) {
+
+        return {
+          message: 'Error',
+          status: HttpStatus.INTERNAL_SERVER_ERROR
+        }
+      }
+    })
+  }
 
   /*
    *create thread flow
@@ -295,13 +433,16 @@ class ThreadController {
             let threadData = {
               title: requestObj.body.title,
               body: requestObj.body.body,
-              communityId: requestObj.body.communityId,
-              type: requestObj.body.type
+              contextId: requestObj.body.contextId,
+              type: requestObj.body.type,
+              contextType: requestObj.body.contextType
             }
             let user = {
               userName: userProfile.userName,
               firstName: userProfile.firstName,
-              email: userProfile.email
+              email: userProfile.email,
+              userId: userProfile.userId,
+              token: authUserToken
             }
 
             this.threadService.createThread(threadData, user).then((threadResponse) => {
