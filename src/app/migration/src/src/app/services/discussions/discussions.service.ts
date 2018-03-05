@@ -1,6 +1,6 @@
 import * as  urlConfig from './../../config/url.config.json';
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http, Response,RequestOptionsArgs } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
@@ -9,6 +9,8 @@ import { DataService } from '../data/data.service';
 import { UserService } from '../user/user.service';
 import { ShareButtons } from '@ngx-share/core';
 const urlConFig = (<any>urlConfig);
+import { HttpClientModule } from '@angular/common/http';
+// import {Http, } from '@angular/http';
 
 @Injectable()
 export class DiscussionsApiservice extends DataService {
@@ -30,7 +32,7 @@ export class DiscussionsApiservice extends DataService {
         const option = {
             url: '/discussions/v1/list/',
             data: {
-                communityId: 'do_212390847580487680138',
+                communityId: communityId,
                 type: 'qna'
             }
         };
@@ -61,8 +63,8 @@ export class DiscussionsApiservice extends DataService {
            // url: '/discussions/v1/thread/create',
             title: model.threadTitle,
             body: model.threadDesc,
-            contextId: 'do_212390847580487680138',
-            contentType: model.contentType,
+            contextId: '01245108888897126412',
+            contextType: 'batch',
             type: 'qna' 
         };
         console.log('inside postThread()', body);
@@ -205,17 +207,27 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
-    archiveAction(id, isArchived) {
-        const body = {
-            'id': id,
-            'isArchived': isArchived
-           
-        };
-        console.log('inside archive of service', id, body);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/archive/` + id, body)
-            .map((response: Response) => {
-                return response;
-            });
-    }
+    // archiveAction(id: string) {
+    //     let body = 
+    //         {
+    //             'id': id                 
+    //       };
+    //     let headers = new Headers({ 'Content-Type': 'application/json' });
+    //     let options = new RequestOptions({
+    //       headers: headers,
+    //       body : body
+    //     });
+      
+    //     return this.http.delete("/discussions/v1/thread/archive/", options)
+    //           .map(res => this.extractData(res))
+    //           .catch(this.handleError);
+
+
+
+        
+
+
+       
+    // }
     
 }

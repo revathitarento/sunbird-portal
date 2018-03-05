@@ -42,7 +42,7 @@
                                     </div>
                                 </div>
                                 <div class="item" *ngFor="let thread of result | sortByDate:param; let i = index">
-                                   <!-- Full thread {{thread | json}} -->
+                                   Full thread {{thread | json}}
                                     <div class="content">
                                         <a (click)="gotoThread(thread.id)" [ngClass]="(thread.seen == true)?'seenClass':''" class="header quesHeading margin-top-10 margin-bottom-10">{{thread.title }}</a>
                                         <div class=" ">

@@ -326,7 +326,7 @@ this.threadUrl = '/migration/thread-details';
   public submitReply() {
     this.isLoading = true;
     this.reply = {
-      'contextId': 'do_212390847580487680138',
+      'contextId': '01245108888897126412',
       'description': this.discussionsModel.replyAnswer
     };
     this.btnloader = true;
@@ -336,7 +336,7 @@ this.threadUrl = '/migration/thread-details';
       console.log('thread details reponse: ', this.replyData);
       this.replyResult = this.replyData.result.id;
       this.isLoading = !this.isLoading;
-      // this.loadReplies(this.replyResult);
+      this.loadReplies(this.replyResult);
       if (this.replyResult !== undefined) {
         this.successMessage = true;
         setTimeout(() => {
@@ -373,7 +373,7 @@ this.threadUrl = '/migration/thread-details';
 //On Archive of Thread function
   public onArchive(id, state) {
     console.log('inside onArchive()', id, state);
-    this.discussionService.archiveAction(id, state).subscribe(data => {
+    this.discussionService.archiveAction(id).subscribe(data => {
       console.log("Archive data", data);
       if (data['responseCode'] === 'OK' && data['result'].status === 'archived') {
       let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
@@ -391,17 +391,17 @@ this.threadUrl = '/migration/thread-details';
     });
   }
 
-  // public loadReplies(threadId) {
-  //   this.discussionService.getThreadbyId(this.id).subscribe(data => {
-  //     this.replyData = data;
-  //     this.replyResult = this.replyData.result.thread.replies;
-  //     console.log('load replies data, replyResult replies', data, this.replyResult);
-  //     this.threadDetails = this.replyData.result;
-  //     this.loadReplyActions(this.replyResult);
-  //     this.discussionsModel.replyAnswer = '';
-  //     $('.ui.negative.message').hide();
-  //   });
-  // }
+  public loadReplies(threadId) {
+    this.discussionService.getThreadbyId(this.id).subscribe(data => {
+      this.replyData = data;
+      this.replyResult = this.replyData.result.thread.replies;
+      console.log('load replies data, replyResult replies', data, this.replyResult);
+      this.threadDetails = this.replyData.result;
+     // this.loadReplyActions(this.replyResult);
+      this.discussionsModel.replyAnswer = '';
+      $('.ui.negative.message').hide();
+    });
+  }
 
 
 

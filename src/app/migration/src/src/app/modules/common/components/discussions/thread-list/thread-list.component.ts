@@ -33,7 +33,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
         this.courseType = 'ENROLLED_COURSE';
     }
     public displayThreads() {
-        this.discussionService.getThreads(this.id).subscribe(data => {
+        this.discussionService.getThreads('01245108888897126412').subscribe(data => {
             console.log('data from getThreads', data);
             this.threads = data;
             this.result = this.threads.result.threads;

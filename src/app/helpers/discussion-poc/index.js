@@ -13,7 +13,6 @@ const API_IDS = {
   getthreadbyid: 'get-thread-by-id',
   actions: 'actions',
   markassolution: 'markassolution',
-  archive: 'archive',
   creategroup: 'create-group'
 }
 
@@ -145,13 +144,41 @@ module.exports = function (keycloak) {
         sendErrorResponse(responseObj, API_IDS.markassolution, err.message, err.status)
       })
   })
-  router.post('/group/create', (requestObj, responseObj, next) => {
-    threadController.createGroup(requestObj)
+
+  router.put('/thread/edit', (requestObj, responseObj, next) => {
+    threadController.editThread(requestObj)
       .then((data) => {
-        sendSuccessResponse(responseObj, API_IDS.creategroup, data, HttpStatus.OK)
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
       })
       .catch((err) => {
-        sendErrorResponse(responseObj, API_IDS.creategroup, err.message, err.status)
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.put('/reply/edit', (requestObj, responseObj, next) => {
+    threadController.replyThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.delete('/thread/lock', (requestObj, responseObj, next) => {
+    threadController.lockThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.delete('/thread/archive', (requestObj, responseObj, next) => {
+    threadController.archiveThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
       })
   })
   router.post('/thread/edit', (requestObj, responseObj, next) => {   
@@ -210,19 +237,16 @@ module.exports = function (keycloak) {
   })
 
 
-  router.post('/thread/archive/:id', (requestObj, responseObj, next) => {
+  // router.post('/thread/archive/:id', (requestObj, responseObj, next) => {
    
-    var data    
-      data = {       
-          status: "archived",
-          isUndo: true
-      }
-      console.log('archive in node', data)
-    sendSuccessResponse(responseObj, API_IDS.archive, data, HttpStatus.OK)
-  })
+  //   var data    
+  //     data = {       
+  //         status: "archived",
+  //         isUndo: true
+  //     }
+  //     console.log('archive in node', data)
+  //   sendSuccessResponse(responseObj, API_IDS.archive, data, HttpStatus.OK)
+  // })
   return router
 }
-
-
-
 // module.exports = router
