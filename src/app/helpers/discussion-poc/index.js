@@ -5,7 +5,6 @@ let ThreadController = require('./threadController.js')
 let httpService = require('./services/httpWrapper.js')
 let dateFormat = require('dateformat')
 let uuidv1 = require('uuid/v1')
-
 const API_ID_BASE = 'api.plugin.discussions'
 const API_IDS = {
   createthread: 'create-thread',
@@ -224,6 +223,43 @@ module.exports = function (keycloak) {
       console.log('inside else', data)
     }
     sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+  /// /////////////////////////////////////////////////////////////////
+  router.put('/thread/edit', (requestObj, responseObj, next) => {
+    threadController.editThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.put('/reply/edit', (requestObj, responseObj, next) => {
+    threadController.replyThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.delete('/thread/lock', (requestObj, responseObj, next) => {
+    threadController.lockThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.delete('/thread/archive', (requestObj, responseObj, next) => {
+    threadController.archiveThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
   })
   return router
 }
