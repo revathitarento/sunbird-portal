@@ -13,7 +13,6 @@ const API_IDS = {
   getthreadbyid: 'get-thread-by-id',
   actions: 'actions',
   markassolution: 'markassolution',
-  archive: 'archive',
   creategroup: 'create-group'
 }
 
@@ -145,19 +144,43 @@ module.exports = function (keycloak) {
         sendErrorResponse(responseObj, API_IDS.markassolution, err.message, err.status)
       })
   })
-  router.post('/group/create', (requestObj, responseObj, next) => {
-    threadController.createGroup(requestObj)
+
+  router.put('/thread/edit', (requestObj, responseObj, next) => {
+    threadController.editThread(requestObj)
       .then((data) => {
-        sendSuccessResponse(responseObj, API_IDS.creategroup, data, HttpStatus.OK)
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
       })
       .catch((err) => {
-        sendErrorResponse(responseObj, API_IDS.creategroup, err.message, err.status)
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
       })
   })
-
+  router.put('/reply/edit', (requestObj, responseObj, next) => {
+    threadController.replyThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.delete('/thread/lock', (requestObj, responseObj, next) => {
+    threadController.lockThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
+  router.delete('/thread/archive', (requestObj, responseObj, next) => {
+    threadController.archiveThread(requestObj)
+      .then((data) => {
+        sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
+      })
+      .catch((err) => {
+        sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
+      })
+  })
   return router
 }
-
-
-
 // module.exports = router
