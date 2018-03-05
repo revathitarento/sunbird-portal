@@ -154,7 +154,72 @@ module.exports = function (keycloak) {
         sendErrorResponse(responseObj, API_IDS.creategroup, err.message, err.status)
       })
   })
+  router.post('/thread/edit', (requestObj, responseObj, next) => {   
+    var data    
+      data = {
+       status: 'done'
+    }
+    console.log('Edit thread body', requestObj)
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
 
+  router.post('/reply/edit',(requestObj, responseObj, next) => {
+    var data    
+    data = {
+     status: 'done'
+  }
+  console.log('Edit reply body', requestObj)
+  sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+
+  router.post('/thread/lock/:id', (requestObj, responseObj, next) => {
+    console.log('lock', requestObj.body)
+    var data
+    if (requestObj.body.isLocked === false) {
+      data = {
+        id: requestObj.body.id,
+        option: true
+      }
+      console.log('inside if', data)
+    } else {
+      data = {
+        id: requestObj.body.id,
+        option: false
+      }
+      console.log('inside else', data)
+    }
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+  router.post('/thread/spam/:id', (requestObj, responseObj, next) => {
+    console.log('lock', requestObj.body)
+    var data
+    if (requestObj.body.isSpam === false) {
+      data = {
+        id: requestObj.body.id,
+        option: true
+      }
+      console.log('inside if', data)
+    } else {
+      data = {
+        id: requestObj.body.id,
+        option: false
+      }
+      console.log('inside else', data)
+    }
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+
+
+  router.post('/thread/archive/:id', (requestObj, responseObj, next) => {
+   
+    var data    
+      data = {       
+          status: "archived",
+          isUndo: true
+      }
+      console.log('archive in node', data)
+    sendSuccessResponse(responseObj, API_IDS.archive, data, HttpStatus.OK)
+  })
   return router
 }
 

@@ -149,6 +149,9 @@
                                                     <button shareButton="facebook" sbUrl="{{shareLink}}"><i class="fa fa-facebook"></i>Share</button>
                                                     <button shareButton="twitter" sbUrl="{{shareLink}}"><i class="fa fa-twitter"></i>Tweet</button>
                                                     <button shareButton="linkedin" sbUrl="{{shareLink}}"><i class="fa fa-linkedin"></i>LinkedIn</button>
+                                                    <!-- <a href="mailto:?to=&subject=%5BDiscourse%5D%20"+{{reply.body}}+"&body="{{shareLink}}">
+                                                            <i class="fa fa-mail">
+                                                                </i></a> -->
                                                 </div>                                               
                                         </sui-modal>
 
@@ -187,14 +190,14 @@
                                     </form>
                                     <!--Notification-->
                                     <div class="error_notify margin-top-15">
-                                        <div class="ui tiny green message" *ngIf="actId == 2 && repId == reply.id && notifyActions == true && actionType == 'can_act'">Like removed</div>
-                                        <div class="ui tiny green message" *ngIf="actId == 2 && repId == reply.id && notifyActions == true && actionType == 'acted'">Liked the post </div>
+                                        <div class="ui tiny green message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.vote ==0">Like removed</div>
+                                        <div class="ui tiny green message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==1">Liked the post </div>
 
-                                        <div class="ui tiny orange message" *ngIf="actId == 5 && repId == reply.id && notifyActions == true && actionType == 'can_act'">Dislike removed</div>
-                                        <div class="ui tiny orange message" *ngIf="actId == 5 && repId == reply.id && notifyActions == true && actionType == 'acted'">Post is disliked</div>
+                                        <div class="ui tiny orange message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==0">Dislike removed</div>
+                                        <div class="ui tiny orange message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==1">Post is disliked</div>
 
-                                        <div class="ui tiny red message" *ngIf="actId == 8 && repId == reply.id && notifyActions == true  && actionType == 'can_act'">Spam removed</div>
-                                        <div class="ui tiny red message" *ngIf="actId == 8 && repId == reply.id && notifyActions == true  && actionType == 'acted'">Post is spammed</div>
+                                        <div class="ui tiny red message" *ngIf="repId == reply.id && notifyActions == true  && actionType == 'can_act'">Spam removed</div>
+                                        <div class="ui tiny red message" *ngIf="repId == reply.id && notifyActions == true  && actionType == 'acted'">Post is spammed</div>
                                     </div>
                                     <!--Notification ends-->
                                 </div>

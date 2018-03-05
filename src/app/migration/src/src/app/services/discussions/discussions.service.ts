@@ -58,18 +58,19 @@ export class DiscussionsApiservice extends DataService {
 
     postThread(model) {
         const body = {
-            url: '/discussions/v1/thread/create',
+           // url: '/discussions/v1/thread/create',
             title: model.threadTitle,
             body: model.threadDesc,
-            communityId: 'do_212390847580487680138',
+            contextId: 'do_212390847580487680138',
             contentType: model.contentType,
             type: 'qna' 
         };
         console.log('inside postThread()', body);
-        return this.post(body)
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/create`, body)       
             .map((response: Response) => {
+                console.log("Response of post thread", response);
                 return response;
-            });
+            });            
     }
     editThread(model) {
         const body = {

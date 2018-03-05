@@ -19,7 +19,7 @@ export class CreateThreadComponent implements OnInit {
     public errorMessage: boolean;
     public discussionsModel = new DiscussionsObject('', '', '');    
     constructor(private router: Router, private route: ActivatedRoute, private discussionService: DiscussionsApiservice) { 
-        this.discussionsModel.contentType = 'ENROLLED_COURSE';
+        this.discussionsModel.contentType = 'batch';
     }
     ngOnInit() {
         this.loading = true;

@@ -64,9 +64,9 @@
                                                 <span title="dislike" class="cursor-pointer">
                                                     <i class="custom-vote-icon thumbs down icon"></i>
                                                 </span>
-                                                <span title="share a link to this thread" class="cursor-pointer" [cbContent]="baseUrl + 'migration/thread-details/' + thread.id" ngxClipboard (cbOnSuccess)="linkShare()">
+                                                <!-- <span title="share a link to this thread" class="cursor-pointer" [cbContent]="baseUrl + 'migration/thread-details/' + thread.id" ngxClipboard (cbOnSuccess)="linkShare()">
                                                     <i class="linkify icon"></i>
-                                                </span>
+                                                </span> -->
                                                 <span title="Archive this post" class="cursor-pointer" (click)="onArchive(thread.id,false)">
                                                     <i class="archive icon"  [ngClass]="archivedState == true && index === i?'ui brown':''"  ></i>
                                                 </span>

@@ -41,3 +41,8 @@
     background-color: blue;
     color: #000 !important;
 }
+.single-reply .ui.form textarea:not([rows]) {
+    height: 12em;
+    min-height: 4em;
+    max-height: 8em;
+}
