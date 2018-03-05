@@ -10,7 +10,8 @@
                                 <div class="header courseStructureSectionHeading discussionHeading">Questions</div>
                                 <div class="ui category search">
                                     <div class="ui icon input">
-                                        <input class="prompt" type="text" placeholder="Search threads, replies" [(ngModel)]="query" (keyup)="filter()">
+                                        <input class="prompt" type="text" placeholder="Search threads, replies" [(ngModel)]="query" >
+                                        <!-- (keyup)="filter()" -->
                                         <i class="search icon"></i>
                                     </div>
                                     <div class="results"></div>
@@ -40,7 +41,7 @@
                                         </small>
                                     </div>
                                 </div>
-                                <div class="item" *ngFor="let thread of result | sortByDate:param">
+                                <div class="item" *ngFor="let thread of result | sortByDate:param; let i = index">
                                    <!-- Full thread {{thread | json}} -->
                                     <div class="content">
                                         <a (click)="gotoThread(thread.id)" [ngClass]="(thread.seen == true)?'seenClass':''" class="header quesHeading margin-top-10 margin-bottom-10">{{thread.title }}</a>
@@ -59,15 +60,15 @@
                                                 <span>{{thread.author.name}}</span>
                                                 <span title="like" class="cursor-pointer">
                                                     <i class="custom-vote-icon thumbs up icon"></i>
-                                                </span> {{thread.likeCount}}
+                                                </span> {{thread.voteCount}}
                                                 <span title="dislike" class="cursor-pointer">
                                                     <i class="custom-vote-icon thumbs down icon"></i>
                                                 </span>
                                                 <span title="share a link to this thread" class="cursor-pointer" [cbContent]="baseUrl + 'migration/thread-details/' + thread.id" ngxClipboard (cbOnSuccess)="linkShare()">
                                                     <i class="linkify icon"></i>
                                                 </span>
-                                                <span title="delete this post" class="cursor-pointer">
-                                                    <i class="trash outline icon"></i>
+                                                <span title="Archive this post" class="cursor-pointer" (click)="onArchive(thread.id,false)">
+                                                    <i class="archive icon"  [ngClass]="archivedState == true && index === i?'ui brown':''"  ></i>
                                                 </span>
                                                 <span title="lock this post" class="cursor-pointer">
                                                     <i class="lock icon"></i>

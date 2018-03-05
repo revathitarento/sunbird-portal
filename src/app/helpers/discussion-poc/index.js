@@ -14,6 +14,7 @@ const API_IDS = {
   getthreadbyid: 'get-thread-by-id',
   actions: 'actions',
   markassolution: 'markassolution',
+  archive: 'archive',
   creategroup: 'create-group'
 }
 
@@ -155,22 +156,24 @@ module.exports = function (keycloak) {
       })
   })
 
-  // router.post('/thread/replies/marksolution', (requestObj, responseObj, next) => {
-  //   console.log('Mark solution body', requestObj.body)
-  //   var data
-  //   if (requestObj.body.isUndo === false) {
-  //     data = {
-  //       id: requestObj.body.id,
-  //       option: true
-  //     }
-  //   } else {
-  //     data = {
-  //       id: requestObj.body.id,
-  //       option: false
-  //     }
-  //   }
-  //   sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
-  // })
+  router.post('/thread/edit', (requestObj, responseObj, next) => {   
+    var data    
+      data = {
+       status: 'done'
+    }
+    console.log('Edit thread body', requestObj)
+    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+
+  router.post('/reply/edit',(requestObj, responseObj, next) => {
+    var data    
+    data = {
+     status: 'done'
+  }
+  console.log('Edit reply body', requestObj)
+  sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  })
+
   router.post('/thread/lock/:id', (requestObj, responseObj, next) => {
     console.log('lock', requestObj.body)
     var data
@@ -207,24 +210,27 @@ module.exports = function (keycloak) {
     }
     sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
   })
+
+
   router.post('/thread/archive/:id', (requestObj, responseObj, next) => {
-    console.log('lock', requestObj.body)
-    var data
-    if (requestObj.body.isArchived === false) {
-      data = {
-        id: requestObj.body.id,
-        option: true
+   
+    var data    
+      data = {       
+          status: "archived",
+          isUndo: true
       }
-      console.log('inside if', data)
-    } else {
-      data = {
-        id: requestObj.body.id,
-        option: false
-      }
-      console.log('inside else', data)
-    }
-    sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+      console.log('archive in node', data)
+    sendSuccessResponse(responseObj, API_IDS.archive, data, HttpStatus.OK)
   })
+
+  // router.post('/thread/checkAccess/:id', (requestObj, responseObj, next) => {
+  //   var data = true;
+  //   sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
+  // })
+
   return router
 }
+
+
+
 // module.exports = router

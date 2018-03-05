@@ -55,8 +55,10 @@ export class DiscussionsApiservice extends DataService {
     private handleError(error: Response) {
         return Observable.throw(error.statusText);
     }
+
     postThread(model) {
         const body = {
+            url: '/discussions/v1/thread/create',
             title: model.threadTitle,
             body: model.threadDesc,
             communityId: 'do_212390847580487680138',
@@ -64,11 +66,40 @@ export class DiscussionsApiservice extends DataService {
             type: 'qna' 
         };
         console.log('inside postThread()', body);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/create`, body)
+        return this.post(body)
             .map((response: Response) => {
                 return response;
             });
     }
+    editThread(model) {
+        const body = {
+            url: '/discussions/v1/thread/edit',
+            title: model.threadTitle,
+            id: model.threadId,
+            communityId: 'do_212390847580487680138',
+            contentType: 'ENROLLED',
+            type: 'qna' 
+        };
+        return this.post(body)
+        .map((response: Response ) => {
+            return response;
+        })
+    }
+
+    editReply(model) {
+        const body = {
+            url: '/discussions/v1/reply/edit',
+            threadId: model.threadId,
+            replyAnswer: model.replyAnswer,
+          
+        };
+        console.log("editrreply in service", body);
+        return this.post(body)
+        .map((response: Response ) => {
+            return response;
+        })
+    }
+
     upvoteAction(id, undo) {
         console.log('inside service actions()', id);
         const option = {
@@ -173,13 +204,14 @@ export class DiscussionsApiservice extends DataService {
                 return response;
             });
     }
-    archiveAction(id, userId, isArchived) {
-        const  request = {
-            "threadId": id, // Mandatory, unique ID of the thread to archive
-            "userId": '874ed8a5-782e-4f6c-8f36-e0288455901e' // Mandatory, unique ID of the user archiving the thread
-            }
-        console.log('inside lockAction service', id, request);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/archive/` + id, request)
+    archiveAction(id, isArchived) {
+        const body = {
+            'id': id,
+            'isArchived': isArchived
+           
+        };
+        console.log('inside archive of service', id, body);
+        return this.http.post(`${this.baseUrl}/discussions/v1/thread/archive/` + id, body)
             .map((response: Response) => {
                 return response;
             });
