@@ -33,7 +33,7 @@ class ThreadService {
         let group = await (this.groupService.getOrCreateGroup(threadData.contextType, threadData.contextId, user))
         if (group) {
           let threadId = await (this.discussionAdapter.createThread(threadData, user))
-          this.groupService.addThreadConfig(group, threadId).then((success) => {
+          this.groupService.addThreadConfig(group, threadId,user.userId).then((success) => {
               resolve(threadId)
             },
             (error) => {

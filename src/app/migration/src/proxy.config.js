@@ -10,7 +10,7 @@ const PROXY_CONFIG = [
     target: 'http://localhost:3000',
     secure: false,
     logLevel: 'debug',
-    pathRewrite: {'/userId': '/d1924601-9ce1-4b6e-b3b1-1442a3d61ac4'}
+    pathRewrite: {'/userId': '/3becd312-737c-4192-8c69-c01146b8a80e'}
   }
- ]
- module.exports = PROXY_CONFIG
+]
+module.exports = PROXY_CONFIG

@@ -512,8 +512,8 @@ class ThreadController {
       } catch (error) {
 
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message,
+          status: error.status
         }
       }
     })
@@ -535,7 +535,7 @@ class ThreadController {
         if (userId) {
           return new Promise((resolve, reject) => {
             let threadFilters = {
-              communityId: requestObj.body.communityId,
+              contextId: requestObj.body.contextId,
               type: requestObj.body.type
             }
             let user = {
