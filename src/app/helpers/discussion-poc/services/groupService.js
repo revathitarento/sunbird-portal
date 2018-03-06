@@ -213,11 +213,11 @@ class GroupService {
     })
   }
 
-  getGroupMemberByUserId(groupId, userId) {
+  getGroupMemberByUserId(userId,threadId) {
     return new Promise((resolve, reject) => {
-      this.cassandraModel.instance.GroupMember.findOne({
-        groupid: groupId,
-        userid: userId
+      this.cassandraModel.instance.GroupMember.findOne({       
+        userid: userId,
+        scope:threadId
       }, {
         raw: true,
         allow_filtering: true
@@ -232,13 +232,15 @@ class GroupService {
 
   checkModerationAccess(threadId, userId) {
     return new Promise((resolve, reject) => {
-      let thread = await (this.getThreadConfig(threadId))
-      let groupMember = await (this.getGroupMemberByUserId(thread.groupid, userId))
-      if (groupMember && groupMember.roles && (groupMember.roles.indexOf('owner') >= 0 || groupMember.roles.indexOf('moderator') >= 0)) {
-        resolve(true)
-      } else {
-        resolve(false)
-      }
+      
+        let groupMember = await (this.getGroupMemberByUserId(userId,threadId))
+        if (groupMember && groupMember.roles && (groupMember.roles.indexOf('owner') >= 0 || groupMember.roles.indexOf('moderator') >= 0)) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+     
+     
     })
   }
 
