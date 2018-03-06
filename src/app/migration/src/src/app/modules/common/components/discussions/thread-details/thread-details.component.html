@@ -9,14 +9,14 @@
                             <div class="ui text loader">Loading</div>
                         </div>
                         <div class="ui top padded grid">
-                            <div class="text-align-left">
-                                <a class="cursor-pointer go-back-arrow" [routerLink]="['/migration/thread-list', id]">
-                                    <i class="large arrow left icon"></i>
-                                </a>
-                            </div>
+                            <!-- <div class="text-align-left">
+                                
+                            </div> -->
                             <!-- full thread details: {{threadDetails | json}} -->
                             <div class="cardsHeading">
-                                {{threadDetails.thread.title}}
+                                <a class="cursor-pointer go-back-arrow" [routerLink]="['/migration/thread-list/0124543621061672965']">
+                                    <i class="medium arrow left icon"></i>
+                                </a>   {{threadDetails.thread.title}}
                                 <a class="addeditprofile cursor-pointer" *ngIf="!openThreadEdit" (click)="writeIconClick(openThreadEdit)"> <i class="write icon"></i> </a>                              
                                 <a class="addeditprofile cursor-pointer" *ngIf="openThreadEdit" (click)="openThreadEdit=false">
                                     Close</a> 
@@ -63,17 +63,14 @@
                                             </span> -->
                                             <span  title="lock this post" class="cursor-pointer"
                                                 (click)="onLock(threadDetails.thread.id)">
-                                                <i class="lock icon" [ngClass]="lockedState == true? 'unlock alternate icon ui red':''"></i>
+                                                <i class="lock icon" [ngClass]="threadDetails.thread.locked == true? 'unlock alternate icon ui red':''"></i>
                                             </span>
                                            
                                             <span title="archive this post" class="cursor-pointer"
                                                 (click)="onArchive(threadDetails.thread.id,false)">
-                                                <i class="archive icon"  [ngClass]="archivedState == true?'ui brown':''" ></i>
+                                                <i class="archive icon"  [ngClass]="threadDetails.thread.archived == true || archivedState === true ?'ui brown':''" ></i>
                                             </span>
-                                            <!-- <span *ngIf="archivedId == threadDetails.thread.id && archivedState == true" title="unarchive this post" class="cursor-pointer"
-                                                (click)="onArchive(threadDetails.thread.id,true)">
-                                                <i class="archive icon ui brown"></i>
-                                            </span> -->
+                                           
                                             <!-- <span title="spam this post" class="cursor-pointer" (click)="spamAction(threadDetails.thread.id, isSpam = deletedState)" >
                                                 <i class="ban icon" [ngClass]="deletedId == threadDetails.thread.id && deletedState == false?'ui brown':''"></i>
                                             </span>  -->
@@ -100,13 +97,20 @@
 
                         </div>
                         <div class="ui divider"></div>
-                        <div class="ui comments">
+                        <div class="ui comments">                               
+                                <sui-message class="warning" *ngIf="errorState == true">
+                                        <div class="header">
+                                                You are not authorised to perform this action
+                                        </div>                                      
+                                    </sui-message>
+                              
                                 <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId  &&  notifyActions == true && threadDetails.thread.actions.vote == 1">Liked the thread</div>
                                 <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId   && notifyActions == true && threadDetails.thread.actions.vote == 0">Unliked the thread</div>
     
-                                <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId && archivedState == true && notifyActions == true">Archived the thread</div>
-                                <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId && archivedState == false  && notifyActions == true">Removed the archive</div>
-    
+                                <div class="ui tiny green message" *ngIf="threadDetails.thread.id == repId && archivedState == true && notifyActions == true">Archived  the thread</div>
+                                <div class="ui tiny red message" *ngIf="threadDetails.thread.id == repId && archivedState == false  && notifyActions == true">Removed the archive</div>
+
+                                
                                 <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId && lockedState == true  && notifyActions == true">Locked the thread</div>
                                 <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId && lockedState == false  && notifyActions == true">UnLocked the thread</div>
     

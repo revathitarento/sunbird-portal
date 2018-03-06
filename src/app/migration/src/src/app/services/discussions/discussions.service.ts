@@ -187,41 +187,34 @@ export class DiscussionsApiservice extends DataService {
             });
     }
     lockAction(id) {
-        const body = {
-            'threadId': id
-        };
-        console.log('inside lockAction service', id, body);
-        return this.http.delete(`${this.baseUrl}/discussions/v1/thread/lock/`)
-            .map((response: Response) => {
-                return response;
-            });
+        let obj = 
+            {
+                'threadId': id
+            };
+        let jsonObj = JSON.stringify(obj);
+
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+        });
+        let options = new RequestOptions({
+            headers: headers,
+            body: obj
+        });
+
+        return  this.http.delete("/discussions/v1/thread/lock",options)
+      .map((response: Response) => {
+            return response;
+        });
+    
     }
-    spamAction(id, isSpam) {
-        const body = {
-            'id': id,
-            'isSpam': isSpam
-        };
-        console.log('inside spam action service', id, body);
-        return this.http.post(`${this.baseUrl}/discussions/v1/thread/spam/` + id, body)
-            .map((response: Response) => {
-                return response;
-            });
-    }
+ 
     archiveAction(id: string) {
         let obj = 
             {
                 'threadId': id                 
           };
           let jsonObj = JSON.stringify(obj);
-        // let headers = new Headers({ 'Content-Type': 'application/json' });
-        // let options = new RequestOptions({
-        //   headers: headers,
-        //   body : body
-        // });
-      
-        // return this.http.delete("/discussions/v1/thread/archive/", options)
-        //       .map(res => this.extractData(res))
-        //       .catch(this.handleError);
+       
         let headers = new Headers({
             'Content-Type': 'application/json'
           });
@@ -231,20 +224,31 @@ export class DiscussionsApiservice extends DataService {
           });
         
         
-        return  this.http.delete("/discussions/v1/thread/archive", options)
-        .map((response: Response) => {
-          return response.json()
-        })
-        .catch(err => {
-          return err;
+        // return  this.http.delete("/discussions/v1/thread/archive", options)
+        // .map((response: Response) => {
+        //   console.log(" response.json()", response.json());
+        // })
+        // .catch(err => {
+        //   return err;
+        // });
+
+      return  this.http.delete("/discussions/v1/thread/archive",options)
+      .map((response: Response) => {
+            return response;
         });
-
-
-       
-    }
-    
+   
 }
 
-// this._http.delete('/discussions/v1/thread/archive/'+id)
-//             .map(res => res.json());
-//     }
+
+
+spamAction(id, isSpam) {
+    const body = {
+        'id': id,
+        'isSpam': isSpam
+    };
+    console.log('inside spam action service', id, body);
+    return this.http.post(`${this.baseUrl}/discussions/v1/thread/spam/` + id, body)
+        .map((response: Response) => {
+            return response;
+        });
+}
