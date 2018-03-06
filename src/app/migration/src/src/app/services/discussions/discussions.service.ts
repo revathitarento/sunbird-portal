@@ -1,6 +1,6 @@
 import * as  urlConfig from './../../config/url.config.json';
 import { Injectable } from '@angular/core';
-import { Http, Response,RequestOptionsArgs } from '@angular/http';
+import { Http, Response,RequestOptionsArgs, RequestOptions } from '@angular/http';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
@@ -10,6 +10,7 @@ import { UserService } from '../user/user.service';
 import { ShareButtons } from '@ngx-share/core';
 const urlConFig = (<any>urlConfig);
 import { HttpClientModule } from '@angular/common/http';
+import { Headers } from '@angular/http';
 // import {Http, } from '@angular/http';
 
 @Injectable()
@@ -221,13 +222,22 @@ export class DiscussionsApiservice extends DataService {
         // return this.http.delete("/discussions/v1/thread/archive/", options)
         //       .map(res => this.extractData(res))
         //       .catch(this.handleError);
-
-        return this.http
-        .request('DELETE', '/discussions/v1/thread/archive/', { body: jsonObj })
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+          });
+          let options = new RequestOptions({
+            headers: headers,
+            body: obj
+          });
+        
+        
+        return  this.http.delete("/discussions/v1/thread/archive", options)
         .map((response: Response) => {
-            return response;
+          return response.json()
         })
-        .catch(this.handleError);       
+        .catch(err => {
+          return err;
+        });
 
 
        
