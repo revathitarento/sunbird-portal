@@ -122,6 +122,7 @@ class GroupService {
           userid: member.userId,
           roles: member.roles,
           status: 1,
+          scope: '*',
           joiningdate: Date.now().toString(),
           createddate: Date.now().toString(),
           updateddate: Date.now().toString()
@@ -173,8 +174,20 @@ class GroupService {
     })
   }
 
-  addThreadConfig(groupId, threadId) {
+  addThreadConfig(groupId, threadId, userId) {
     return new Promise((resolve, reject) => {
+
+      let groupMemberData = new CassandraModel.instance.GroupMember({
+        groupid: groupId.toString(),
+        userid: userId,
+        roles: ['owner'],
+        status: 1,
+        scope: threadId.toString(),
+        joiningdate: Date.now().toString(),
+        createddate: Date.now().toString(),
+        updateddate: Date.now().toString()
+      })
+
       let threadConfig = new CassandraModel.instance.ThreadConfig({
         threadid: threadId.toString(),
         groupid: groupId.toString(),
@@ -187,7 +200,14 @@ class GroupService {
           console.log(err)
           reject(err)
         } else {
-          resolve(true)
+          groupMemberData.save(function (err) {
+            if (err) {
+              console.log(err)
+              reject(err)
+            } else {
+              resolve(true)
+            }
+          })
         }
       })
     })
@@ -216,8 +236,7 @@ class GroupService {
       let groupMember = await (this.getGroupMemberByUserId(thread.groupid, userId))
       if (groupMember && groupMember.roles && (groupMember.roles.indexOf('owner') >= 0 || groupMember.roles.indexOf('moderator') >= 0)) {
         resolve(true)
-      }
-      else{
+      } else {
         resolve(false)
       }
     })

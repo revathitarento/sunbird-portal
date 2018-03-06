@@ -32,7 +32,7 @@ export class DiscussionsApiservice extends DataService {
         const option = {
             url: '/discussions/v1/list/',
             data: {
-                communityId: communityId,
+                contextId: communityId,
                 type: 'qna'
             }
         };
@@ -58,12 +58,12 @@ export class DiscussionsApiservice extends DataService {
         return Observable.throw(error.statusText);
     }
 
-    postThread(model) {
+    postThread(contextId,model) {
         const body = {
            // url: '/discussions/v1/thread/create',
             title: model.threadTitle,
             body: model.threadDesc,
-            contextId: '01245108888897126412',
+            contextId: contextId,
             contextType: 'batch',
             type: 'qna' 
         };
@@ -190,7 +190,7 @@ export class DiscussionsApiservice extends DataService {
             'threadId': id
         };
         console.log('inside lockAction service', id, body);
-        return this.http.delete(`${this.baseUrl}/discussions/v1/thread/lock/`, body)
+        return this.http.delete(`${this.baseUrl}/discussions/v1/thread/lock/`)
             .map((response: Response) => {
                 return response;
             });

@@ -37,7 +37,7 @@ export class CreateThreadComponent implements OnInit {
       }
     public onCreateThread() {
         this.isLoading = true;
-        this.discussionService.postThread(this.discussionsModel).subscribe(data => {
+        this.discussionService.postThread(this.id,this.discussionsModel).subscribe(data => {
             this.successMessage = false;
             this.result = data;
             this.isLoading = !this.isLoading;

@@ -192,11 +192,11 @@ module.exports = function (keycloak) {
         sendErrorResponse(responseObj, API_IDS.actions, err.message, err.status)
       })
   })
-  router.post('/thread/edit', (requestObj, responseObj, next) => {   
-    var data    
+  router.post('/thread/edit', (requestObj, responseObj, next) => {
+    var
       data = {
-       status: 'done'
-    }
+        status: 'done'
+      }
     console.log('Edit thread body', requestObj)
     sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
   })
@@ -220,9 +220,8 @@ module.exports = function (keycloak) {
     sendSuccessResponse(responseObj, API_IDS.markassolution, data, HttpStatus.OK)
   })
 
-
   // router.post('/thread/archive/:id', (requestObj, responseObj, next) => {
-   
+
   //   var data    
   //     data = {       
   //         status: "archived",

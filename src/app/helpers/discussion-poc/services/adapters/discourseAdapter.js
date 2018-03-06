@@ -47,8 +47,8 @@ class DiscourseAdapter {
 
     this.userName = userName
     this.apiAuth = {
-      apiKey: '1dfdb2bf7b8c21aee7dbffb0fb2afbd72f2cc21c32bd20f17e056faeac247ce5',
-      apiUserName: 'revathi'
+      apiKey: '582df0739d5d4503c3eb8a8828bccaaa9d27fdf7be204f47509501717f6857ec',
+      apiUserName: 'loganathan.shanmugam'
     }
   }
 
@@ -341,7 +341,7 @@ class DiscourseAdapter {
     return new Promise((resolve, reject) => {
       this.createUserIfNotExists(user).then((success) => {
         let filters = {
-          q: '#' + threadData.type + ' tags:batch__' + threadData.communityId,
+          q: '#' + threadData.type + ' tags:batch__' + threadData.contextId,
           page: 1,
           api_key: this.apiAuth.apiKey,
           api_username: user.userName

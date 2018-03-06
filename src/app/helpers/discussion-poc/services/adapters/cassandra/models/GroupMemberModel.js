@@ -11,6 +11,8 @@ module.exports = {
       type: 'list',
       typeDef: '<text>'
     },
+    scope: 'text',
+    scopeid: 'text',
     status: 'int',
     joiningdate: 'text',
     createddate: 'text',

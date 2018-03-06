@@ -18,6 +18,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
     public result: any;
     public sub: any;
     public id: number;
+    public batchId:any;
     public loading: boolean;
     showErrMessage: boolean;
     public msg: any;
@@ -33,7 +34,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
         this.courseType = 'ENROLLED_COURSE';
     }
     public displayThreads() {
-        this.discussionService.getThreads('01245108888897126412').subscribe(data => {
+        this.discussionService.getThreads(this.batchId).subscribe(data => {
             console.log('data from getThreads', data);
             this.threads = data;
             this.result = this.threads.result.threads;
@@ -57,12 +58,13 @@ export class ThreadListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loading = true;
         this.showErrMessage = false;
-        this.displayThreads();
+        
         this.param = '-createdDate';
         this.sub = this.route.params.subscribe(params => {
             console.log('params', params);
-            this.id = params['id'];
+            this.batchId = params['id'];
         });
+        this.displayThreads();
 
     }
     ascSortClick() {
