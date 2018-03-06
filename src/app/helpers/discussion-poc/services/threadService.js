@@ -100,7 +100,7 @@ class ThreadService {
   archiveThread(threadData, user) {
     return new Promise((resolve, reject) => {
       try {
-        let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId, user.userId))
+        let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId.toString(), user.userId))
         if (moderationAllowed === true) {
           threadData.status = 'archived'
           let status = await (this.discussionAdapter.moderationAction(threadData, user))
