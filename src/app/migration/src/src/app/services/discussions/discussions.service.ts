@@ -97,7 +97,7 @@ export class DiscussionsApiservice extends DataService {
           
         };
         console.log("edit reply in service", body);
-        return this.http.post(`${this.baseUrl}/discussions/v1/reply/edit`, body)       
+        return this.http.put(`${this.baseUrl}/discussions/v1/reply/edit`, body)       
             .map((response: Response) => {
                 console.log("Response of edit reply", response);
                 return response;

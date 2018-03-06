@@ -380,22 +380,22 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     console.log('inside onArchive()', id, state);
     this.discussionService.archiveAction(id).subscribe(data => {
       console.log("Archive data", data['responseCode']);
-      if (data['responseCode'] === 'OK' && data['result'].status === 'true') {
+      if (data['responseCode'] === 'OK' && data['result'].status === true) {
+        this.archivedState = true;
         console.log("status", data['result'].status);
         let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
         // if(state === true){
         // this.archivedId = data['result'].id;
-        this.archivedState = true;
+        
         this.showNotify(id);
         // this.threadDetails['thread']['replies'][index]['actions'].archived = 1;
       }
-
-
     },
       error => {
         this.errorState = true;
-console.log("error",error)
-      }
+        this.archivedState = false;
+        console.log("error",error)
+      });
   }
 
   public loadReplies(threadId) {
@@ -433,7 +433,8 @@ console.log("error",error)
     },
     error => {
       this.errorState = true;
-      console.log("error",error)  
+      this.openThreadEdit = false;
+      console.log("error",error);
     });
   }
 

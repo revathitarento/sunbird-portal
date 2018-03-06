@@ -80,7 +80,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <sui-modal class="closeModal" *ngIf="threadDetails.thread.descId == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
+                            <!-- <sui-modal class="closeModal" *ngIf="threadDetails.thread.descId == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
                                                    
                                 <div class="content">
                                     <p>Social share</p>
@@ -91,8 +91,8 @@
                                     <!-- <a href="mailto:?to=&subject=%5BDiscourse%5D%20"+{{reply.body}}+"&body="{{shareLink}}">
                                             <i class="fa fa-mail">
                                                 </i></a> -->
-                                </div>                                               
-                        </sui-modal> 
+                                <!-- </div>                                               
+                        </sui-modal>  --> 
                         
 
                         </div>
@@ -108,7 +108,7 @@
                                 <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId   && notifyActions == true && threadDetails.thread.actions.vote == 0">Unliked the thread</div>
     
                                 <div class="ui tiny green message" *ngIf="threadDetails.thread.id == repId && archivedState == true && notifyActions == true">Archived  the thread</div>
-                                <div class="ui tiny red message" *ngIf="threadDetails.thread.id == repId && archivedState == false  && notifyActions == true">Removed the archive</div>
+                                <!-- <div class="ui tiny red message" *ngIf="threadDetails.thread.id == repId && archivedState == false  && notifyActions == true">Removed the archive</div> -->
 
                                 
                                 <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId && lockedState == true  && notifyActions == true">Locked the thread</div>
@@ -172,7 +172,7 @@
                                         </span>       -->
                                         <span (click)="showPopup(reply.id)" class="cursor-pointer">Share</span>
 
-                                        <sui-modal class="closeModal" *ngIf="isFoo == true && reply.id == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
+                                        <sui-modal class="closeModal" *ngIf="reply.id == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
                                                
                                                 <div class="content">
                                                     <p>Social share</p>
@@ -254,9 +254,7 @@
                                         Your reply must be at least 20 characters long.
                                     </div>
                                 </div>
-                                <div class="ui negative message" *ngIf="replyAnswer.errors?.minlength">
-                                    Your reply must be at least 20 characters long.
-                                </div>
+                               
                             </div>
                             <div class="text-align-right">
                                 <button class="ui primary submit icon button" [ladda]="isLoading" data-style="slide-right" data-spinner-color="white" [disabled]="discussionsModel.replyAnswer == ''"
