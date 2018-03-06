@@ -34,7 +34,7 @@
                             <div class="ui comments">
                                 <div class="comment">
                                     <div class="content">
-                                        <div class="metadata">
+                                        <div class="metadata width-100">
                                             <span class="author">{{threadDetails.thread.author.userName}}</span>
                                             <span> | </span>
                                             <span>{{replies.length}} replies</span>
@@ -45,10 +45,14 @@
                                             <span *ngIf="threadDetails.thread.actions.downVote != undefined && threadDetails.thread.actions.downVote >= 0" title="Down Vote" class="cursor-pointer" (click)="downVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.downVote === 1, type = 'thread')">
                                                 <i class="custom-vote-icon thumbs down icon" [ngClass]="threadDetails.thread.actions.downVote == 1?'blue':''"></i>0
                                             </span>
-                                            <span title="share a link to this thread" class="cursor-pointer" [cbContent]="href" ngxClipboard (cbOnSuccess)="linkShare()">
+                                            <!-- <span title="share a link to this thread" class="cursor-pointer" [cbContent]="href" ngxClipboard (cbOnSuccess)="linkShare()">
+                                                <i class="linkify icon"></i>
+                                            </span> -->
+                                            <span title="share a link to this thread" class="cursor-pointer" (click)="showPopup(threadDetails.thread.descId)">
                                                 <i class="linkify icon"></i>
                                             </span>
-                                         
+                                           
+                                          
                                             <span *ngIf="threadDetails.thread.actions.flag != undefined && threadDetails.thread.actions.flag >= 0" title="flag as spam" class="cursor-pointer"
                                                  (click)="flagAction(threadDetails.thread.descId,threadDetails.thread.actions.flag === 1, type= 'thread')">
                                                    <i class="custom-vote-icon flag icon"  [ngClass]="threadDetails.thread.actions.flag == 1?'blue':''"></i>
@@ -59,7 +63,7 @@
                                             </span> -->
                                             <span  title="lock this post" class="cursor-pointer"
                                                 (click)="onLock(threadDetails.thread.id)">
-                                                <i class="lock icon" [ngClass]="lockecState == true? 'unlock alternate icon ui red':''"></i>
+                                                <i class="lock icon" [ngClass]="lockedState == true? 'unlock alternate icon ui red':''"></i>
                                             </span>
                                            
                                             <span title="archive this post" class="cursor-pointer"
@@ -70,17 +74,43 @@
                                                 (click)="onArchive(threadDetails.thread.id,true)">
                                                 <i class="archive icon ui brown"></i>
                                             </span> -->
-                                            <span title="spam this post" class="cursor-pointer" (click)="spamAction(threadDetails.thread.id, isSpam = deletedState)" >
+                                            <!-- <span title="spam this post" class="cursor-pointer" (click)="spamAction(threadDetails.thread.id, isSpam = deletedState)" >
                                                 <i class="ban icon" [ngClass]="deletedId == threadDetails.thread.id && deletedState == false?'ui brown':''"></i>
-                                            </span> 
+                                            </span>  -->
                                             
                                             <span class="date text-align-right">{{threadDetails.thread.createdDate | date : longdate}}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <sui-modal class="closeModal" *ngIf="threadDetails.thread.descId == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
+                                                   
+                                <div class="content">
+                                    <p>Social share</p>
+                                    Link = {{shareLink}}
+                                    <button shareButton="facebook" sbUrl="{{shareLink}}"><i class="fa fa-facebook"></i>Share</button>
+                                    <button shareButton="twitter" sbUrl="{{shareLink}}"><i class="fa fa-twitter"></i>Tweet</button>
+                                    <button shareButton="linkedin" sbUrl="{{shareLink}}"><i class="fa fa-linkedin"></i>LinkedIn</button> 
+                                    <!-- <a href="mailto:?to=&subject=%5BDiscourse%5D%20"+{{reply.body}}+"&body="{{shareLink}}">
+                                            <i class="fa fa-mail">
+                                                </i></a> -->
+                                </div>                                               
+                        </sui-modal> 
+                        
+
                         </div>
                         <div class="ui divider"></div>
+                        <div class="ui comments">
+                                <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId  &&  notifyActions == true && threadDetails.thread.actions.vote == 1">Liked the thread</div>
+                                <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId   && notifyActions == true && threadDetails.thread.actions.vote == 0">Unliked the thread</div>
+    
+                                <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId && archivedState == true && notifyActions == true">Archived the thread</div>
+                                <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId && archivedState == false  && notifyActions == true">Removed the archive</div>
+    
+                                <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId && lockedState == true  && notifyActions == true">Locked the thread</div>
+                                <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId && lockedState == false  && notifyActions == true">UnLocked the thread</div>
+    
+                        </div>
                         <div  title="sort" class="ui dropdown" suiDropdown>
                             <small class="text">Sort by</small>
                             <i class="dropdown icon"></i>
@@ -136,7 +166,7 @@
                                         <!-- <span title="share a link to this post" class="cursor-pointer" (click)="replylinkShare(this.id, reply.id)" >
                                             <i class="linkify icon"></i>                                            
                                         </span>       -->
-                                        <span (click)="showPopup(isFoo = true,reply.id)" class="cursor-pointer">Share</span>
+                                        <span (click)="showPopup(reply.id)" class="cursor-pointer">Share</span>
 
                                         <sui-modal class="closeModal" *ngIf="isFoo == true && reply.id == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
                                                
@@ -187,14 +217,16 @@
                                     </form>
                                     <!--Notification-->
                                     <div class="error_notify margin-top-15">
-                                        <div class="ui tiny green message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.vote ==0">Like removed</div>
+                                        <div class="ui tiny red message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.vote ==0">Like removed</div>
                                         <div class="ui tiny green message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==1">Liked the post </div>
 
-                                        <div class="ui tiny orange message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==0">Dislike removed</div>
-                                        <div class="ui tiny orange message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==1">Post is disliked</div>
+                                        <div class="ui tiny red message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==0">Dislike removed</div>
+                                        <div class="ui tiny green message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==1">Post is disliked</div>
 
-                                        <div class="ui tiny red message" *ngIf="repId == reply.id && notifyActions == true  && actionType == 'can_act'">Spam removed</div>
-                                        <div class="ui tiny red message" *ngIf="repId == reply.id && notifyActions == true  && actionType == 'acted'">Post is spammed</div>
+                                        <div class="ui tiny green message" *ngIf="repId == reply.id && notifyActions == true  && reply.actions.acceptAnswer == 1">Marked as Correct</div>
+                                        <div class="ui tiny red message" *ngIf="repId == reply.id && notifyActions == true  && reply.actions.acceptAnswer == 0">Removed as correct answer</div>
+
+
                                     </div>
                                     <!--Notification ends-->
                                 </div>

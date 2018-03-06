@@ -46,3 +46,6 @@
     min-height: 4em;
     max-height: 8em;
 }
+.metadata.width-100{
+    width: 100% !important;
+}

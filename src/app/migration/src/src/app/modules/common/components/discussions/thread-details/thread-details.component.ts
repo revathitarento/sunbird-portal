@@ -211,6 +211,7 @@ this.threadUrl = '/migration/thread-details';
             }        
         } 
       }
+      this.showNotify(id);
     });
   }
 
@@ -242,6 +243,7 @@ this.threadUrl = '/migration/thread-details';
             }        
         } 
       }
+      this.showNotify(id);
     });
   }
 
@@ -275,6 +277,7 @@ this.threadUrl = '/migration/thread-details';
           } 
       }
     }
+    this.showNotify(id);
     }); 
   }
 
@@ -304,16 +307,16 @@ this.threadUrl = '/migration/thread-details';
   //   });
   // }
 
-  public showNotify(id, actionTypeId, actionType) {
+  public showNotify(id) {
     this.repId = id;
-    this.actId = actionTypeId;
-    this.actionType = actionType;
-    console.log('shownotify called,repId, actId, actionType: ', this.repId, this.actId, this.actionType);
+    // this.actId = actionTypeId;
+    // this.actionType = actionType;
+    console.log('shownotify called,repId, actId, actionType: ', this.id);
     this.notifyActions = true;
     setTimeout(() => {
       this.notifyActions = false;
       console.log('inside settimeout');
-    }, 3000);
+    }, 2000);
   }
 
   changeWidget() {
@@ -366,6 +369,7 @@ this.threadUrl = '/migration/thread-details';
           this.threadDetails['thread']['replies'][index]['actions'].acceptAnswer = 0;
           this.threadDetails['thread']['replies'][index].acceptedAnswer = false;
         }
+        this.showNotify(replyId);
       }
     });
   }
@@ -388,6 +392,7 @@ this.threadUrl = '/migration/thread-details';
        // this.threadDetails['thread']['replies'][index]['actions'].archived = 0;
       } 
       }
+      this.showNotify(id);
     });
   }
 
@@ -487,9 +492,11 @@ this.threadUrl = '/migration/thread-details';
       }
     });
   }
+
   public linkShare() {
     alert('copied' + this.href);
   }
+
   public spamAction(id, isSpam) {
     console.log("isSpam: ", isSpam);
     if(isSpam === undefined){
@@ -525,10 +532,9 @@ this.threadUrl = '/migration/thread-details';
   } 
   public modalFlag: boolean;
   public popupId: number;
-  showPopup( isFoo, popupReplyId){
+  showPopup( popupReplyId){
     this.modalFlag = true;   
     this.popupId = popupReplyId; 
-    this.shareLink = this.currentLocation +"#"+this.popupId;
-    console.log("isFoo",isFoo);
+    this.shareLink = this.currentLocation +"#"+this.popupId;    
   }
 }
