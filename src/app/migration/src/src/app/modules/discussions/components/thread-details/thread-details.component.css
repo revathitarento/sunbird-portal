@@ -1,0 +1,51 @@
+.ui.dimmer .quesHeading,
+.left-class,
+.content.padding-top-20 {
+    text-align: left;
+}
+
+.content.padding-top-20 {
+    padding-bottom: 10px;
+}
+.description{
+    width: 100%;   
+}
+.description p{
+    margin-left: 30px
+}
+.metadata{
+    margin-left: 5em;
+}
+.error_notify{
+    width: 170px;
+}
+
+.error_notify .tiny.message{
+    padding: 0.5em;
+    text-align: center;
+}
+.single-reply.highlighted{
+    background-color: rgba(255,0,0,0.4);   
+    -webkit-transition: background-color 1000ms linear;
+    -ms-transition: background-color 1000ms linear;
+    transition: background-color 1000ms linear;
+   
+}
+.single-reply{
+    background-color: rgba(255, 255, 255, 0);   
+    -webkit-transition: background-color 1000ms linear;
+    -ms-transition: background-color 1000ms linear;
+    transition: background-color 1000ms linear;
+}
+.closeModal .content .close.icon{
+    background-color: blue;
+    color: #000 !important;
+}
+.single-reply .ui.form textarea:not([rows]) {
+    height: 12em;
+    min-height: 4em;
+    max-height: 8em;
+}
+.metadata.width-100{
+    width: 100% !important;
+}

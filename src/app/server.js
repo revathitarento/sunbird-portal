@@ -115,6 +115,21 @@ app.all('/', function (req, res) {
   res.render(path.join(__dirname, 'public', 'index.ejs'))
 })
 
+// Discussions routing
+app.use('/discussions/v1', bodyParser.urlencoded({
+  extended: false
+}),
+bodyParser.json({
+  limit: '10mb'
+}), require('./helpers/discussion-poc')(keycloak))
+
+app.use('/private/index', function (req, res, next) {
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+  res.header('Expires', '-1')
+  res.header('Pragma', 'no-cache')
+  next()
+})
+
 app.all('/content-editor/telemetry', bodyParser.urlencoded({ extended: false }),
   bodyParser.json({ limit: reqDataLimitOfContentEditor }), keycloak.protect(), telemetryHelper.logSessionEvents)
 

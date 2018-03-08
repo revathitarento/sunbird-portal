@@ -8,6 +8,7 @@
         "LEARNER_PREFIX": "/learner/",
         "CONTENT_PREFIX": "/content/",
         "ANNOUNCEMENT_PREFIX": "/announcement/v1",
+        "DISCUSSIONS_PREFIX":"/discussions/v1",
         "RESOURCEBUNDLES_PREFIX": "resourcebundles/v1",
         "RESOURCEBUNDLES": {
             "ENG": "/read"
@@ -101,6 +102,20 @@
           "RECEIVED":"/received",
           "CANCEL":"/cancel"
         },
+        "DISCUSSIONS":{
+            "DISPLAY_THREADS":"/list",
+            "THREAD_BY_ID": "/thread/",
+            "POST_THREAD":"/thread/create",
+            "EDIT_THREAD":"/thread/edit",
+            "EDIT_REPLY":"/reply/edit",
+            "VOTE_THREAD":"/thread/vote",
+            "FLAG_THREAD":"/thread/flag",
+            "MARK_ANSWER":"/thread/markanswer",
+            "POST_REPLY":"/thread/reply",
+            "THREAD_LOCK":"/thread/lock",
+            "ARCHIVE_THREAD":"/thread/archive",
+            "SPAM_THREAD":"/thread/spam"
+        },
         "CHANNEL": {
             "READ":"channel/v1/read"
         },
@@ -110,5 +125,6 @@
         "GEO_EXPLORER":{
             "LOCATION_READ": "org/v1/location/read/"
         }
-    }
+    },
+    "BATCH_ID":"0124543621061672965"
 }
