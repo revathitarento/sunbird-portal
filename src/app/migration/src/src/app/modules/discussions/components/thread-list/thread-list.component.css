@@ -7,3 +7,10 @@
 .segment .ui.list.questionList>.item .header{
     color: #000 !important;
 }
+.thread_list_view .ui.comments .comment{
+    font-size: 1.5em;
+    color: #666;
+}
+.header.quesHeading {
+ font-size: 1.3em;
+}

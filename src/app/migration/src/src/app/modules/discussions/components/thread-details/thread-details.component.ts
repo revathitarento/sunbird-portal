@@ -11,6 +11,7 @@ declare var $: any;
 import { PlatformLocation } from '@angular/common';
 import { ShareButtons } from '@ngx-share/core';
 import { SuiModalService, TemplateModalConfig, ModalTemplate, ModalSize } from "ng2-semantic-ui";
+import { ResourceService, ToasterService, } from '@sunbird/shared';
 
 export interface IContext {
   data: boolean;
@@ -23,6 +24,15 @@ export interface IContext {
   providers: [SortByDatePipe]
 })
 export class ThreadDetailsComponent implements OnInit, AfterViewInit {
+        /**
+   * Reference of resourceService
+   */
+  public resourceService: ResourceService;
+
+  /**
+   * Reference of toaster service
+   */
+  private toasterService: ToasterService;
   public el: HTMLInputElement;
   public successMessage: boolean;
   public message: any;
@@ -44,7 +54,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public deletedId: number;
   public deletedState: boolean;
   public isCopied: boolean;
-  public archivedId: number;
+
   public archivedState: boolean;
   public discussionsModel = new DiscussionsObject('', '', '');
   public replyObject = new replyObject('', '', '');
@@ -55,9 +65,9 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public param: any;
   public actionResult: any;
   public repId: any;
-  public actId: number;
-  public repArray: any;
-  public actionType: any;
+
+  
+
   public currentLocation: any;
   public replyHash: any;
   public shareLink: any;
@@ -81,18 +91,19 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   }
   public size: string;
   constructor(private router: Router, private elementRef: ElementRef,
-    private route: ActivatedRoute, private discussionService: DiscussionsApiservice,
+    private route: ActivatedRoute, private discussionService: DiscussionsApiservice, toasterService: ToasterService,
     @Inject(DOCUMENT) document: any, platformLocation: PlatformLocation, public modalService: SuiModalService) {
     this.isCopied = false;
     this.href = document.location.href;
-    console.log('href', this.href);
+    this.toasterService = toasterService;
+   
     this.discussionService.currentMessage.subscribe(message => this.message = message);
     console.log('getting from service', this.message);
     this.el = this.elementRef.nativeElement.innerHTML;
     this.size = ModalSize.Small;
     this.replyHash = (platformLocation as any).location;
     this.currentLocation = ((platformLocation as any).location.href);
-    //let hash = this._platformLocation.onHashChange(fn);
+   
     this.location = ((platformLocation as any).location.origin);
     this.threadUrl = '/migration/thread-details';
     console.log("location.origin: ", (platformLocation as any).location.origin);
@@ -113,15 +124,12 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.discussionService.getThreadbyId(this.id).subscribe(data => {
       this.loading = false;
       this.threadDetails = data['result'];
-      console.log('result', this.threadDetails);
-
-
-      //this.loadReplyActions(this.threadDetails.thread.replies);
+       
       this.replies = this.threadDetails.thread.replies;
       console.log('result this.replies', this.replies);
       this.highlightReply();
       console.log("called on init");
-      //this.loadReplyActions(this.threadDetails.thread.replies);
+    
     });
     this.param = 'createdDate';
 
@@ -264,32 +272,6 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // public actions(id, actionTypeId) {
-  //   this.showAction(id, actionTypeId);
-  //   this.discussionService.actions(id, actionTypeId).subscribe(data => {
-  //     this.actionResult = data;
-  //     this.replyActions[id][actionTypeId] = 'acted';
-  //     // this.notifyActions = true;
-  //     this.repArray = this.replyActions[id];
-  //     const repId = this.actionResult.result.id;
-  //     console.log('this.repArray ', this.repArray, this.repArray[actionTypeId]);
-  //     console.log('actionTypeId from root ', actionTypeId, id);
-
-  //     this.showNotify(repId, actionTypeId, this.replyActions[id][actionTypeId]);
-  //   });
-  // }
-
-  // public undoActions(id, actionTypeId) {
-  //   console.log('inside undoActions()', id, actionTypeId);
-  //   this.discussionService.undoActions(id, actionTypeId).subscribe(data => {
-
-  //     this.replyActions[id][actionTypeId] = 'can_act';
-  //     console.log('../', this.replyActions);
-  //     // this.notifyActions = true;
-  //     this.showNotify(id, actionTypeId, this.replyActions[id][actionTypeId]);
-  //   });
-  // }
-
   public showNotify(id) {
     this.repId = id;
     // this.actId = actionTypeId;
@@ -366,17 +348,18 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
         this.archivedState = true;
         console.log("status", data['result'].status);
         let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
-        // if(state === true){
-        // this.archivedId = data['result'].id;
-        
+        this.toasterService.error(this.resourceService.messages.emsg.m0005);
         this.showNotify(id);
-        // this.threadDetails['thread']['replies'][index]['actions'].archived = 1;
+       
       }
     },
       error => {
-        this.errorState = true;
-        this.archivedState = false;
-        console.log("error",error)
+      //  this.errorState = true;
+        //this.archivedState = false;
+        this.toasterService.error(this.resourceService.messages.emsg.m0005);
+          this.loading = false;
+          this.toasterService.error(this.resourceService.messages.emsg.m0005);
+      
       });
   }
 

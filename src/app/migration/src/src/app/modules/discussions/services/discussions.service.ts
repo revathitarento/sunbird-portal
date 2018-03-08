@@ -57,16 +57,9 @@ export class DiscussionsApiservice extends DataService {
      **/
 
     getThreads(contextId: Number): Observable<ServerResponse> {
-<<<<<<< HEAD
-        console.log('url', this.config.urlConFig.URLS.DISCUSSIONS.DISPLAY_THREADS);
-        const option = {
-            url: this.config.urlConFig.URLS.DISCUSSIONS.DISPLAY_THREADS,
-
-=======
         console.log('com', contextId);
         const option = {
             url: this.config.urlConFig.URLS.DISCUSSIONS.DISPLAY_THREADS,
->>>>>>> 7c1ea8a52a59a5572c13077a2123e1a259ce9e33
             data: {
                 contextId: contextId,
                 type: 'qna'

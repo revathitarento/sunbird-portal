@@ -9,7 +9,6 @@ import { CommunityModule } from '@sunbird/community';
 import { CoreModule } from '@sunbird/core';
 import { SharedModule } from '@sunbird/shared';
 import { DashboardModule } from '@sunbird/dashboard';
-import { DiscussionsModule } from './modules/discussions/discussions.module';
 import { AnnouncementModule } from '@sunbird/announcement';
 import { DiscussionsModule } from './modules/discussions/discussions.module';
 import { Ng2IziToastModule } from 'ng2-izitoast';

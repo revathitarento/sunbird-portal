@@ -49,3 +49,11 @@
 .metadata.width-100{
     width: 100% !important;
 }
+.thread_detail_view .metadata i.icon{
+        font-size: 1.5em;
+    color: #666;
+}
+.thread_detail_view .metadata{
+    font-size: 1rem;
+    color: #666;
+}

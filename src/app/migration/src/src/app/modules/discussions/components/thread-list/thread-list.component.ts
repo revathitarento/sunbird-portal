@@ -1,4 +1,3 @@
-
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { DiscussionsObject } from './../../interfaces/discussions.interface';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -7,6 +6,7 @@ import * as _ from 'lodash';
 import { DiscussionsApiservice } from './../../services/discussions.service';
 import { SortByDatePipe } from './../../pipes/sort-thread-reply/sort-by-date.pipe';
 import { DOCUMENT } from '@angular/platform-browser';
+import { ResourceService, ToasterService, } from '@sunbird/shared';
 
 @Component({
     selector: 'app-thread-list',
@@ -15,24 +15,33 @@ import { DOCUMENT } from '@angular/platform-browser';
     providers: [SortByDatePipe]
 })
 export class ThreadListComponent implements OnInit, OnDestroy {
+      /**
+   * Reference of resourceService
+   */
+  public resourceService: ResourceService;
+
+  /**
+   * Reference of toaster service
+   */
+  private toasterService: ToasterService;
     public threads: any;
     public result: any;
     public sub: any;
     public id: number;
     public batchId:any;
     public loading: boolean;
-    showErrMessage: boolean;
+    
     public msg: any;
     public param: any;
-    public baseUrl: string;
-    public courseType: string;
+
     public query: string;
     public filteredList: any;
     public discussionsModel = new DiscussionsObject('', '', '');
     constructor(private router: Router, private route: ActivatedRoute,
-        private discussionService: DiscussionsApiservice, @Inject(DOCUMENT) document: any) {
-        this.baseUrl = 'http://localhost:4200/';
-        this.courseType = 'ENROLLED_COURSE';
+        private discussionService: DiscussionsApiservice, @Inject(DOCUMENT) document: any,toasterService: ToasterService) {
+        
+     
+        this.toasterService = toasterService;
     }
     public displayThreads() {
         console.log("Called");
@@ -42,7 +51,8 @@ export class ThreadListComponent implements OnInit, OnDestroy {
             this.result = this.threads.result.threads;
             console.log('result: ', this.result);
             if (this.result === undefined) {
-                this.showErrMessage = true;
+                this.toasterService.error(this.resourceService.messages.emsg.m0005);
+
             }
             this.loading = false;
             // this.id = this.result[0].tags[0];
@@ -50,8 +60,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
         },
             err => {
                 this.loading = false;
-                this.showErrMessage = true;
-                console.log('Error occured in Display threads.');
+                this.toasterService.error(this.resourceService.messages.emsg.m0005);
             });
     }
     public linkShare() {
@@ -59,7 +68,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
     }
     ngOnInit(): void {
         this.loading = true;
-        this.showErrMessage = false;
+       
         
         this.param = '-createdDate';
         this.sub = this.route.params.subscribe(params => {
