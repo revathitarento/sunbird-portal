@@ -1,0 +1,9 @@
+.margin-top--30{
+    margin-top: -30px;
+}
+.segment .ui.list.questionList>.item .header.seenClass{
+    color: #919191 !important;
+}
+.segment .ui.list.questionList>.item .header{
+    color: #000 !important;
+}

@@ -10,6 +10,7 @@ import { CoreModule } from '@sunbird/core';
 import { SharedModule } from '@sunbird/shared';
 import { DashboardModule } from '@sunbird/dashboard';
 import { AnnouncementModule } from '@sunbird/announcement';
+import { DiscussionsModule } from './modules/discussions/discussions.module';
 import { Ng2IziToastModule } from 'ng2-izitoast';
 
 @NgModule({
@@ -27,7 +28,8 @@ import { Ng2IziToastModule } from 'ng2-izitoast';
     SharedModule,
     DashboardModule,
     AnnouncementModule,
-    Ng2IziToastModule
+    Ng2IziToastModule,
+    DiscussionsModule
   ],
   providers: [],
   entryComponents: [AppComponent],
