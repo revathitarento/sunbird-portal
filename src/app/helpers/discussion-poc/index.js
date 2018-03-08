@@ -166,7 +166,7 @@ module.exports = function (keycloak) {
   })
 
   router.put('/reply/edit', (requestObj, responseObj, next) => {
-    threadController.replyThread(requestObj)
+    threadController.editReply(requestObj)
       .then((data) => {
         sendSuccessResponse(responseObj, API_IDS.actions, data, HttpStatus.OK)
       })

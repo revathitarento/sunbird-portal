@@ -33,26 +33,20 @@ class ThreadService {
         let group = await (this.groupService.getOrCreateGroup(threadData.contextType, threadData.contextId, user))
         if (group) {
           let threadId = await (this.discussionAdapter.createThread(threadData, user))
-          this.groupService.addThreadConfig(group, threadId,user.userId).then((success) => {
+          this.groupService.addThreadConfig(group, threadId, user.userId).then((success) => {
               resolve(threadId)
             },
             (error) => {
-              reject({
-                message: 'Error',
-                status: HttpStatus.INTERNAL_SERVER_ERROR
-              })
+              reject(error)
             })
         } else {
           reject({
-            message: 'Error',
+            message: 'Error in getting group info',
             status: HttpStatus.INTERNAL_SERVER_ERROR
           })
         }
       } catch (error) {
-        reject({
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
-        })
+        reject(error)
       }
     })
   }
@@ -78,15 +72,49 @@ class ThreadService {
       }
     })
   }
-  
+
+
+  editReply(postData, user) {
+    return new Promise((resolve, reject) => {
+      try {
+        let moderationAllowed = false
+        let replyData = await (this.discussionAdapter.getReplyById(postData.postId,user))
+        if (replyData.username == user.username) {
+          moderationAllowed = true
+        } else {
+          moderationAllowed = await (this.groupService.checkModerationAccess(replyData.topic_id.toString(), user.userId))
+        }
+
+        if (moderationAllowed === true) {
+          let status = await (this.discussionAdapter.editReply(postData, user))
+          resolve(status)
+        } else {
+          reject({
+            message: 'This action requires moderation rights',
+            status: HttpStatus.FORBIDDEN
+          })
+        }
+      } catch (error) {
+        reject({
+          message: 'Error in checking moderation rights',
+          status: HttpStatus.INTERNAL_SERVER_ERROR
+        })
+      }
+    })
+  }
+
   checkModerationAccess(threadData, user) {
     return new Promise((resolve, reject) => {
       try {
         let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId, user.userId))
-        if (moderationAllowed === true) {          
-          resolve({access:true})
+        if (moderationAllowed === true) {
+          resolve({
+            access: true
+          })
         } else {
-          resolve({access:false})
+          resolve({
+            access: false
+          })
         }
       } catch (error) {
         reject({
