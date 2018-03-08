@@ -18,6 +18,9 @@
       ],
       "@sunbird/announcement": [
         "app/modules/announcement"
+      ],
+      "@sunbird/discussions": [
+        "app/modules/discussions"
       ]
     },
     "sourceMap": true,
