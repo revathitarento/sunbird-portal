@@ -13,6 +13,7 @@ const learnerAuthorization = envHelper.PORTAL_API_AUTH_TOKEN
 let batchRoleMap = require('./batchGroupRolemap.json')
 let async = require('asyncawait/async')
 let await = require('asyncawait/await') //
+let HttpStatus = require('http-status-codes')
 class GroupService {
   constructor() {
     this.cassandraModel = CassandraModel
@@ -213,11 +214,11 @@ class GroupService {
     })
   }
 
-  getGroupMemberByUserId(userId,threadId) {
+  getGroupMemberByUserId(userId, threadId) {
     return new Promise((resolve, reject) => {
-      this.cassandraModel.instance.GroupMember.findOne({       
+      this.cassandraModel.instance.GroupMember.findOne({
         userid: userId,
-        scope:threadId
+        scope: threadId
       }, {
         raw: true,
         allow_filtering: true
@@ -232,15 +233,12 @@ class GroupService {
 
   checkModerationAccess(threadId, userId) {
     return new Promise((resolve, reject) => {
-      
-        let groupMember = await (this.getGroupMemberByUserId(userId,threadId))
-        if (groupMember && groupMember.roles && (groupMember.roles.indexOf('owner') >= 0 || groupMember.roles.indexOf('moderator') >= 0)) {
-          resolve(true)
-        } else {
-          resolve(false)
-        }
-     
-     
+      let groupMember = await (this.getGroupMemberByUserId(userId, threadId))
+      if (groupMember && groupMember.roles && (groupMember.roles.indexOf('owner') >= 0 || groupMember.roles.indexOf('moderator') >= 0)) {
+        resolve(true)
+      } else {
+        resolve(false)
+      }
     })
   }
 

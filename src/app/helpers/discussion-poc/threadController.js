@@ -122,9 +122,7 @@ class ThreadController {
                 threadResponse
               )
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -136,8 +134,8 @@ class ThreadController {
       } catch (error) {
 
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in getting moderation info',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })
@@ -171,9 +169,7 @@ class ThreadController {
                 status: threadResponse
               })
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -184,8 +180,8 @@ class ThreadController {
         }
       } catch (error) {
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in marking answer',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })
@@ -213,9 +209,7 @@ class ThreadController {
                 status: threadResponse
               })
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -225,10 +219,9 @@ class ThreadController {
           }
         }
       } catch (error) {
-
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in archiving thread',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })
@@ -256,9 +249,7 @@ class ThreadController {
                 status: threadResponse
               })
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -268,10 +259,9 @@ class ThreadController {
           }
         }
       } catch (error) {
-
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in locking thread',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })
@@ -300,9 +290,7 @@ class ThreadController {
                 status: threadResponse
               })
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -312,14 +300,57 @@ class ThreadController {
           }
         }
       } catch (error) {
-
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in editing thread',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })
   }
+
+
+  __editReply(requestObj) {
+    return async ((requestObj) => {
+      try {
+
+        let authUserToken = await (this.userService.getToken(requestObj))
+
+        let userProfile = await (this.userService.getUserProfile(authUserToken))
+
+        if (userProfile) {
+          return new Promise((resolve, reject) => {
+            let user = {
+              userName: userProfile.userName,
+              userId:userProfile.userId
+            }
+            let postData = {
+              postId: requestObj.body.postId,
+              body: requestObj.body.body
+            }
+            this.threadService.editReply(postData, user).then((threadResponse) => {
+              resolve({
+                status: threadResponse
+              })
+            }, function (error) {
+              reject(error)
+            })
+          })
+        } else {
+          return {
+            message: 'Unauthorized User',
+            status: HttpStatus.UNAUTHORIZED
+          }
+        }
+      } catch (error) {
+        return {
+          message: error.message || 'Error in editing thread',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
+        }
+      }
+    })
+  }
+
+
 
   /*
    *create thread flow
@@ -347,9 +378,7 @@ class ThreadController {
                 status: threadResponse
               })
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -359,10 +388,9 @@ class ThreadController {
           }
         }
       } catch (error) {
-
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in flagging thread',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })
@@ -395,9 +423,7 @@ class ThreadController {
                 status: threadResponse
               })
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -409,8 +435,8 @@ class ThreadController {
       } catch (error) {
 
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in voting thread',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })
@@ -444,9 +470,7 @@ class ThreadController {
                 id: threadResponse
               })
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -458,8 +482,8 @@ class ThreadController {
       } catch (error) {
 
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in reply thread',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })
@@ -498,9 +522,7 @@ class ThreadController {
                 id: threadResponse
               })
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -510,10 +532,9 @@ class ThreadController {
           }
         }
       } catch (error) {
-
         return {
-          message: error.message,
-          status: error.status
+          message: error.message || 'Error in creating thread',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })
@@ -530,9 +551,8 @@ class ThreadController {
         // validate request
         let userProfile = await (this.userService.getUserProfile(authUserToken))
 
-        // validate request
-        let userId = await (this.userService.getLoggedinUserId()(requestObj))
-        if (userId) {
+        
+        if (userProfile && userProfile.userId) {
           return new Promise((resolve, reject) => {
             let threadFilters = {
               contextId: requestObj.body.contextId,
@@ -546,9 +566,7 @@ class ThreadController {
                 threads: threadResponse
               })
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -558,10 +576,9 @@ class ThreadController {
           }
         }
       } catch (error) {
-        console.log("Error in catch", error)
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in getting threads',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })
@@ -590,9 +607,7 @@ class ThreadController {
                 thread: threadResponse
               })
             }, function (error) {
-              reject({
-                error: error
-              })
+              reject(error)
             })
           })
         } else {
@@ -603,8 +618,8 @@ class ThreadController {
         }
       } catch (error) {
         return {
-          message: 'Error',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in getting thread details',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         }
       }
     })

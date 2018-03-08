@@ -7,6 +7,7 @@ const _ = require('lodash')
 let queryString = require('querystring')
 let async = require('asyncawait/async')
 let await = require('asyncawait/await')
+let HttpStatus = require('http-status-codes')
 /**
  * Class provides services for thread related requests */
 
@@ -47,8 +48,8 @@ class DiscourseAdapter {
 
     this.userName = userName
     this.apiAuth = {
-      apiKey: '1dfdb2bf7b8c21aee7dbffb0fb2afbd72f2cc21c32bd20f17e056faeac247ce5',
-      apiUserName: 'revathi'
+      apiKey: '582df0739d5d4503c3eb8a8828bccaaa9d27fdf7be204f47509501717f6857ec',
+      apiUserName: 'loganathan.shanmugam'
     }
   }
 
@@ -116,11 +117,12 @@ class DiscourseAdapter {
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
-        if (res.user) {
+        if (data.response.statusCode == HttpStatus.OK && res.user) {
           resolve(res.user)
         } else {
           reject({
-            'message': 'User Not found'
+            message: res.errors[0] || 'Error in getting user info',
+            status: data.response.statusCode
           })
         }
       }, (error) => {
@@ -133,27 +135,27 @@ class DiscourseAdapter {
    *check discourse user and create if not found
    */
   createUserIfNotExists(user) {
-        return new Promise((resolve, reject) => {
-          let options = {
-            method: 'GET',
-            uri: this.discourseEndPoint + this.discourseUris.users + '/' + user.userName + '.json'
-          }
-          this.httpService.call(options).then((data) => {
-            let res = JSON.parse(data.body)
-            if (res.user) {
-              resolve(true)
-            } else {
-              this.createUser(user).then((success) => {
-                resolve(true)
-              }, (error) => {
-                reject(error)
-              })
-            }
+    return new Promise((resolve, reject) => {
+      let options = {
+        method: 'GET',
+        uri: this.discourseEndPoint + this.discourseUris.users + '/' + user.userName + '.json'
+      }
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
+        if (data.response.statusCode == HttpStatus.OK && res.user) {
+          resolve(true)
+        } else {
+          this.createUser(user).then((success) => {
+            resolve(true)
           }, (error) => {
             reject(error)
           })
-        })     
-   
+        }
+      }, (error) => {
+        reject(error)
+      })
+    })
+
   }
 
   /*
@@ -177,11 +179,14 @@ class DiscourseAdapter {
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
-        console.log(res)
-        if (res) {
+        
+        if (data.response.statusCode == HttpStatus.OK && res.topic_id) {
           resolve(res.topic_id)
         } else {
-          reject(res)
+          reject({
+            message: res.errors[0] || 'Error in thread creation',
+            status: data.response.statusCode
+          })
         }
       }, (error) => {
         reject(error)
@@ -209,7 +214,7 @@ class DiscourseAdapter {
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
-        console.log(res)
+       
         if (res) {
           resolve(res.topic_id)
         } else {
@@ -284,7 +289,7 @@ class DiscourseAdapter {
     }
     let adapter = this
     _.forEach(posts, function (post, index) {
-      if (post.post_number !== 1) {
+      if (post.post_number !== 1 && post.post_type === 1) {
         let replyData = {
           id: post.id,
           author: {
@@ -573,6 +578,72 @@ class DiscourseAdapter {
         resolve(true)
       } else {
         reject(true)
+      }
+    })
+  }
+
+  getReplyById(postId,user){
+    this.userName = user.userName
+    return new Promise((resolve, reject) => {
+      let filters = {
+        api_key: this.apiAuth.apiKey,
+        api_username: this.userName
+      }
+      let options = {
+        method: 'GET',
+        uri: this.discourseEndPoint + this.discourseUris.postThread + '/' + postId + '.json?' + queryString.stringify(filters)
+      }
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
+        if (res && data.response.statusCode == HttpStatus.OK) {
+          resolve(res)
+        } else {
+          reject({
+            message: res.errors[0] || 'Error in getting reply info',
+            status: data.response.statusCode
+          })
+        }
+      }, (error) => {
+        reject(error)
+      })
+    });
+  }
+
+  editReply(replyData, user) {
+    this.userName = user.userName
+    return new Promise((resolve, reject) => {
+      let discourseUser = await (this.getUserByUserName(user.userName))
+      if (discourseUser) {
+        let moderator = await (this.grantModeration(discourseUser.id))
+        let options = {
+          method: 'PUT',
+          uri: this.discourseEndPoint + '/posts/' + replyData.postId + '.json',
+          form: {
+            'api_key': this.apiAuth.apiKey,
+            'api_username': this.userName,
+            'post[raw]': replyData.body,
+            'cooked': replyData.body
+          }
+        }
+        this.httpService.call(options).then((data) => {
+          let res = JSON.parse(data.body)
+          if (res.post && res.post.id && data.response.statusCode == HttpStatus.OK) {
+            resolve('done')
+          } else {
+            reject({
+              message: res.errors[0] || 'Error in editing reply',
+              status: data.response.statusCode
+            })
+          }
+        }, (error) => {
+          reject(error)
+        })
+        
+      } else {
+        reject({
+          message:  'Error in editing reply',
+          status: HttpStatus.INTERNAL_SERVER_ERROR
+        })
       }
     })
 
