@@ -33,7 +33,7 @@ class ThreadService {
         let group = await (this.groupService.getOrCreateGroup(threadData.contextType, threadData.contextId, user))
         if (group) {
           let threadId = await (this.discussionAdapter.createThread(threadData, user))
-          this.groupService.addThreadConfig(group, threadId, user.userId,threadData.config).then((success) => {
+          this.groupService.addThreadConfig(group, threadId.toString(), user.userId,threadData.config).then((success) => {
               resolve(threadId)
             },
             (error) => {
@@ -54,7 +54,7 @@ class ThreadService {
   editThread(threadData, user) {
     return new Promise((resolve, reject) => {
       try {
-        let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId, user.userId))
+        let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId.toString(), user.userId))
         if (moderationAllowed === true) {
           let grantModeration = await (this.discussionAdapter.grantModeration(user.userName))
           let status = await (this.discussionAdapter.editThread(threadData, user))
@@ -111,7 +111,7 @@ class ThreadService {
   checkModerationAccess(threadData, user) {
     return new Promise((resolve, reject) => {
       try {
-        let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId, user.userId))
+        let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId.toString(), user.userId))
         if (moderationAllowed === true) {
           resolve({
             access: true
@@ -158,7 +158,7 @@ class ThreadService {
   lockThread(threadData, user) {
     return new Promise((resolve, reject) => {
       try {
-        let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId, user.userId))
+        let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId.toString(), user.userId))
         if (moderationAllowed === true) {
           threadData.status = 'closed'
           let grantModeration = await (this.discussionAdapter.grantModeration(user.userName))
@@ -195,7 +195,7 @@ class ThreadService {
   getThreadById(threadId, user) {   
     return new Promise((resolve, reject) => {
       let threadDetails = await(this.discussionAdapter.getThreadById(threadId, user))
-      let threadConfig =  await(this.groupService.getThreadConfig(threadId))
+      let threadConfig =  await(this.groupService.getThreadConfig(threadId.toString()))
       threadDetails.config = JSON.parse(threadConfig.config.toString())
       resolve(threadDetails)
     })

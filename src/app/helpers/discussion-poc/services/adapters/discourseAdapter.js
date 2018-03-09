@@ -238,10 +238,13 @@ class DiscourseAdapter {
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
 
-        if (res) {
+        if (data.response.statusCode == HttpStatus.OK && res.topic_id) {
           resolve(res.topic_id)
         } else {
-          reject(res)
+          reject({
+            message: res.errors[0] || 'Error in reply to this thread',
+            status: data.response.statusCode
+          })
         }
       }, (error) => {
         reject(error)
@@ -383,7 +386,7 @@ class DiscourseAdapter {
         this.httpService.call(options).then((data) => {
           let res = JSON.parse(data.body)
           console.log(res)
-          if (res) {
+          if (res && data.response.statusCode == HttpStatus.OK) {
             resolve(this.extractThreadList(res.topics, res.posts))
           } else {
             reject(res)
@@ -418,7 +421,7 @@ class DiscourseAdapter {
 
         this.httpService.call(options).then((data) => {
           let res = JSON.parse(data.body)
-         
+
 
           if (res) {
             resolve(this.extractThreadData(res))
@@ -452,10 +455,13 @@ class DiscourseAdapter {
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
-        if (res) {
+        if (res && data.response.statusCode == HttpStatus.OK) {
           resolve('done')
         } else {
-          reject(res)
+          reject({
+            message: res.errors[0] || 'Error occured.Please try again later',
+            status: data.response.statusCode
+          })
         }
       }, (error) => {
         reject(error)
@@ -476,10 +482,13 @@ class DiscourseAdapter {
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
-        if (res) {
+        if (res && data.response.statusCode == HttpStatus.OK) {
           resolve('done')
         } else {
-          reject(res)
+          reject({
+            message: res.errors[0] || 'Error occured.Please try again later',
+            status: data.response.statusCode
+          })
         }
       }, (error) => {
         reject(error)
@@ -501,10 +510,13 @@ class DiscourseAdapter {
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
-        if (res) {
+        if (res && data.response.statusCode == HttpStatus.OK) {
           resolve('done')
         } else {
-          reject(res)
+          reject({
+            message: res.errors[0] || 'Error occured.Please try again later',
+            status: data.response.statusCode
+          })
         }
       }, (error) => {
         reject(error)
@@ -528,10 +540,13 @@ class DiscourseAdapter {
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
-        if (res) {
+        if (res && data.response.statusCode == HttpStatus.OK) {
           resolve('done')
         } else {
-          reject(res)
+          reject({
+            message: res.errors[0] || 'Error occured.Please try again later',
+            status: data.response.statusCode
+          })
         }
       }, (error) => {
         reject(error)
@@ -555,10 +570,13 @@ class DiscourseAdapter {
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
 
-        if (res) {
+        if (res && data.response.statusCode == HttpStatus.OK) {
           resolve('done')
         } else {
-          reject(res)
+          reject({
+            message: res.errors[0] || 'Error occured.Please try again later',
+            status: data.response.statusCode
+          })
         }
       }, (error) => {
         reject(error)
@@ -624,29 +642,29 @@ class DiscourseAdapter {
   editReply(replyData, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
-        let options = {
-          method: 'PUT',
-          uri: this.discourseEndPoint + '/posts/' + replyData.postId + '.json',
-          form: {
-            'api_key': this.apiAuth.apiKey,
-            'api_username': this.userName,
-            'post[raw]': replyData.body,
-            'cooked': replyData.body
-          }
+      let options = {
+        method: 'PUT',
+        uri: this.discourseEndPoint + '/posts/' + replyData.postId + '.json',
+        form: {
+          'api_key': this.apiAuth.apiKey,
+          'api_username': this.userName,
+          'post[raw]': replyData.body,
+          'cooked': replyData.body
         }
-        this.httpService.call(options).then((data) => {
-          let res = JSON.parse(data.body)
-          if (res.post && res.post.id && data.response.statusCode == HttpStatus.OK) {
-            resolve('done')
-          } else {
-            reject({
-              message: res.errors[0] || 'Error in editing reply',
-              status: data.response.statusCode
-            })
-          }
-        }, (error) => {
-          reject(error)
-        })   
+      }
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
+        if (res.post && res.post.id && data.response.statusCode == HttpStatus.OK) {
+          resolve('done')
+        } else {
+          reject({
+            message: res.errors[0] || 'Error in editing reply',
+            status: data.response.statusCode
+          })
+        }
+      }, (error) => {
+        reject(error)
+      })
     })
 
   }
