@@ -43,7 +43,8 @@ class DiscourseAdapter {
       unAcceptSolution: '/solution/unaccept',
       retort: '/retorts',
       adminUsers: '/admin/users/',
-      grantModeration: '/grant_moderation'
+      grantModeration: '/grant_moderation',
+      revokeModeration: '/revoke_moderation'
     }
 
     this.userName = userName
@@ -53,11 +54,12 @@ class DiscourseAdapter {
     }
   }
 
-  grantModeration(userId) {
+  grantModeration(userName) {
     return new Promise((resolve, reject) => {
+      let discourseUser = await (this.getUserByUserName(userName))
       let options = {
         method: 'PUT',
-        uri: this.discourseEndPoint + this.discourseUris.adminUsers + userId + this.discourseUris.grantModeration,
+        uri: this.discourseEndPoint + this.discourseUris.adminUsers + discourseUser.id + this.discourseUris.grantModeration,
         form: {
           api_key: this.apiAuth.apiKey,
           api_username: this.apiAuth.apiUserName
@@ -75,6 +77,27 @@ class DiscourseAdapter {
       })
     })
   }
+
+  revokeModeration(userName) {
+    let discourseUser = await (this.getUserByUserName(userName))
+    return new Promise((resolve, reject) => {
+      let options = {
+        method: 'PUT',
+        uri: this.discourseEndPoint + this.discourseUris.adminUsers + discourseUser.id + this.discourseUris.revokeModeration,
+        form: {
+          api_key: this.apiAuth.apiKey,
+          api_username: this.apiAuth.apiUserName
+        }
+      }
+      this.httpService.call(options).then((data) => {
+        resolve(true)
+      }, (error) => {
+        reject(error)
+      })
+      resolve(true)
+    })
+  }
+
 
   /*
    *create discourse user
@@ -179,7 +202,7 @@ class DiscourseAdapter {
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
-        
+
         if (data.response.statusCode == HttpStatus.OK && res.topic_id) {
           resolve(res.topic_id)
         } else {
@@ -214,7 +237,7 @@ class DiscourseAdapter {
       }
       this.httpService.call(options).then((data) => {
         let res = JSON.parse(data.body)
-       
+
         if (res) {
           resolve(res.topic_id)
         } else {
@@ -395,7 +418,7 @@ class DiscourseAdapter {
 
         this.httpService.call(options).then((data) => {
           let res = JSON.parse(data.body)
-          console.log(JSON.stringify(res))
+         
 
           if (res) {
             resolve(this.extractThreadData(res))
@@ -519,70 +542,59 @@ class DiscourseAdapter {
   moderationAction(threadData, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
-      let discourseUser = await (this.getUserByUserName(user.userName))
-      if (discourseUser) {
-        let moderator = await (this.grantModeration(discourseUser.id))
-        let options = {
-          method: 'PUT',
-          uri: this.discourseEndPoint + '/t/' + threadData.threadId + '/status',
-          form: {
-            api_key: this.apiAuth.apiKey,
-            api_username: this.userName,
-            status: threadData.status,
-            enabled: true
-          }
+      let options = {
+        method: 'PUT',
+        uri: this.discourseEndPoint + '/t/' + threadData.threadId + '/status',
+        form: {
+          api_key: this.apiAuth.apiKey,
+          api_username: this.userName,
+          status: threadData.status,
+          enabled: true
         }
-        this.httpService.call(options).then((data) => {
-          let res = JSON.parse(data.body)
-          if (res) {
-            resolve('done')
-          } else {
-            reject(res)
-          }
-        }, (error) => {
-          reject(error)
-        })
-        resolve(true)
-      } else {
-        reject(true)
       }
-    })
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
 
+        if (res) {
+          resolve('done')
+        } else {
+          reject(res)
+        }
+      }, (error) => {
+        reject(error)
+      })
+    })
   }
 
   editThread(threadData, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
-      let discourseUser = await (this.getUserByUserName(user.userName))
-      if (discourseUser) {
-        let moderator = await (this.grantModeration(discourseUser.id))
-        let options = {
-          method: 'PUT',
-          uri: this.discourseEndPoint + '/t/-/' + threadData.threadId + '.json',
-          form: {
-            api_key: this.apiAuth.apiKey,
-            api_username: this.userName,
-            title: threadData.title
-          }
+      let options = {
+        method: 'PUT',
+        uri: this.discourseEndPoint + '/t/-/' + threadData.threadId + '.json',
+        form: {
+          api_key: this.apiAuth.apiKey,
+          api_username: this.userName,
+          title: threadData.title
         }
-        this.httpService.call(options).then((data) => {
-          let res = JSON.parse(data.body)
-          if (res.basic_topic.id) {
-            resolve('done')
-          } else {
-            reject(res)
-          }
-        }, (error) => {
-          reject(error)
-        })
-        resolve(true)
-      } else {
-        reject(true)
       }
+      this.httpService.call(options).then((data) => {
+        let res = JSON.parse(data.body)
+        if (data.response.statusCode == HttpStatus.OK && res.basic_topic.id) {
+          resolve('done')
+        } else {
+          reject({
+            message: res.errors[0] || 'Error in editing thread',
+            status: data.response.statusCode
+          })
+        }
+      }, (error) => {
+        reject(error)
+      })
     })
   }
 
-  getReplyById(postId,user){
+  getReplyById(postId, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
       let filters = {
@@ -612,9 +624,6 @@ class DiscourseAdapter {
   editReply(replyData, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
-      let discourseUser = await (this.getUserByUserName(user.userName))
-      if (discourseUser) {
-        let moderator = await (this.grantModeration(discourseUser.id))
         let options = {
           method: 'PUT',
           uri: this.discourseEndPoint + '/posts/' + replyData.postId + '.json',
@@ -637,14 +646,7 @@ class DiscourseAdapter {
           }
         }, (error) => {
           reject(error)
-        })
-        
-      } else {
-        reject({
-          message:  'Error in editing reply',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
-        })
-      }
+        })   
     })
 
   }

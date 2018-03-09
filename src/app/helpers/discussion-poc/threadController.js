@@ -283,7 +283,9 @@ class ThreadController {
             }
             let threadData = {
               threadId: requestObj.body.threadId,
-              title: requestObj.body.title
+              title: requestObj.body.title,
+              body: requestObj.body.body,
+              postId : requestObj.body.descId
             }
             this.threadService.editThread(threadData, user).then((threadResponse) => {
               resolve({
@@ -507,7 +509,8 @@ class ThreadController {
               body: requestObj.body.body,
               contextId: requestObj.body.contextId,
               type: requestObj.body.type,
-              contextType: requestObj.body.contextType
+              contextType: requestObj.body.contextType,
+              config:requestObj.body.config
             }
             let user = {
               userName: userProfile.userName,

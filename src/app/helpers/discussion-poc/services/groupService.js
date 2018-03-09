@@ -175,7 +175,7 @@ class GroupService {
     })
   }
 
-  addThreadConfig(groupId, threadId, userId) {
+  addThreadConfig(groupId, threadId, userId,config) {
     return new Promise((resolve, reject) => {
 
       let groupMemberData = new CassandraModel.instance.GroupMember({
@@ -192,7 +192,7 @@ class GroupService {
       let threadConfig = new CassandraModel.instance.ThreadConfig({
         threadid: threadId.toString(),
         groupid: groupId.toString(),
-        config: Buffer.from(JSON.stringify('{}')),
+        config: Buffer.from(JSON.stringify(config)),
         createddate: Date.now().toString(),
         updateddate: Date.now().toString()
       })
