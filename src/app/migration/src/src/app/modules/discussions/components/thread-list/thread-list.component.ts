@@ -38,9 +38,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
     public filteredList: any;
     public discussionsModel = new DiscussionsObject('', '', '');
     constructor(private router: Router, private route: ActivatedRoute,
-        private discussionService: DiscussionsApiservice, @Inject(DOCUMENT) document: any,toasterService: ToasterService) {
-        
-     
+        private discussionService: DiscussionsApiservice, @Inject(DOCUMENT) document: any,toasterService: ToasterService) {     
         this.toasterService = toasterService;
     }
     public displayThreads() {

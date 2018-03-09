@@ -316,7 +316,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.notifyActions = true;
     setTimeout(() => {
       this.notifyActions = false;
-      console.log('inside settimeout');
+     
     }, 2000);
   }
 
@@ -347,7 +347,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
         this.successMessage = true;
         setTimeout(() => {
           this.successMessage = false;
-          console.log('inside settimeout');
+         
         }, 2000);
       }
       console.log('data from post reply is id', this.replyResult);
@@ -467,25 +467,26 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.replyObject.threadId = threadId;
     this.replyObject.replyId = replyId;
 
-
-
-
+    this.discussionService.editReply(this.replyObject).subscribe(data => {
+      console.log("Edit Reply", data);
+      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+        
     let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId });
     if (replyId === this.threadDetails.thread.replies[index].id) {
       this.threadDetails.thread.replies[index].body = this.threadDetails.thread.replies[index].newBody;
       this.replyObject.replyAnswer = this.threadDetails.thread.replies[index].newBody;
-    }
-    this.discussionService.editReply(this.replyObject).subscribe(data => {
-      console.log("Edit Reply", data);
-      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
-        // this.threadDetails.thread.title = this.threadDetails.thread.newTitle;           
+    }          
         this.openReplyEdit = false;
         console.log("reply  after,", this.threadDetails.thread.replies[index].newBody);
-      }
-      else {
-        console.log("Error in Editing reply");
-      }
-    });
+      }      
+    },
+  error =>{
+    this.errorData = error;  
+      console.log("edit reply error", error);
+      this.errMsg = this.errorData.error.params.errmsg;
+        this.toasterService.error(this.errMsg);
+        this.openReplyEdit = false;
+  });
   }
 
 

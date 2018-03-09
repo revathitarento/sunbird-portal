@@ -23,24 +23,31 @@
                                 </a>
                             </div>
                             <div (click)="checkNewQuestion()" class="cursor-pointer" style="text-align: center"></div>
-                            <div [ngClass]="loading? 'ui relaxed divided list questionList active inverted dimmer' : 'ui relaxed divided list questionList'">
-                                <div class="ui text loader">Loading</div>
-                                <div *ngIf="showErrMessage">Error in displaying Threads</div>
-                                <div title="sort" class="ui dropdown right-float" suiDropdown>
-                                    <small class="text">Sort by</small>
-                                    <i class="dropdown icon"></i>
-                                    <div class="menu" suiDropdownMenu>
-                                        <small class="item" (click)="ascSortClick()">
-                                            Older
-                                        </small>
-                                        <small class="item" (click)="descSortClick()">
-                                            Newer
-                                        </small>
-                                        <small class="item" (click)="likeSortClick()">
-                                            Votes
-                                        </small>
-                                    </div>
-                                </div>
+
+                            <div class= "ui relaxed divided list questionList">
+                                    <div [ngClass]="loading? 'ui active inverted dimmer' : ''">
+                                            <div class="ui text loader">Loading</div>
+                                        </div>
+                                        <div class="ui grid">
+                                        <div class="sixteen wide right aligned column">
+                                                <div title="sort" class="ui dropdown right-float margin-top-20 margin-bottom-20" suiDropdown *ngIf="result.length > 0">
+                                                        <div class="ui right floated  button">
+                                                                
+                                                                  Sort by <i class="dropdown icon"></i>
+                                                                    <div class="menu" suiDropdownMenu>
+                                                                        <div class="item" (click)="ascSortClick()">
+                                                                            Older
+                                                                        </div>
+                                                                        <div class="item" (click)="descSortClick()">
+                                                                            Newer
+                                                                        </div>
+                                                                   
+                                                                </div>
+                                                            </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        
                                 <div class="item" *ngFor="let thread of result | sortByDate:param; let i = index">
                                    <!-- Full thread {{thread | json}} -->
                                     <div class="content">

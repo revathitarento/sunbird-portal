@@ -113,11 +113,10 @@
      -->
                         </div>
 
-                        <div title="sort" class="extra">
+                        <div title="sort" class="extra" *ngIf="!openThreadEdit && threadDetails.thread.repliesCount > 0">
                             <div class="ui right floated  button">
-                                <div  class="ui dropdown" suiDropdown *ngIf="!openThreadEdit">
-                                    <small class="text">Sort by</small>
-                                    <i class="dropdown icon"></i>
+                                <div  class="ui dropdown" suiDropdown >
+                                  Sort by <i class="dropdown icon"></i>
                                     <div class="menu" suiDropdownMenu>
                                         <div class="item" (click)="ascSortClick()">
                                             Older
@@ -127,7 +126,6 @@
                                         </div>
                                     </div>
                                 </div>
-                              
                             </div>
                           </div>
                        
