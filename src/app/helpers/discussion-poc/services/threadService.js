@@ -33,7 +33,7 @@ class ThreadService {
         let group = await (this.groupService.getOrCreateGroup(threadData.contextType, threadData.contextId, user))
         if (group) {
           let threadId = await (this.discussionAdapter.createThread(threadData, user))
-          this.groupService.addThreadConfig(group, threadId, user.userId).then((success) => {
+          this.groupService.addThreadConfig(group, threadId, user.userId,threadData.config).then((success) => {
               resolve(threadId)
             },
             (error) => {
@@ -56,8 +56,11 @@ class ThreadService {
       try {
         let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId, user.userId))
         if (moderationAllowed === true) {
+          let grantModeration = await (this.discussionAdapter.grantModeration(user.userName))
           let status = await (this.discussionAdapter.editThread(threadData, user))
-          resolve(status)
+          let descStatus = await (this.editReply(threadData, user))
+          let revokeModeration = await (this.discussionAdapter.revokeModeration(user.userName))
+          resolve(descStatus)
         } else {
           reject({
             message: 'This action requires moderation rights',
@@ -66,8 +69,8 @@ class ThreadService {
         }
       } catch (error) {
         reject({
-          message: 'Error in checking moderation rights',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message:error.message ||  'Error in checking moderation rights',
+          status:error.status ||  HttpStatus.INTERNAL_SERVER_ERROR
         })
       }
     })
@@ -79,14 +82,16 @@ class ThreadService {
       try {
         let moderationAllowed = false
         let replyData = await (this.discussionAdapter.getReplyById(postData.postId,user))
-        if (replyData.username == user.username) {
+        if (replyData.username == user.userName) {
           moderationAllowed = true
         } else {
           moderationAllowed = await (this.groupService.checkModerationAccess(replyData.topic_id.toString(), user.userId))
         }
 
         if (moderationAllowed === true) {
+          let grantModeration = await (this.discussionAdapter.grantModeration(user.userName))
           let status = await (this.discussionAdapter.editReply(postData, user))
+          let revokeModeration = await (this.discussionAdapter.revokeModeration(user.userName))
           resolve(status)
         } else {
           reject({
@@ -96,8 +101,8 @@ class ThreadService {
         }
       } catch (error) {
         reject({
-          message: 'Error in checking moderation rights',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in editing this reply',
+          status:error.status ||  HttpStatus.INTERNAL_SERVER_ERROR
         })
       }
     })
@@ -130,8 +135,10 @@ class ThreadService {
       try {
         let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId.toString(), user.userId))
         if (moderationAllowed === true) {
+          let grantModeration = await (this.discussionAdapter.grantModeration(user.userName))
           threadData.status = 'archived'
           let status = await (this.discussionAdapter.moderationAction(threadData, user))
+          let revokeModeration = await (this.discussionAdapter.revokeModeration(user.userName))
           resolve(status)
         } else {
           reject({
@@ -141,8 +148,8 @@ class ThreadService {
         }
       } catch (error) {
         reject({
-          message: 'Error in checking moderation rights',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in archiving this thread',
+          status:  error.status || HttpStatus.INTERNAL_SERVER_ERROR
         })
       }
     })
@@ -154,7 +161,9 @@ class ThreadService {
         let moderationAllowed = await (this.groupService.checkModerationAccess(threadData.threadId, user.userId))
         if (moderationAllowed === true) {
           threadData.status = 'closed'
+          let grantModeration = await (this.discussionAdapter.grantModeration(user.userName))
           let status = await (this.discussionAdapter.moderationAction(threadData, user))
+          let revokeModeration = await (this.discussionAdapter.revokeModeration(user.userName))
           resolve(status)
         } else {
           reject({
@@ -164,8 +173,8 @@ class ThreadService {
         }
       } catch (error) {
         reject({
-          message: 'Error in checking moderation rights',
-          status: HttpStatus.INTERNAL_SERVER_ERROR
+          message: error.message || 'Error in locking this thread',
+          status: error.status || HttpStatus.INTERNAL_SERVER_ERROR
         })
       }
     })
@@ -183,8 +192,13 @@ class ThreadService {
   getThreadsList(threadData, user) {
     return this.discussionAdapter.getThreadsList(threadData, user)
   }
-  getThreadById(threadId, user) {
-    return this.discussionAdapter.getThreadById(threadId, user)
+  getThreadById(threadId, user) {   
+    return new Promise((resolve, reject) => {
+      let threadDetails = await(this.discussionAdapter.getThreadById(threadId, user))
+      let threadConfig =  await(this.groupService.getThreadConfig(threadId))
+      threadDetails.config = JSON.parse(threadConfig.config.toString())
+      resolve(threadDetails)
+    })
   }
 
   voteThread(threadData, user) {
