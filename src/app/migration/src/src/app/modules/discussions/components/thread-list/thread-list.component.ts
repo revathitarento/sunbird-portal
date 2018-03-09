@@ -51,7 +51,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
             this.result = this.threads.result.threads;
             console.log('result: ', this.result);
             if (this.result === undefined) {
-                this.toasterService.error(this.resourceService.messages.emsg.m0005);
+                this.toasterService.error("Error in displaying threads");
 
             }
             this.loading = false;
@@ -60,7 +60,7 @@ export class ThreadListComponent implements OnInit, OnDestroy {
         },
             err => {
                 this.loading = false;
-                this.toasterService.error(this.resourceService.messages.emsg.m0005);
+                this.toasterService.error("Error in displaying threads");
             });
     }
     public linkShare() {

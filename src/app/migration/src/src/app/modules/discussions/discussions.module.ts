@@ -25,7 +25,9 @@ import { DiscussionsApiservice } from './services/discussions.service';
 
 // SB core and shared services
 import { SearchService } from '@sunbird/core';
-// import { SharedModule } from '@sunbird/shared';
+import { SharedModule } from '@sunbird/shared';
+//Copy to clipboard plugin
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
   imports: [
@@ -39,7 +41,8 @@ import { SearchService } from '@sunbird/core';
         spinnerLines: 12
     }),
     DiscussionsRoutingModule,
-    HttpClientModule,       // for share counts
+    HttpClientModule,    // for share counts
+    ClipboardModule,   
    // HttpClientJsonpModule,  // for linkedin and tumblr share counts
     ShareModule.forRoot()
   ],

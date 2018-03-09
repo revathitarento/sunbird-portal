@@ -5,13 +5,13 @@ import { replyObject } from './../../interfaces/reply.interface';
 import { DiscussionsApiservice } from './../../services/discussions.service';
 import { DOCUMENT } from '@angular/platform-browser';
 import { SortByDatePipe } from './../../pipes/sort-thread-reply/sort-by-date.pipe';
+import { ResourceService, ToasterService, RouterNavigationService, ServerResponse } from '@sunbird/shared';
 import * as _ from 'lodash';
 declare var jquery: any;
 declare var $: any;
 import { PlatformLocation } from '@angular/common';
 import { ShareButtons } from '@ngx-share/core';
 import { SuiModalService, TemplateModalConfig, ModalTemplate, ModalSize } from "ng2-semantic-ui";
-import { ResourceService, ToasterService, } from '@sunbird/shared';
 
 export interface IContext {
   data: boolean;
@@ -63,7 +63,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public replyId: number;
   public btnloader: boolean;
   public param: any;
-  public actionResult: any;
+
   public repId: any;
 
   
@@ -73,7 +73,8 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public shareLink: any;
   public location: any
   public threadUrl: any;
-  public errorState: any;
+  public errorData: any;
+  public errMsg: string;
 
   @ViewChild('modalTemplate')
   public modalTemplate: ModalTemplate<null, string, string>
@@ -121,16 +122,20 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
       this.id = params['id'];
       console.log('id.', this.id);
     });
-    this.discussionService.getThreadbyId(this.id).subscribe(data => {
+    this.discussionService.getThreadbyId(this.id).subscribe(
+      (apiResponse: ServerResponse) => {
       this.loading = false;
-      this.threadDetails = data['result'];
-       
+      this.threadDetails = apiResponse.result;       
       this.replies = this.threadDetails.thread.replies;
       console.log('result this.replies', this.replies);
       this.highlightReply();
       console.log("called on init");
     
-    });
+    },
+  err =>{
+    this.toasterService.error("Error in displaying Thread details");
+    this.loading = false;
+  });
     this.param = 'createdDate';
 
 
@@ -139,6 +144,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.postDwellTime();
     this.threadDetails.thread.newTitle = this.threadDetails.thread.title;
+    this.threadDetails.thread.newBody = this.threadDetails.thread.body;
     this.highlightReply();
   }
 
@@ -184,8 +190,10 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
           if (undo === true) {
             console.log("thread action", this.threadDetails)
             this.threadDetails['thread']['actions'].vote = 0;
+            this.toasterService.success("Undone the upvote of thread");
           } else {
-            this.threadDetails['thread']['actions'].vote = 1;
+            this.threadDetails['thread']['actions'].vote = 1;           
+            this.toasterService.success("You up voted the thread");
           }
         }
 
@@ -196,13 +204,21 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
           let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
           if (undo === true) {
             this.threadDetails['thread']['replies'][index]['actions'].vote = 0;
+            this.toasterService.success("Undone the upvote of reply");
           }
           else {
-            this.threadDetails['thread']['replies'][index]['actions'].vote = 1;
+            this.threadDetails['thread']['replies'][index]['actions'].vote = 1;           
+            this.toasterService.success("You up voted the reply");
           }
         }
       }
       this.showNotify(id);
+    },
+    error => {
+      this.errorData = error;  
+      console.log("upvote error", error);
+      this.errMsg = this.errorData.error.params.errmsg;
+        this.toasterService.error(this.errMsg);
     });
   }
 
@@ -216,8 +232,10 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
           if (undo === true) {
             console.log("thread action", this.threadDetails)
             this.threadDetails['thread']['actions'].downVote = 0;
+            this.toasterService.success("Undone the down vote of thread");
           } else {
             this.threadDetails['thread']['actions'].downVote = 1;
+            this.toasterService.success("You down voted the thread");
           }
         }
 
@@ -228,13 +246,21 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
           let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
           if (undo === true) {
             this.threadDetails['thread']['replies'][index]['actions'].downVote = 0;
+            this.toasterService.success("Undone the down vote of reply");
           }
           else {
             this.threadDetails['thread']['replies'][index]['actions'].downVote = 1;
+            this.toasterService.success("You down voted the reply");
           }
         }
       }
       this.showNotify(id);
+    },
+    error => {
+      this.errorData = error;  
+      console.log("downvote error", error);
+     // this.errMsg = this.errorData.error.params.errmsg;
+        this.toasterService.error(error);
     });
   }
 
@@ -250,8 +276,10 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
           if (undo === true) {
             console.log("thread action", this.threadDetails)
             this.threadDetails['thread']['actions'].flag = 0;
+            this.toasterService.success("Successfully removed the flag");
           } else {
             this.threadDetails['thread']['actions'].flag = 1;
+            this.toasterService.success("Successfully Flagged thread");
           }
         }
 
@@ -262,14 +290,22 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
           let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
           if (undo === true) {
             this.threadDetails['thread']['replies'][index]['actions'].flag = 0;
+            this.toasterService.success("Successfully removed the flag");
           }
           else {
             this.threadDetails['thread']['replies'][index]['actions'].flag = 1;
+            this.toasterService.success("Successfully flagged reply");
           }
         }
       }
-      this.showNotify(id);
-    });
+      // this.showNotify(id);
+    
+    },
+    error => {      
+       this.toasterService.error("Error in Flagging thread");
+         this.loading = false;
+     }
+  );
   }
 
   public showNotify(id) {
@@ -298,7 +334,9 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
       'description': this.discussionsModel.replyAnswer
     };
     this.btnloader = true;
+    console.log("this.id in submitreply", this.id);
     this.discussionService.postReply(this.id, this.reply).subscribe(data => {
+      console.log("return data from reply post", data);
       this.btnloader = false;
       this.replyData = data;
       console.log('thread details reponse: ', this.replyData);
@@ -328,11 +366,13 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
           console.log("thread action inside true state", this.threadDetails)
           this.threadDetails['thread']['replies'][index]['actions'].acceptAnswer = 1;
           this.threadDetails['thread']['replies'][index].acceptedAnswer = true;
+          this.toasterService.success("Marked as correct answer");
         }
         else {
           console.log("thread action inside flase state", this.threadDetails);
           this.threadDetails['thread']['replies'][index]['actions'].acceptAnswer = 0;
           this.threadDetails['thread']['replies'][index].acceptedAnswer = false;
+          this.toasterService.success("Removed as correct answer");
         }
         this.showNotify(replyId);
       }
@@ -348,18 +388,14 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
         this.archivedState = true;
         console.log("status", data['result'].status);
         let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
-        this.toasterService.error(this.resourceService.messages.emsg.m0005);
+        this.toasterService.success("Thread archived successfully");
         this.showNotify(id);
-       
       }
     },
       error => {
-      //  this.errorState = true;
-        //this.archivedState = false;
-        this.toasterService.error(this.resourceService.messages.emsg.m0005);
+       //this.archivedState = false;
+        this.toasterService.error("Error in Archiving thread");
           this.loading = false;
-          this.toasterService.error(this.resourceService.messages.emsg.m0005);
-      
       });
   }
 
@@ -397,7 +433,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
       }
     },
     error => {
-      this.errorState = true;
+     // this.errorState = true;
       this.openThreadEdit = false;
       console.log("error",error);
     });
@@ -452,6 +488,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     });
   }
 
+
   public onLock(id) {
     this.lockedState = false;
     console.log('inside onLock', id);
@@ -464,13 +501,14 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
       }
     },
     error => {
-      this.errorState = true;
-      console.log("error",error)  
+      this.errorData = error;  
+      this.errMsg = this.errorData.error.params.errmsg;
+        this.toasterService.error(this.errMsg);
     });
   }
 
   public linkShare() {
-    alert('copied' + this.href);
+    alert('copied' + this.shareLink);
   }
 
   public spamAction(id, isSpam) {

@@ -38,6 +38,7 @@
     "ng2-charts": "^1.6.0",
     "ng2-izitoast": "^1.0.1",
     "ng2-semantic-ui": "^0.9.6",
+    "ngx-clipboard": "^10.0.0",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"
   },

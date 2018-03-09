@@ -101,21 +101,7 @@
           "READ" : "/read",
           "RECEIVED":"/received",
           "CANCEL":"/cancel"
-        },
-        "DISCUSSIONS":{
-            "DISPLAY_THREADS":"/list",
-            "THREAD_BY_ID": "/thread/",
-            "POST_THREAD":"/thread/create",
-            "EDIT_THREAD":"/thread/edit",
-            "EDIT_REPLY":"/reply/edit",
-            "VOTE_THREAD":"/thread/vote",
-            "FLAG_THREAD":"/thread/flag",
-            "MARK_ANSWER":"/thread/markanswer",
-            "POST_REPLY":"/thread/reply",
-            "THREAD_LOCK":"/thread/lock",
-            "ARCHIVE_THREAD":"/thread/archive",
-            "SPAM_THREAD":"/thread/spam"
-        },
+        },       
         "CHANNEL": {
             "READ":"channel/v1/read"
         },

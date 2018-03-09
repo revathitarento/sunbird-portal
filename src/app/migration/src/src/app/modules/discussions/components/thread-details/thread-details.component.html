@@ -17,26 +17,31 @@
                                 <a class="cursor-pointer" *ngIf="!openThreadEdit" (click)="writeIconClick(openThreadEdit)"> <i class="write icon"></i> </a>                              
                                 <a class="cursor-pointer" *ngIf="openThreadEdit" (click)="openThreadEdit=false">
                                     Close</a> 
+                                </div>
                                  <div class="content description">{{threadDetails.thread.body}}</div>
-                                <form class="ui form margin-top-20 "  *ngIf="openThreadEdit">
+                                <form class="ui form margin-top-20 "  *ngIf="openThreadEdit" style=" float: left; width: 100%; max-width: 530px;">
                                     <div class="field">
-                                        <textarea [(ngModel)]="threadDetails.thread.newTitle" [ngModelOptions]="{standalone: true}"></textarea>
+                                        <label>Title</label>
+                                        <textarea class="min-textarea" [(ngModel)]="threadDetails.thread.newTitle" [ngModelOptions]="{standalone: true}"></textarea>
                                     </div>
-                            
+                                    <div class="field">
+                                            <label>Body</label>
+                                        <textarea class="min-textarea" [(ngModel)]="threadDetails.thread.newBody" [ngModelOptions]="{standalone: true}"></textarea>
+                                    </div>
                                     <button class="ui primary button margin-top-15" *ngIf="openThreadEdit" 
                                     (click)="onEditThread(threadDetails.thread.id, threadDetails.thread.title,openThreadEdit)">Save </button>
                                     
                                 </form>
-                            </div>
+                           
                           
-                            <div class="ui comments">
+                            <div class="ui comments" style="width:100%;display:block;">
                                 <div class="comment">
                                     <div class="content">
                                         <div class="metadata width-100">
                                             <span class="author">{{threadDetails.thread.author.userName}}</span>
                                             <span> | </span>
                                             <span>{{replies.length}} replies</span>
-                                            <span *ngIf="threadDetails.thread.actions.vote != undefined && threadDetails.thread.actions.vote >= 0" title="Vote" class="cursor-pointer" (click)="upVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.vote === 1, type = 'thread' )">
+                                            <span *ngIf="threadDetails.thread.actions.vote !== undefined && threadDetails.thread.actions.vote >= 0" title="Vote" class="cursor-pointer" (click)="upVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.vote === 1, type = 'thread' )">
                                                 <i class="custom-vote-icon thumbs up icon" [ngClass]="threadDetails.thread.actions.vote == 1?'blue':''"></i>{{message.like_count}}
                                             </span>
                                            
@@ -58,7 +63,7 @@
                                                 <i class="lock icon" [ngClass]="threadDetails.thread.locked == true? 'unlock alternate icon ui red':''"></i>
                                             </span>
                                            
-                                            <span title="archive this post" class="cursor-pointer"
+                                            <span title="archive this post" [ngClass]="threadDetails.thread.archived == true ?' disabled ': 'cursor-pointer'"
                                                 (click)="onArchive(threadDetails.thread.id,false)">
                                                 <i class="archive icon"  [ngClass]="threadDetails.thread.archived == true || archivedState === true ?'ui blue':''" ></i>
                                             </span>
@@ -96,30 +101,37 @@
                                         </div>                                      
                                     </sui-message> -->
                               
-                                <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId  &&  notifyActions == true && threadDetails.thread.actions.vote == 1">Liked the thread</div>
+                                <!-- <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId  &&  notifyActions == true && threadDetails.thread.actions.vote == 1">Liked the thread</div>
                                 <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId   && notifyActions == true && threadDetails.thread.actions.vote == 0">Unliked the thread</div>
     
-                                <div class="ui tiny green message" *ngIf="threadDetails.thread.id == repId && archivedState == true && notifyActions == true">Archived  the thread</div>
+                                <div class="ui tiny green message" *ngIf="threadDetails.thread.id == repId && archivedState == true && notifyActions == true">Archived  the thread</div> -->
                                 <!-- <div class="ui tiny red message" *ngIf="threadDetails.thread.id == repId && archivedState == false  && notifyActions == true">Removed the archive</div> -->
 
-                                
+<!--                                 
                                 <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId && lockedState == true  && notifyActions == true">Locked the thread</div>
                                 <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId && lockedState == false  && notifyActions == true">UnLocked the thread</div>
-    
+     -->
                         </div>
-                        <div  title="sort" class="ui dropdown" suiDropdown>
-                            <small class="text">Sort by</small>
-                            <i class="dropdown icon"></i>
-                            <div class="menu" suiDropdownMenu>
-                                <div class="item" (click)="ascSortClick()">
-                                    Older
+
+                        <div title="sort" class="extra">
+                            <div class="ui right floated  button">
+                                <div  class="ui dropdown" suiDropdown *ngIf="!openThreadEdit">
+                                    <small class="text">Sort by</small>
+                                    <i class="dropdown icon"></i>
+                                    <div class="menu" suiDropdownMenu>
+                                        <div class="item" (click)="ascSortClick()">
+                                            Older
+                                        </div>
+                                        <div class="item" (click)="descSortClick()">
+                                            Newer
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="item" (click)="descSortClick()">
-                                    Newer
-                                </div>
+                              
                             </div>
-                        </div>
-                        <div class="ui comments margin-top-10">
+                          </div>
+                       
+                        <div class="ui comments margin-top-10" *ngIf="!openThreadEdit">
                             <!-- <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param; let i = index"> -->
                                     <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param; let i = index">
                                     <!-- full reply details: {{reply | json}} -->
@@ -133,7 +145,7 @@
                                     <div class="text margin-left-10">{{reply.body}}</div>
                                     <div class="actions metadata">
                                         <span *ngIf="reply.actions.vote != undefined && reply.actions.vote >= 0 " title="Vote" class="cursor-pointer" (click)="upVoteAction(reply.id,reply.actions.vote === 1, type = 'reply')">
-                                            <i class="custom-vote-icon thumbs up icon" [ngClass]=" repId == reply.id && reply.actions.vote ==1 ?'blue':''"></i>
+                                            <i class="custom-vote-icon thumbs up icon" [ngClass]="repId == reply.id && reply.actions.vote ==1 ||  reply.actions.vote ==1?'blue':''"></i>
                                         </span>
                                         
                                        
@@ -170,6 +182,9 @@
                                                 <div class="content">
                                                     <p>Social share</p>
                                                     Link = {{shareLink}}
+                                                    <span title="share a link to this thread" class="cursor-pointer" [cbContent]="shareLink" ngxClipboard (cbOnSuccess)="linkShare()">
+                                                <i class="linkify icon"></i>
+                                            </span>
                                                     <button shareButton="facebook" sbUrl="{{shareLink}}"><i class="fa fa-facebook"></i>Share</button>
                                                     <button shareButton="twitter" sbUrl="{{shareLink}}"><i class="fa fa-twitter"></i>Tweet</button>
                                                     <button shareButton="linkedin" sbUrl="{{shareLink}}"><i class="fa fa-linkedin"></i>LinkedIn</button>
@@ -205,20 +220,6 @@
                                         (click)="onEditReply(threadDetails.thread.id, reply.id, reply.body, openReplyEdit) ">Save </button> 
                                         <!-- ng-disable="!profileSummary" -->
                                     </form>
-                                    <!--Notification-->
-                                    <div class="error_notify margin-top-15">
-                                        <div class="ui tiny red message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.vote ==0">Like removed</div>
-                                        <div class="ui tiny green message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==1">Liked the post </div>
-
-                                        <div class="ui tiny red message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==0">Dislike removed</div>
-                                        <div class="ui tiny green message" *ngIf="repId == reply.id && notifyActions == true && reply.actions.downVote ==1">Post is disliked</div>
-
-                                        <div class="ui tiny green message" *ngIf="repId == reply.id && notifyActions == true  && reply.actions.acceptAnswer == 1">Marked as Correct</div>
-                                        <div class="ui tiny red message" *ngIf="repId == reply.id && notifyActions == true  && reply.actions.acceptAnswer == 0">Removed as correct answer</div>
-
-
-                                    </div>
-                                    <!--Notification ends-->
                                 </div>
                             </div>
 
@@ -247,9 +248,7 @@
                                     type="submit">
                                     <span class="ladda-label">Add your reply</span>
                                 </button>
-                                <!-- <button class="ui primary submit icon button"  [disabled]="discussionsModel.replyAnswer == ''" type="submit">
-                                <span >Add your reply</span>
-                            </button> -->
+                                
                             </div>
                         </form>
                     </div>

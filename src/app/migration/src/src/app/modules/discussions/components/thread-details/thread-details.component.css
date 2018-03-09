@@ -57,3 +57,8 @@
     font-size: 1rem;
     color: #666;
 }
+
+.ui.form textarea.min-textarea{
+    max-height: 4em;
+    min-height: 4em;
+}

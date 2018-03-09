@@ -1,3 +1,4 @@
+import { threadConfig } from './../interfaces/threadConfig.interface';
 import { ConfigService, ServerResponse } from '@sunbird/shared';
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs, RequestOptions } from '@angular/http';
@@ -83,13 +84,15 @@ export class DiscussionsApiservice extends DataService {
      **/
 
     postThread(contextId: Number|String, model){
+        console.log("model:",model);
         const body = {
             // url: '/discussions/v1/thread/create',
             title: model.threadTitle,
             body: model.threadDesc,
             contextId: contextId,
             contextType: 'batch',
-            type: 'qna'
+            type: 'qna',
+            config: model.threadConfig
         };
         return this.http.post(`${this.baseUrl}/thread/create`, body)
 
@@ -114,7 +117,7 @@ export class DiscussionsApiservice extends DataService {
             title: model.threadTitle,
             threadId: model.threadId
         };
-        return this.http.patch(`${this.baseUrl}/thread/edit`, body)
+        return this.http.put(`${this.baseUrl}/thread/edit`, body)
 
     }
     /**
@@ -128,7 +131,7 @@ export class DiscussionsApiservice extends DataService {
 
         };
         console.log("edit reply in service", body);
-        return this.http.patch(`${this.baseUrl}/reply/edit`, body)
+        return this.http.put(`${this.baseUrl}/reply/edit`, body)
 
     }
     /**     
@@ -141,7 +144,7 @@ export class DiscussionsApiservice extends DataService {
             data: {
                 'postId': id,
                 'value': 'up',
-                'undo': undo
+                //'undo': undo
             }
         };
         return this.post(option)
@@ -152,11 +155,11 @@ export class DiscussionsApiservice extends DataService {
     downvoteAction(id, undo) {
         console.log('inside service actions()', id);
         const option = {
-            url: `/discussions/v1/thread/vote`,
+            url: this.config.urlConFig.URLS.DISCUSSIONS.VOTE_THREAD,
             data: {
                 'postId': id,
                 'value': 'down',
-                'undo': undo
+               // 'undo': undo
             }
         };
         return this.post(option)
@@ -176,27 +179,30 @@ export class DiscussionsApiservice extends DataService {
     }
 
     /**     
-       * Method to Mark as correct answer     
-       **/
+    * Method to Mark as correct answer     
+    **/
     markAsCorrect(replyId, isUndo) {
         console.log('inside mark as correct answer', replyId, isUndo);
         const options = {
-            'url':this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
+            // 'url':this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
             'postId': replyId,
             'undo': isUndo
         };
-        return this.post(options)
+        // return this.post(options)
+        return this.http.post(`${this.baseUrl}/thread/markanswer`, options)
     }
     /**     
        * Method to Reply to a thread     
        **/
     postReply(threadId, model) {
+        console.log("model",model);
         const options = {
-            'url': this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
+            // 'url': this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
             'threadId': threadId,
             'body': model.description
         };
-        return this.post(options)
+        // return this.post(options)
+        return this.http.post(`${this.baseUrl}/thread/reply`, options)
     }
     /**     
        * Method to Lock a thread     
