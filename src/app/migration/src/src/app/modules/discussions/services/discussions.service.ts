@@ -1,4 +1,3 @@
-import { threadConfig } from './../interfaces/threadConfig.interface';
 import { ConfigService, ServerResponse } from '@sunbird/shared';
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs, RequestOptions } from '@angular/http';
@@ -112,10 +111,13 @@ export class DiscussionsApiservice extends DataService {
       * Method to Edit thread by ID from api, PATCH method 
       **/
     editThread(model) {
+        console.log("model in edit thread", model);
         const body = {
             //url: '/discussions/v1/thread/edit',
             title: model.threadTitle,
-            threadId: model.threadId
+            threadId: model.threadId.toString(),
+            descId :model.descId.toString(),
+            body: model.body
         };
         return this.http.put(`${this.baseUrl}/thread/edit`, body)
 
@@ -211,7 +213,7 @@ export class DiscussionsApiservice extends DataService {
         const option = {
             url: this.config.urlConFig.URLS.DISCUSSIONS.THREAD_LOCK,
             data: {
-                'threadId': id
+                'threadId': id.toString()
             }
         };
         return this.delete(option).map(data => {

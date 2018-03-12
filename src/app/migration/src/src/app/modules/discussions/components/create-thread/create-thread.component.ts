@@ -101,17 +101,13 @@ export class CreateThreadComponent implements OnInit {
                 //     this.changeWidget();
                 // }, 3000);
             this.toasterService.success("Success in creating questions");
+            this.router.navigate(['/thread-list', this.id]);
                 
             } 
         },
         err => {
-            this.toasterService.error("Error in creating the question");
+            this.toasterService.error("Error in creating the question");    
     
-    
-           // this.errorMessage = true;
-            // setTimeout(() => {
-            //     this.changeWidget();
-            // }, 3000);
         }
     );
     }

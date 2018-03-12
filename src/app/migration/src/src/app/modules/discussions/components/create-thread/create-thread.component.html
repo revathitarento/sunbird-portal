@@ -37,14 +37,7 @@
                                                 Your answer has been added successfully.
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- <div *ngIf="errorMessage" class="field">
-                                            <div class="ui negative message">
-                                                <div class="header">
-                                                    Error in creating question.
-                                                </div>
-                                            </div>
-                                        </div>                                     -->
+                                    </div>        
                             <div class="ui form">
                                 <div class="field">
                                     <label class="left-class">Title</label>
@@ -74,7 +67,7 @@
                             <div class="ui raised segment" >
                             <div class="grouped fields">
                                    
-                                <h4 class="ui header">User rights</h4>
+                                <h4 class="ui header">Thread Configurations</h4>
                                 <div class="field">
                                     <sui-checkbox [(ngModel)]="discussionsModel.threadConfig.upVote" [ngModelOptions]="{standalone: true}" (ngModelChange)="onFilterChange(type = 'upVote',discussionsModel.threadConfig.upVote)">Up vote</sui-checkbox>
                                 </div>

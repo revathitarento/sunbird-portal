@@ -66,8 +66,6 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
 
   public repId: any;
 
-  
-
   public currentLocation: any;
   public replyHash: any;
   public shareLink: any;
@@ -384,20 +382,29 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     console.log('inside onArchive()', id, state);
     this.discussionService.archiveAction(id).subscribe(data => {
       console.log("Archive data", data['responseCode']);
-      if (data['responseCode'] === 'OK' && data['result'].status === true) {
+      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+        if(!this.threadDetails.thread.archived === true){        
         this.archivedState = true;
         console.log("status", data['result'].status);
         let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
+        this.threadDetails.thread.archived = true;
         this.toasterService.success("Thread archived successfully");
-        this.showNotify(id);
+        this.router.navigate(['/thread-list/0124543621061672965']);
+      }
+      else{
+        this.toasterService.error("Thread is already archived ");
+      }
+      //  this.showNotify(id);
       }
     },
       error => {
-       //this.archivedState = false;
-        this.toasterService.error("Error in Archiving thread");
-          this.loading = false;
+        this.errorData = error;  
+        console.log("error", error);
+         this.errMsg = this.errorData.error.params.errmsg;
+          this.toasterService.error(this.errMsg);
       });
   }
+
 
   public loadReplies(threadId) {
     this.discussionService.getThreadbyId(this.id).subscribe(data => {
@@ -417,14 +424,18 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public openThreadEdit: boolean = false;
   //this.openThreadEdit = false;
 
-  public onEditThread(id, title, openThreadEdit) {
+  public onEditThread(id, title, descId,body, openThreadEdit) {
     this.discussionsModel.threadTitle = this.threadDetails.thread.newTitle;
+    this.discussionsModel.body = this.threadDetails.thread.newBody;
     this.discussionsModel.threadId = id;
+    this.discussionsModel.descId = descId;
+  //  this.discussionsModel.body = body;
     console.log("openThreadEdit", openThreadEdit);
     this.discussionService.editThread(this.discussionsModel).subscribe(data => {
       console.log("Edit thread ", data);
       if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
         this.threadDetails.thread.title = this.threadDetails.thread.newTitle;
+        this.threadDetails.thread.body = this.threadDetails.thread.newBody;
         this.openThreadEdit = false;
         console.log("openThreadEdit after,", this.openThreadEdit);
       }
@@ -434,8 +445,11 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     },
     error => {
      // this.errorState = true;
-      this.openThreadEdit = false;
-      console.log("error",error);
+      this.openThreadEdit = false;      
+      this.errorData = error;  
+      console.log("thread edit error", error);
+       this.errMsg = this.errorData.error.params.errmsg;
+        this.toasterService.error(this.errMsg);
     });
   }
 
@@ -466,6 +480,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public onEditReply(threadId, replyId, replyBody, openReplyEdit) {
     this.replyObject.threadId = threadId;
     this.replyObject.replyId = replyId;
+    this.replyObject.replyAnswer = replyBody;
 
     this.discussionService.editReply(this.replyObject).subscribe(data => {
       console.log("Edit Reply", data);
@@ -495,21 +510,28 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     console.log('inside onLock', id);
     this.discussionService.lockAction(id).subscribe(data => {
       console.log("locked data", data);
-      if (data['responseCode'] === 'OK' && data['result'].status === 'successful') {
-        this.lockedId = data['result'].id
-        this.lockedState = true;
-        console.log('lock response', data, this.lockedId, this.lockedState);
+      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+        if (!this.threadDetails.thread.locked === true) {
+          this.lockedId = data['result'].id
+          this.lockedState = true;
+          console.log('lock response', data, this.lockedId, this.lockedState);
+          this.toasterService.success("Locked the thread successfully");
+          this.router.navigate(['/thread-list/0124543621061672965']);
+        }
+        else {
+          this.toasterService.error("Thread is already locked");
+        }
       }
     },
-    error => {
-      this.errorData = error;  
-      this.errMsg = this.errorData.error.params.errmsg;
+      error => {
+        this.errorData = error;
+        this.errMsg = this.errorData.error.params.errmsg;
         this.toasterService.error(this.errMsg);
-    });
+      });
   }
 
   public linkShare() {
-    alert('copied' + this.shareLink);
+    alert('copied');
   }
 
   public spamAction(id, isSpam) {

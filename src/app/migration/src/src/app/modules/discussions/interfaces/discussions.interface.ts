@@ -4,6 +4,8 @@ export class DiscussionsObject {
         public replyAnswer: string,
         public contextType?: string,
         public threadDesc?: string,
+        public descId? : string,
+        public body? : string,
         public threadId?: number,
         public threadConfig? : {
             upVote: boolean;
@@ -14,6 +16,8 @@ export class DiscussionsObject {
     ) {
         this.threadTitle = threadTitle;
         this.threadDesc = threadDesc;
+        this.descId = descId;
+        this.body = body;
         this.replyAnswer = replyAnswer;
         this.contextType = contextType;
          this.threadId = threadId;
