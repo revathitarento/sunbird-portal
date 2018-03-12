@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs/Rx';
-import { DiscussionsApiservice } from '../../../../../services/discussions/discussions.service';
+import { DiscussionsApiservice } from './../../services/discussions.service';
 import { async, ComponentFixture, TestBed, inject, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';

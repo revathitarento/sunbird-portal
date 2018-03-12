@@ -10,17 +10,17 @@
                                 <div class="header courseStructureSectionHeading discussionHeading">Questions</div>
                                 <div class="ui category search">
                                     <div class="ui icon input">
-                                        <input class="prompt" type="text" placeholder="Search threads, replies" [(ngModel)]="query" >
+                                        <!-- <input class="prompt" type="text" placeholder="Search threads, replies" [(ngModel)]="query" > -->
                                         <!-- (keyup)="filter()" -->
                                         <i class="search icon"></i>
                                     </div>
                                     <div class="results"></div>
                                 </div>
                             </div>
-                            <div class="ui right floated mini button margin-top--30">
-                                <a class="cursor-pointer" [routerLink]="['/create-thread', batchId]">
+                            <div class="ui right floated mini  margin-top--30">
+                                <button class="cursor-pointer" [routerLink]="['/create-thread', batchId]">
                                     <i class="large add circle icon"></i>Create
-                                </a>
+                                </button>
                             </div>
                             <div (click)="checkNewQuestion()" class="cursor-pointer" style="text-align: center"></div>
 
@@ -41,6 +41,10 @@
                                                                         <div class="item" (click)="descSortClick()">
                                                                             Newer
                                                                         </div>
+                                                                        <div class="item" (click)="likeSortClick()">
+                                                                            Votes
+                                                                         </div>
+                                                                        
                                                                    
                                                                 </div>
                                                             </div>

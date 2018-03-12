@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/app/modules/discussions/components/create-thread/create-thread.component.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../../index.html">All files</a> / <a href="index.html">src/app/modules/discussions/components/create-thread</a> create-thread.component.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">28.57% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>14/49</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">0% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/12</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">10% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/10</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">27.91% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>12/43</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { DiscussionsObject } from './../../interfaces/discussions.interface';
+import { DiscussionsApiservice } from './../../services/discussions.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { ResourceService, ToasterService, RouterNavigationService, ServerResponse } from '@sunbird/shared';
+// import { threadConfig } from './../../interfaces/threadConfig.interface';
+&nbsp;
+declare var jquery: any;
+declare var $: any;
+@Component({
+    selector: 'app-create-thread',
+    templateUrl: './create-thread.component.html',
+    styleUrls: ['./create-thread.component.css']
+})
+export class CreateThreadComponent implements OnInit {
+            /**
+   * Reference of resourceService
+   */
+  public resourceService: ResourceService;
+  /**
+	 * Contains threadConfig details in
+     * CreateThread service
+	 */
+//   threadConfig: threadConfig;
+  /**
+   * Reference of toaster service
+   */
+  private toasterService: ToasterService;
+    public successMessage: boolean;
+    public sub: any;
+    public id: number;
+    public loading: boolean;
+    public isLoading: boolean;
+    public result: any;
+    public errorMessage: boolean;
+    public contextId: number|string;
+&nbsp;
+    public <span class="cstat-no" title="statement not covered" >discussionsModel = new DiscussionsObject('', '', '','');    </span>
+<span class="fstat-no" title="function not covered" >    constructor(private <span class="cstat-no" title="statement not covered" ></span>router: Router,</span> private <span class="cstat-no" title="statement not covered" >route: ActivatedRoute,</span> private <span class="cstat-no" title="statement not covered" >discussionService: DiscussionsApiservice,</span> toasterService: ToasterService) { 
+<span class="cstat-no" title="statement not covered" >        this.discussionsModel.contextType = 'batch';</span>
+<span class="cstat-no" title="statement not covered" >        this.toasterService = toasterService;</span>
+    }
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    ngOnInit() {</span></span>
+<span class="cstat-no" title="statement not covered" >        this.loading = true;</span>
+       // this.errorMessage = false;
+<span class="cstat-no" title="statement not covered" >        this.contextId = '0124543621061672965';</span>
+<span class="cstat-no" title="statement not covered" >        this.sub = this.route.params.subscribe(<span class="fstat-no" title="function not covered" >params =&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >            this.loading = false;</span>
+<span class="cstat-no" title="statement not covered" >            this.id = params['id'];</span>
+            
+        });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        this.discussionsModel.threadConfig =  {</span>
+            upVote: false,
+            downVote: false,
+            flag: false,
+            acceptAnswer: false
+        };
+    }
+&nbsp;
+    public changeAction: boolean;
+<span class="fstat-no" title="function not covered" >    onFilterChange(</span>type,value) {
+<span class="cstat-no" title="statement not covered" >        this.changeAction = value;</span>
+       
+<span class="cstat-no" title="statement not covered" >        if(type == this.discussionsModel.threadConfig.upVote){          </span>
+<span class="cstat-no" title="statement not covered" >            this.discussionsModel.threadConfig.upVote = value;</span>
+        }
+       else <span class="cstat-no" title="statement not covered" >if(type == this.discussionsModel.threadConfig.downVote){</span>
+<span class="cstat-no" title="statement not covered" >          this.discussionsModel.threadConfig.downVote = value;</span>
+        }
+        else <span class="cstat-no" title="statement not covered" >if(type == this.discussionsModel.threadConfig.flag){</span>
+<span class="cstat-no" title="statement not covered" >            this.discussionsModel.threadConfig.flag = value;</span>
+          }
+          else <span class="cstat-no" title="statement not covered" >if(type == this.discussionsModel.threadConfig.acceptAnswer){</span>
+<span class="cstat-no" title="statement not covered" >            this.discussionsModel.threadConfig.acceptAnswer = value;</span>
+          }
+<span class="cstat-no" title="statement not covered" >          console.log("final thread", this.discussionsModel.threadConfig);</span>
+      }
+&nbsp;
+&nbsp;
+&nbsp;
+<span class="fstat-no" title="function not covered" >    public changeWidget() {</span>
+<span class="cstat-no" title="statement not covered" >        this.router.navigate(['/thread-list', this.id]);</span>
+    }
+<span class="fstat-no" title="function not covered" >    showErrfield() {</span>
+<span class="cstat-no" title="statement not covered" >        $('.ui.negative.message').show();</span>
+      }
+   
+<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    public onCreateThread() {</span></span>
+<span class="cstat-no" title="statement not covered" >        this.isLoading = true;</span>
+<span class="cstat-no" title="statement not covered" >        this.discussionService.postThread(this.contextId,this.discussionsModel).subscribe(<span class="fstat-no" title="function not covered" >data =&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >            this.successMessage = false;</span>
+<span class="cstat-no" title="statement not covered" >            this.result = data;</span>
+<span class="cstat-no" title="statement not covered" >            this.isLoading = !this.isLoading;</span>
+<span class="cstat-no" title="statement not covered" >            if (this.result.result.id != null || this.result.result.id !== undefined) {</span>
+            //    this.discussionsModel.threadTitle = '';
+            //    this.discussionsModel.threadDesc = '';              
+               // this.successMessage = true;
+                // setTimeout(() =&gt; {
+                //     this.changeWidget();
+                // }, 3000);
+<span class="cstat-no" title="statement not covered" >            this.toasterService.success("Success in creating questions");</span>
+<span class="cstat-no" title="statement not covered" >            this.router.navigate(['/thread-list', this.id]);</span>
+                
+            } 
+        },
+<span class="fstat-no" title="function not covered" >        err =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            this.toasterService.error("Error in creating the question");    </span>
+    
+        }
+    );
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Mar 12 2018 15:20:29 GMT+0530 (IST)
+</div>
+</div>
+<script src="../../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../../sorter.js"></script>
+</body>
+</html>

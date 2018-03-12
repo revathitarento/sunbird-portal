@@ -114,10 +114,12 @@ export class DiscussionsApiservice extends DataService {
         console.log("model in edit thread", model);
         const body = {
             //url: '/discussions/v1/thread/edit',
+            data:{
             title: model.threadTitle,
             threadId: model.threadId.toString(),
             descId :model.descId.toString(),
             body: model.body
+            }
         };
         return this.http.put(`${this.baseUrl}/thread/edit`, body)
 
@@ -128,7 +130,7 @@ export class DiscussionsApiservice extends DataService {
     editReply(model) {
         const body = {
             // url: '/discussions/v1/reply/edit',
-            postId: model.threadId,
+            postId: model.replyId,
             body: model.replyAnswer,
 
         };
@@ -186,12 +188,14 @@ export class DiscussionsApiservice extends DataService {
     markAsCorrect(replyId, isUndo) {
         console.log('inside mark as correct answer', replyId, isUndo);
         const options = {
-            // 'url':this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
-            'postId': replyId,
-            'undo': isUndo
+            'url':this.config.urlConFig.URLS.DISCUSSIONS.MARK_ANSWER,
+            data: {
+                'postId': replyId,
+                'undo': isUndo
+            }
         };
         // return this.post(options)
-        return this.http.post(`${this.baseUrl}/thread/markanswer`, options)
+        return this.post(options)
     }
     /**     
        * Method to Reply to a thread     
@@ -199,12 +203,14 @@ export class DiscussionsApiservice extends DataService {
     postReply(threadId, model) {
         console.log("model",model);
         const options = {
-            // 'url': this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
+            'url': this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
+            data: {
             'threadId': threadId,
             'body': model.description
+            }
         };
         // return this.post(options)
-        return this.http.post(`${this.baseUrl}/thread/reply`, options)
+        return this.post(options)
     }
     /**     
        * Method to Lock a thread     

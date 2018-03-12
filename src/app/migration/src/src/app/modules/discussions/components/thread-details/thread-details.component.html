@@ -41,23 +41,18 @@
                                             <span class="author">{{threadDetails.thread.author.userName}}</span>
                                             <span> | </span>
                                             <span>{{replies.length}} replies</span>
-                                            <span *ngIf="threadDetails.thread.actions.vote !== undefined && threadDetails.thread.actions.vote >= 0" title="Up Vote" class="cursor-pointer"
-                                                    [ngClass]="threadDetails.thread.config.upVote === true?'flag_show':'flag_hide'"  (click)="upVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.vote === 1, type = 'thread' )">
+                                            <span *ngIf="threadDetails.thread.actions.vote !== undefined && threadDetails.thread.actions.vote >= 0" title="Up Vote" class="disabledButton"
+                                                    [ngClass]="threadDetails.thread.config.upVote === true?'flag_show cursor-pointer':'flag_hide'"  (click)="upVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.vote === 1, type = 'thread' )">
                                                 <i class="custom-vote-icon thumbs up icon" [ngClass]="threadDetails.thread.actions.vote == 1?'blue':''"></i>{{message.like_count}}
                                             </span>
                                            
                                             <span *ngIf="threadDetails.thread.actions.downVote != undefined && threadDetails.thread.actions.downVote >= 0" title="Down Vote" 
-                                                    [ngClass]="threadDetails.thread.config.downVote === true?'flag_show':'flag_hide'" class="cursor-pointer" (click)="downVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.downVote === 1, type = 'thread')">
+                                                    [ngClass]="threadDetails.thread.config.downVote === true?'flag_show cursor-pointer':'flag_hide'" class="disabledButton" (click)="downVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.downVote === 1, type = 'thread')">
                                                 <i class="custom-vote-icon thumbs down icon" [ngClass]="threadDetails.thread.actions.downVote == 1?'blue':''"></i>
                                             </span>
-                                            <span title="Share a link to this thread" class="cursor-pointer" [cbContent]="currentLocation" ngxClipboard (cbOnSuccess)="linkShare()">
-                                                <i class="copy icon"></i>
-                                            </span>
-                                            <!-- <span title="share a link to this thread" class="cursor-pointer" (click)="showPopup(threadDetails.thread.descId)">
-                                                <i class="linkify icon"></i>
-                                            </span>        -->
-                                            <span *ngIf="threadDetails.thread.actions.flag != undefined && threadDetails.thread.actions.flag >= 0" title="Flag as spam" class="cursor-pointer"
-                                                [ngClass]="threadDetails.thread.config.flag === true?'flag_show':'flag_hide'" (click)="flagAction(threadDetails.thread.descId,threadDetils.thread.actions.flag === 1, type= 'thread')">
+                                           
+                                            <span *ngIf="threadDetails.thread.actions.flag != undefined && threadDetails.thread.actions.flag >= 0" title="Flag as spam" class="disabledButton"
+                                                [ngClass]="threadDetails.thread.config.flag === true?'flag_show cursor-pointer':'flag_hide'" (click)="flagAction(threadDetails.thread.descId,threadDetils.thread.actions.flag === 1, type= 'thread')">
                                                    <i class="custom-vote-icon flag icon"  [ngClass]="threadDetails.thread.actions.flag == 1?'blue':''"></i>
                                              </span>                                         
                                             <span  title="Lock this post" class="cursor-pointer"
@@ -69,6 +64,13 @@
                                                 (click)="onArchive(threadDetails.thread.id,false)">
                                                 <i class="archive icon"  [ngClass]="threadDetails.thread.archived == true || archivedState === true ?'ui blue':''" ></i>
                                             </span>
+
+                                            <span title="Share a link to this thread" class="cursor-pointer" [cbContent]="currentLocation" ngxClipboard (cbOnSuccess)="linkShare()">
+                                                    <i class="copy icon"></i>
+                                                </span>
+                                                <!-- <span title="share a link to this thread" class="cursor-pointer" (click)="showPopup(threadDetails.thread.descId)">
+                                                    <i class="linkify icon"></i>
+                                                </span>        -->
                                            
                                             <!-- <span title="spam this post" class="cursor-pointer" (click)="spamAction(threadDetails.thread.id, isSpam = deletedState)" >
                                                 <i class="ban icon" [ngClass]="deletedId == threadDetails.thread.id && deletedState == false?'ui brown':''"></i>

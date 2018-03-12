@@ -62,7 +62,11 @@
     max-height: 4em;
     min-height: 4em;
 }
-span.cursor-pointer.flag_hide .icon:before {
+span.flag_hide .icon:before {
     color: lightgray;
-    cursor: default;
+    
 }
+span.flag_hide .icon{
+    pointer-events: none;
+    cursor: default;
+} 

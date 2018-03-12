@@ -485,23 +485,24 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.discussionService.editReply(this.replyObject).subscribe(data => {
       console.log("Edit Reply", data);
       if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
-        
-    let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId });
-    if (replyId === this.threadDetails.thread.replies[index].id) {
-      this.threadDetails.thread.replies[index].body = this.threadDetails.thread.replies[index].newBody;
-      this.replyObject.replyAnswer = this.threadDetails.thread.replies[index].newBody;
-    }          
+
+        let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': replyId });
+        if (replyId === this.threadDetails.thread.replies[index].id) {
+          this.threadDetails.thread.replies[index].body = this.threadDetails.thread.replies[index].newBody;
+          this.replyObject.replyAnswer = this.threadDetails.thread.replies[index].newBody;
+          this.toasterService.success("Editted the reply successfully");
+        }
         this.openReplyEdit = false;
         console.log("reply  after,", this.threadDetails.thread.replies[index].newBody);
-      }      
+      }
     },
-  error =>{
-    this.errorData = error;  
-      console.log("edit reply error", error);
-      this.errMsg = this.errorData.error.params.errmsg;
+      error => {
+        this.errorData = error;
+        console.log("edit reply error", error);
+        this.errMsg = this.errorData.error.params.errmsg;
         this.toasterService.error(this.errMsg);
         this.openReplyEdit = false;
-  });
+      });
   }
 
 

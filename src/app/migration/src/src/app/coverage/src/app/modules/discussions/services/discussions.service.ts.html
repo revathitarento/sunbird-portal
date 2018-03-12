@@ -1,0 +1,818 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/app/modules/discussions/services/discussions.service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../../../index.html">All files</a> / <a href="index.html">src/app/modules/discussions/services</a> discussions.service.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">49.25% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>33/67</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>2/2</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">17.65% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>3/17</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">46.88% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>30/64</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ConfigService, ServerResponse } from '@sunbird/shared';
+import { Injectable } from '@angular/core';
+import { Http, Response, RequestOptionsArgs, RequestOptions } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { DataService } from './../../core/services/data/data.service';
+import { UserService } from '@sunbird/core';
+import { HttpClientModule } from '@angular/common/http';
+import { Headers } from '@angular/http';
+&nbsp;
+@Injectable()
+/**
+ * DiscussionApiService extends dataservice where
+ * get, post, delete etc methods are written
+ */
+export class DiscussionsApiservice extends DataService {
+    public messageSource = new BehaviorSubject&lt;any&gt;([]);
+&nbsp;
+    currentMessage = this.messageSource.asObservable();
+    /**
+   * base Url for Discussion api
+   */
+    baseUrl: string;
+    /**
+     * reference of config service.
+     */
+    public config: ConfigService;
+    /**
+     * reference of http service.
+     */
+    public http: HttpClient;
+    /**
+     * Constructor - default method of DiscussionApiService class
+     *
+     * @param {ConfigService} config ConfigService reference
+     * @param {HttpClient} http HttpClient reference
+     */
+&nbsp;
+    constructor(config: ConfigService, http: HttpClient) {
+        super(http);
+        this.config = config;
+        this.baseUrl = this.config.urlConFig.URLS.DISCUSSIONS_PREFIX;
+    }
+    /**
+     * Read value from Thread list component
+     * Using .next() method
+     **/
+<span class="fstat-no" title="function not covered" >    public changeMessage(</span>object) {
+<span class="cstat-no" title="statement not covered" >        console.log('object from list comp', object);</span>
+<span class="cstat-no" title="statement not covered" >        this.messageSource.next(object);</span>
+    }
+    /**
+     * Method to List thread from api call
+     * It calls the post method from data service class
+     **/
+&nbsp;
+    getThreads(contextId: Number): Observable&lt;ServerResponse&gt; {
+        console.log('com', contextId);
+        const option = {
+            url: this.config.urlConFig.URLS.DISCUSSIONS.DISPLAY_THREADS,
+            data: {
+                contextId: contextId,
+                type: 'qna'
+            }
+        };
+        return this.post(option)
+    }
+    /**
+      * Method to Get thread by ID from api, GET method 
+      **/
+<span class="fstat-no" title="function not covered" >    public getThreadbyId(</span>threadId: Number): Observable&lt;ServerResponse&gt; {
+        const option = <span class="cstat-no" title="statement not covered" >{</span>
+            url:this.config.urlConFig.URLS.DISCUSSIONS.THREAD_BY_ID + threadId
+        };
+<span class="cstat-no" title="statement not covered" >        return this.get(option)</span>
+    }
+&nbsp;
+    /**
+     * Method to make read api call
+     * It calls the post method from data service class
+     **/
+&nbsp;
+<span class="fstat-no" title="function not covered" >    postThread(</span>contextId: Number|String, model){
+<span class="cstat-no" title="statement not covered" >        console.log("model:",model);</span>
+        const body = <span class="cstat-no" title="statement not covered" >{</span>
+            // url: '/discussions/v1/thread/create',
+            title: model.threadTitle,
+            body: model.threadDesc,
+            contextId: contextId,
+            contextType: 'batch',
+            type: 'qna',
+            config: model.threadConfig
+        };
+<span class="cstat-no" title="statement not covered" >        return this.http.post(`${this.baseUrl}/thread/create`, body)</span>
+&nbsp;
+&nbsp;
+        //  const options = {
+        //     url:this.config.urlConFig.URLS.DISCUSSIONS.POST_THREAD,
+        //     title: model.threadTitle,
+        //     body: model.threadDesc,
+        //     contextId: contextId,
+        //     contextType: 'batch',
+        //     type: 'qna'
+        // };
+        // return this.post(options)
+&nbsp;
+    }
+    /**
+      * Method to Edit thread by ID from api, PATCH method 
+      **/
+<span class="fstat-no" title="function not covered" >    editThread(</span>model) {
+<span class="cstat-no" title="statement not covered" >        console.log("model in edit thread", model);</span>
+        const body = <span class="cstat-no" title="statement not covered" >{</span>
+            //url: '/discussions/v1/thread/edit',
+            title: model.threadTitle,
+            threadId: model.threadId.toString(),
+            descId :model.descId.toString(),
+            body: model.body
+        };
+<span class="cstat-no" title="statement not covered" >        return this.http.put(`${this.baseUrl}/thread/edit`, body)</span>
+&nbsp;
+    }
+    /**
+      * Method to Edit reply by ID from api, PATCH method 
+      **/
+<span class="fstat-no" title="function not covered" >    editReply(</span>model) {
+        const body = <span class="cstat-no" title="statement not covered" >{</span>
+            // url: '/discussions/v1/reply/edit',
+            postId: model.replyId,
+            body: model.replyAnswer,
+&nbsp;
+        };
+<span class="cstat-no" title="statement not covered" >        console.log("edit reply in service", body);</span>
+<span class="cstat-no" title="statement not covered" >        return this.http.put(`${this.baseUrl}/reply/edit`, body)</span>
+&nbsp;
+    }
+    /**     
+        * Method to UpVote a thread     
+        **/
+<span class="fstat-no" title="function not covered" >    upvoteAction(</span>id, undo) {
+<span class="cstat-no" title="statement not covered" >        console.log('inside service actions()', id);</span>
+        const option = <span class="cstat-no" title="statement not covered" >{</span>
+            url: this.config.urlConFig.URLS.DISCUSSIONS.VOTE_THREAD,
+            data: {
+                'postId': id,
+                'value': 'up',
+                //'undo': undo
+            }
+        };
+<span class="cstat-no" title="statement not covered" >        return this.post(option)</span>
+    }
+    /**     
+       * Method to DownVote a thread     
+       **/
+<span class="fstat-no" title="function not covered" >    downvoteAction(</span>id, undo) {
+<span class="cstat-no" title="statement not covered" >        console.log('inside service actions()', id);</span>
+        const option = <span class="cstat-no" title="statement not covered" >{</span>
+            url: this.config.urlConFig.URLS.DISCUSSIONS.VOTE_THREAD,
+            data: {
+                'postId': id,
+                'value': 'down',
+               // 'undo': undo
+            }
+        };
+<span class="cstat-no" title="statement not covered" >        return this.post(option)</span>
+    }
+    /**     
+       * Method to Flag a thread     
+       **/
+<span class="fstat-no" title="function not covered" >    flagAction(</span>id, undo) {
+        const option = <span class="cstat-no" title="statement not covered" >{</span>
+            url: this.config.urlConFig.URLS.DISCUSSIONS.FLAG_THREAD,
+            data: {
+                'postId': id
+            }
+        };
+<span class="cstat-no" title="statement not covered" >        return this.post(option)</span>
+&nbsp;
+    }
+&nbsp;
+    /**     
+    * Method to Mark as correct answer     
+    **/
+<span class="fstat-no" title="function not covered" >    markAsCorrect(</span>replyId, isUndo) {
+<span class="cstat-no" title="statement not covered" >        console.log('inside mark as correct answer', replyId, isUndo);</span>
+        const options = <span class="cstat-no" title="statement not covered" >{</span>
+            // 'url':this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
+            'postId': replyId,
+            'undo': isUndo
+        };
+        // return this.post(options)
+<span class="cstat-no" title="statement not covered" >        return this.http.post(`${this.baseUrl}/thread/markanswer`, options)</span>
+    }
+    /**     
+       * Method to Reply to a thread     
+       **/
+<span class="fstat-no" title="function not covered" >    postReply(</span>threadId, model) {
+<span class="cstat-no" title="statement not covered" >        console.log("model",model);</span>
+        const options = <span class="cstat-no" title="statement not covered" >{</span>
+            // 'url': this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
+            'threadId': threadId,
+            'body': model.description
+        };
+        // return this.post(options)
+<span class="cstat-no" title="statement not covered" >        return this.http.post(`${this.baseUrl}/thread/reply`, options)</span>
+    }
+    /**     
+       * Method to Lock a thread     
+       **/
+<span class="fstat-no" title="function not covered" >    lockAction(</span>id: Number) {
+        const option = <span class="cstat-no" title="statement not covered" >{</span>
+            url: this.config.urlConFig.URLS.DISCUSSIONS.THREAD_LOCK,
+            data: {
+                'threadId': id.toString()
+            }
+        };
+<span class="cstat-no" title="statement not covered" >        return this.delete(option).map(<span class="fstat-no" title="function not covered" >data =&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >            return data;</span>
+        });
+    }
+&nbsp;
+&nbsp;
+    /**
+     * Method to make delete api call
+     * It calls the delete method from data service class
+     *
+     */
+<span class="fstat-no" title="function not covered" >    archiveAction(</span>id: string) {
+        const option = <span class="cstat-no" title="statement not covered" >{</span>
+            url: this.config.urlConFig.URLS.DISCUSSIONS.ARCHIVE_THREAD,
+            data: {
+                'threadId': id
+            }
+        };
+<span class="cstat-no" title="statement not covered" >        return this.delete(option)</span>
+    }
+    /**     
+     * Method to SPAM a thread     
+     **/
+&nbsp;
+<span class="fstat-no" title="function not covered" >    spamAction(</span>id, isSpam) {
+        const options = <span class="cstat-no" title="statement not covered" >{</span>
+            url:this.config.urlConFig.URLS.DISCUSSIONS.ARCHIVE_THREAD,
+            'id': id,
+            'isSpam': isSpam
+        };       
+<span class="cstat-no" title="statement not covered" >        return this.post(options)</span>
+    }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Mar 12 2018 17:17:06 GMT+0530 (IST)
+</div>
+</div>
+<script src="../../../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../../../sorter.js"></script>
+</body>
+</html>
