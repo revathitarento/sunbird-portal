@@ -10,7 +10,7 @@
                                 <div class="header courseStructureSectionHeading discussionHeading">Questions</div>
                                 <div class="ui category search">
                                     <div class="ui icon input">
-                                        <input class="prompt" type="text" placeholder="Search threads, replies" [(ngModel)]="query">
+                                        <input class="prompt" type="text" placeholder="Search threads, replies" [(ngModel)]="query" >
                                         <!-- (keyup)="filter()" -->
                                         <i class="search icon"></i>
                                     </div>
@@ -23,30 +23,33 @@
                                 </a>
                             </div>
                             <div (click)="checkNewQuestion()" class="cursor-pointer" style="text-align: center"></div>
-                            <div class="ui relaxed divided list questionList">
-                                <div [ngClass]="loading? 'ui active inverted dimmer' : ''">
-                                    <div class="ui text loader">Loading</div>
-                                </div>
-                                <div class="ui grid">
-                                    <div class="sixteen wide right aligned column">
-                                        <div title="sort" class="ui dropdown right-float margin-top-20 margin-bottom-20" suiDropdown *ngIf="result.length > 0">
-                                            <div class="ui right floated button">
-                                                Sort by
-                                                <i class="dropdown icon"></i>
-                                                <div class="menu" suiDropdownMenu>
-                                                    <div class="item" (click)="ascSortClick()">
-                                                        Older
-                                                    </div>
-                                                    <div class="item" (click)="descSortClick()">
-                                                        Newer
-                                                    </div>
-                                                </div>
-                                            </div>
+
+                            <div class= "ui relaxed divided list questionList">
+                                    <div [ngClass]="loading? 'ui active inverted dimmer' : ''">
+                                            <div class="ui text loader">Loading</div>
                                         </div>
-                                    </div>
-                                </div>
+                                        <div class="ui grid" style="width: 102%;">
+                                        <div class="sixteen wide right aligned column">
+                                                <div title="sort" class="ui dropdown right-float margin-top-20 margin-bottom-20" suiDropdown *ngIf="result.length > 0">
+                                                        <div class="ui right floated  button">
+                                                                
+                                                                  Sort by <i class="dropdown icon"></i>
+                                                                    <div class="menu" suiDropdownMenu>
+                                                                        <div class="item" (click)="ascSortClick()">
+                                                                            Older
+                                                                        </div>
+                                                                        <div class="item" (click)="descSortClick()">
+                                                                            Newer
+                                                                        </div>
+                                                                   
+                                                                </div>
+                                                            </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        
                                 <div class="item" *ngFor="let thread of result | sortByDate:param; let i = index">
-                                    <!-- Full thread {{thread | json}} -->
+                                   <!-- Full thread {{thread | json}} -->
                                     <div class="content">
                                         <a (click)="gotoThread(thread.id)" [ngClass]="(thread.seen == true)?'seenClass':''" class="header quesHeading margin-top-10 margin-bottom-10">{{thread.title }}</a>
                                         <div class=" ">
@@ -65,12 +68,12 @@
                                                 <span title="like" class="cursor-pointer">
                                                     <i class="custom-vote-icon thumbs up icon"></i>
                                                 </span> {{thread.voteCount}}
-
+                                               
                                                 <!-- <span title="share a link to this thread" class="cursor-pointer" [cbContent]="baseUrl + 'migration/thread-details/' + thread.id" ngxClipboard (cbOnSuccess)="linkShare()">
                                                     <i class="linkify icon"></i>
                                                 </span> -->
                                                 <span title="Archive this post" class="cursor-pointer" (click)="onArchive(thread.id,false)">
-                                                    <i class="archive icon" [ngClass]="archivedState == true && index === i?'ui blue':''"></i>
+                                                    <i class="archive icon"  [ngClass]="archivedState == true && index === i?'ui blue':''"  ></i>
                                                 </span>
                                                 <span title="lock this post" class="cursor-pointer">
                                                     <i class="lock icon"></i>
@@ -78,8 +81,10 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="content description" *ngIf="thread.length == 0">No Questions added</div>
                                 </div>
+
                                 <!-- <div class="content description" *ngIf="threads.length == 0">No Questions added</div> -->
                             </div>
                         </div>

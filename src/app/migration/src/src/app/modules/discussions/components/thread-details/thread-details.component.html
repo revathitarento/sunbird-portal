@@ -29,7 +29,7 @@
                                         <textarea class="min-textarea" [(ngModel)]="threadDetails.thread.newBody" [ngModelOptions]="{standalone: true}"></textarea>
                                     </div>
                                     <button class="ui primary button margin-top-15" *ngIf="openThreadEdit" 
-                                    (click)="onEditThread(threadDetails.thread.id, threadDetails.thread.title,openThreadEdit)">Save </button>
+                                    (click)="onEditThread(threadDetails.thread.id, threadDetails.thread.title, threadDetails.thread.descId, threadDetails.thread.body, openThreadEdit)">Save </button>
                                     
                                 </form>
                            
@@ -41,29 +41,31 @@
                                             <span class="author">{{threadDetails.thread.author.userName}}</span>
                                             <span> | </span>
                                             <span>{{replies.length}} replies</span>
-                                            <span *ngIf="threadDetails.thread.actions.vote !== undefined && threadDetails.thread.actions.vote >= 0" title="Vote" class="cursor-pointer" (click)="upVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.vote === 1, type = 'thread' )">
+                                            <span *ngIf="threadDetails.thread.actions.vote !== undefined && threadDetails.thread.actions.vote >= 0" title="Up Vote" class="cursor-pointer"
+                                                    [ngClass]="threadDetails.thread.config.upVote === true?'flag_show':'flag_hide'"  (click)="upVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.vote === 1, type = 'thread' )">
                                                 <i class="custom-vote-icon thumbs up icon" [ngClass]="threadDetails.thread.actions.vote == 1?'blue':''"></i>{{message.like_count}}
                                             </span>
                                            
-                                            <span *ngIf="threadDetails.thread.actions.downVote != undefined && threadDetails.thread.actions.downVote >= 0" title="Down Vote" class="cursor-pointer" (click)="downVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.downVote === 1, type = 'thread')">
-                                                <i class="custom-vote-icon thumbs down icon" [ngClass]="threadDetails.thread.actions.downVote == 1?'blue':''"></i>0
+                                            <span *ngIf="threadDetails.thread.actions.downVote != undefined && threadDetails.thread.actions.downVote >= 0" title="Down Vote" 
+                                                    [ngClass]="threadDetails.thread.config.downVote === true?'flag_show':'flag_hide'" class="cursor-pointer" (click)="downVoteAction(threadDetails.thread.descId,threadDetails.thread.actions.downVote === 1, type = 'thread')">
+                                                <i class="custom-vote-icon thumbs down icon" [ngClass]="threadDetails.thread.actions.downVote == 1?'blue':''"></i>
                                             </span>
-                                            <!-- <span title="share a link to this thread" class="cursor-pointer" [cbContent]="href" ngxClipboard (cbOnSuccess)="linkShare()">
+                                            <span title="Share a link to this thread" class="cursor-pointer" [cbContent]="currentLocation" ngxClipboard (cbOnSuccess)="linkShare()">
+                                                <i class="copy icon"></i>
+                                            </span>
+                                            <!-- <span title="share a link to this thread" class="cursor-pointer" (click)="showPopup(threadDetails.thread.descId)">
                                                 <i class="linkify icon"></i>
-                                            </span> -->
-                                            <span title="share a link to this thread" class="cursor-pointer" (click)="showPopup(threadDetails.thread.descId)">
-                                                <i class="linkify icon"></i>
-                                            </span>       
-                                            <span *ngIf="threadDetails.thread.actions.flag != undefined && threadDetails.thread.actions.flag >= 0" title="flag as spam" class="cursor-pointer"
-                                                 (click)="flagAction(threadDetails.thread.descId,threadDetails.thread.actions.flag === 1, type= 'thread')">
+                                            </span>        -->
+                                            <span *ngIf="threadDetails.thread.actions.flag != undefined && threadDetails.thread.actions.flag >= 0" title="Flag as spam" class="cursor-pointer"
+                                                [ngClass]="threadDetails.thread.config.flag === true?'flag_show':'flag_hide'" (click)="flagAction(threadDetails.thread.descId,threadDetils.thread.actions.flag === 1, type= 'thread')">
                                                    <i class="custom-vote-icon flag icon"  [ngClass]="threadDetails.thread.actions.flag == 1?'blue':''"></i>
                                              </span>                                         
-                                            <span  title="lock this post" class="cursor-pointer"
+                                            <span  title="Lock this post" class="cursor-pointer"
                                                 (click)="onLock(threadDetails.thread.id)">
-                                                <i class="lock icon" [ngClass]="threadDetails.thread.locked == true? 'unlock alternate icon ui red':''"></i>
+                                                <i class="lock icon" [ngClass]="threadDetails.thread.locked == true || lockedState == true ? 'unlock alternate icon ui red':''"></i>
                                             </span>
                                            
-                                            <span title="archive this post" [ngClass]="threadDetails.thread.archived == true ?' disabled ': 'cursor-pointer'"
+                                            <span title="Archive this post" [ngClass]="threadDetails.thread.archived == true ?' disabled ': 'cursor-pointer'"
                                                 (click)="onArchive(threadDetails.thread.id,false)">
                                                 <i class="archive icon"  [ngClass]="threadDetails.thread.archived == true || archivedState === true ?'ui blue':''" ></i>
                                             </span>
@@ -113,7 +115,7 @@
      -->
                         </div>
 
-                        <div title="sort" class="extra" *ngIf="!openThreadEdit && threadDetails.thread.repliesCount > 0">
+                        <div title="sort" class="extra" *ngIf="!openThreadEdit && threadDetails.thread.repliesCount > 1">
                             <div class="ui right floated  button">
                                 <div  class="ui dropdown" suiDropdown >
                                   Sort by <i class="dropdown icon"></i>
@@ -142,17 +144,17 @@
                                     </div>
                                     <div class="text margin-left-10">{{reply.body}}</div>
                                     <div class="actions metadata">
-                                        <span *ngIf="reply.actions.vote != undefined && reply.actions.vote >= 0 " title="Vote" class="cursor-pointer" (click)="upVoteAction(reply.id,reply.actions.vote === 1, type = 'reply')">
+                                        <span *ngIf="reply.actions.vote != undefined && reply.actions.vote >= 0 " title="Up vote" class="cursor-pointer" (click)="upVoteAction(reply.id,reply.actions.vote === 1, type = 'reply')">
                                             <i class="custom-vote-icon thumbs up icon" [ngClass]="repId == reply.id && reply.actions.vote ==1 ||  reply.actions.vote ==1?'blue':''"></i>
                                         </span>
                                         
                                        
-                                        <span *ngIf="reply.actions.downVote != undefined && reply.actions.downVote >= 0" title="dislike" class="cursor-pointer" (click)="downVoteAction(reply.id,reply.actions.downVote === 1, type = 'reply')">
+                                        <span *ngIf="reply.actions.downVote != undefined && reply.actions.downVote >= 0" title="Dislike" class="cursor-pointer" (click)="downVoteAction(reply.id,reply.actions.downVote === 1, type = 'reply')">
                                             <i class="custom-vote-icon thumbs down icon" [ngClass]="reply.actions.downVote ==1?'blue':''"></i>
                                         </span>
 
                                      
-                                        <span *ngIf="reply.actions.flag != undefined && reply.actions.flag >= 0" title="flag as spam" class="cursor-pointer"
+                                        <span *ngIf="reply.actions.flag != undefined && reply.actions.flag >= 0" title="Flag as spam" class="cursor-pointer"
                                                 (click)="flagAction(reply.id,reply.actions.flag === 1, type= 'reply')">
                                                   <i class="custom-vote-icon flag icon"  [ngClass]="reply.actions.flag == 1?'blue':''"></i>
                                             </span>
@@ -173,19 +175,34 @@
                                         <!-- <span title="share a link to this post" class="cursor-pointer" (click)="replylinkShare(this.id, reply.id)" >
                                             <i class="linkify icon"></i>                                            
                                         </span>       -->
-                                        <span (click)="showPopup(reply.id)" class="cursor-pointer">Share</span>
+                                        <span title="share a link to this thread" class="cursor-pointer" [cbContent]="shareLink" ngxClipboard (cbOnSuccess)="linkShare()" (click)="showPopup(reply.id)" >Share</span>
 
                                         <sui-modal class="closeModal" *ngIf="reply.id == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
                                                
                                                 <div class="content">
                                                     <p>Social share</p>
-                                                    Link = {{shareLink}}
+                                                  
+                                                    <div class="ui center aligned basic segment">
+                                                            <div class="ui left icon action input">
+                                                             
+                                                              <input type="text"  value="{{shareLink}}" data-content="You can use me to enter data">
+                                                              <div class="ui blue submit button"  [cbContent]="shareLink" ngxClipboard (cbOnSuccess)="linkShare()">Copy Link</div>
+                                                            </div>
+                                                           </div>
+
+
+
+                                                   <!-- <div class="ui icon input">
+                                                        <input type="text">
+                                                        <i class="search icon"></i>
+                                                      </div>
+                                                   <div class="ui teal button" data-title="Copy Link" data-content="Copied">Click Me</div>
                                                     <span title="share a link to this thread" class="cursor-pointer" [cbContent]="shareLink" ngxClipboard (cbOnSuccess)="linkShare()">
-                                                <i class="linkify icon"></i>
-                                            </span>
-                                                    <button shareButton="facebook" sbUrl="{{shareLink}}"><i class="fa fa-facebook"></i>Share</button>
+                                                <i class="copy icon"></i>
+                                            </span> -->
+                                                    <!-- <button shareButton="facebook" sbUrl="{{shareLink}}"><i class="fa fa-facebook"></i>Share</button>
                                                     <button shareButton="twitter" sbUrl="{{shareLink}}"><i class="fa fa-twitter"></i>Tweet</button>
-                                                    <button shareButton="linkedin" sbUrl="{{shareLink}}"><i class="fa fa-linkedin"></i>LinkedIn</button>
+                                                    <button shareButton="linkedin" sbUrl="{{shareLink}}"><i class="fa fa-linkedin"></i>LinkedIn</button> -->
                                                     <!-- <a href="mailto:?to=&subject=%5BDiscourse%5D%20"+{{reply.body}}+"&body="{{shareLink}}">
                                                             <i class="fa fa-mail">
                                                                 </i></a> -->
@@ -231,13 +248,13 @@
                                 </div>
                                 <div class="field">
                                     <!-- <div id="custom-toolbar" [froalaEditor] name="replyAnswer" minlength="20" [(ngModel)]="discussionsModel.replyAnswer" #replyAnswer="ngModel"></div> -->
-                                    <textarea type="text" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" minlength="20" required #replyAnswer="ngModel"></textarea>
+                                    <textarea type="text" name="replyAnswer" [(ngModel)]="discussionsModel.replyAnswer" minlength="20"  #replyAnswer="ngModel"></textarea>
                                     <div class="ui negative message" [hidden]="replyAnswer.valid || replyAnswer.pristine">
                                         This is a required field.
                           
-                                    <div class="ui negative message" *ngIf="replyAnswer.errors?.minlength">
+                                    <!-- <div class="ui negative message" *ngIf="replyAnswer.errors?.minlength">
                                         Your reply must be at least 20 characters long.
-                                    </div>
+                                    </div> -->
                                 </div>
                                
                             </div>
