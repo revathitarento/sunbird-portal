@@ -49,8 +49,8 @@ class DiscourseAdapter {
 
     this.userName = userName
     this.apiAuth = {
-      apiKey: '1dfdb2bf7b8c21aee7dbffb0fb2afbd72f2cc21c32bd20f17e056faeac247ce5',
-      apiUserName: 'revathi'
+      apiKey: 'd992634b70660bce0aede9317e605c2d39678bb19aeaad58c6578f473bdeafae',
+      apiUserName: 'vaishnavi'
     }
   }
 

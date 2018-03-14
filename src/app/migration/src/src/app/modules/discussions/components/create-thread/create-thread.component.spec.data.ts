@@ -15,4 +15,4 @@ export const mockRes = {
             "id": 59
         }
     }
- }
+}

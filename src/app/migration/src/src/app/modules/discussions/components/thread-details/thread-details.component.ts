@@ -24,9 +24,9 @@ export interface IContext {
   providers: [SortByDatePipe]
 })
 export class ThreadDetailsComponent implements OnInit, AfterViewInit {
-        /**
-   * Reference of resourceService
-   */
+  /**
+* Reference of resourceService
+*/
   public resourceService: ResourceService;
 
   /**
@@ -63,9 +63,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public replyId: number;
   public btnloader: boolean;
   public param: any;
-
   public repId: any;
-
   public currentLocation: any;
   public replyHash: any;
   public shareLink: any;
@@ -73,6 +71,8 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public threadUrl: any;
   public errorData: any;
   public errMsg: string;
+  public modalFlag: boolean;
+  public popupId: number;
 
   // @ViewChild('modalTemplate')
   // public modalTemplate: ModalTemplate<null, string, string>
@@ -95,13 +95,13 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.isCopied = false;
     this.href = document.location.href;
     this.toasterService = toasterService;
-   
+
     this.discussionService.currentMessage.subscribe(message => this.message = message);
     console.log('getting from service', this.message);
     this.el = this.elementRef.nativeElement.innerHTML;
     this.replyHash = (platformLocation as any).location;
     this.currentLocation = ((platformLocation as any).location.href);
-   
+
     this.location = ((platformLocation as any).location.origin);
     this.threadUrl = '/migration/thread-details';
     console.log("location.origin: ", (platformLocation as any).location.origin);
@@ -121,18 +121,18 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     });
     this.discussionService.getThreadbyId(this.id).subscribe(
       (apiResponse: ServerResponse) => {
-      this.loading = false;
-      this.threadDetails = apiResponse.result;       
-      this.replies = this.threadDetails.thread.replies;
-      console.log('result this.replies', this.replies);
-      this.highlightReply();
-      console.log("called on init");
-    
-    },
-  err =>{
-    this.toasterService.error("Error in displaying Thread details");
-    this.loading = false;
-  });
+        this.loading = false;
+        this.threadDetails = apiResponse.result;
+        this.replies = this.threadDetails.thread.replies;
+        console.log('result this.replies', this.replies);
+        this.highlightReply();
+        console.log("called on init");
+
+      },
+      err => {
+        this.toasterService.error("Error in displaying Thread details");
+        this.loading = false;
+      });
     this.param = 'createdDate';
 
 
@@ -189,7 +189,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
             this.threadDetails['thread']['actions'].vote = 0;
             this.toasterService.success("Undone the upvote of thread");
           } else {
-            this.threadDetails['thread']['actions'].vote = 1;           
+            this.threadDetails['thread']['actions'].vote = 1;
             this.toasterService.success("You up voted the thread");
           }
         }
@@ -204,19 +204,19 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
             this.toasterService.success("Undone the upvote of reply");
           }
           else {
-            this.threadDetails['thread']['replies'][index]['actions'].vote = 1;           
+            this.threadDetails['thread']['replies'][index]['actions'].vote = 1;
             this.toasterService.success("You up voted the reply");
           }
         }
       }
       this.showNotify(id);
     },
-    error => {
-      this.errorData = error;  
-      console.log("upvote error", error);
-      this.errMsg = this.errorData.error.params.errmsg;
+      error => {
+        this.errorData = error;
+        console.log("upvote error", error);
+        this.errMsg = this.errorData.error.params.errmsg;
         this.toasterService.error(this.errMsg);
-    });
+      });
   }
 
   //Down Vote thread and replies
@@ -253,12 +253,12 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
       }
       this.showNotify(id);
     },
-    error => {
-      this.errorData = error;  
-      console.log("downvote error", error);
-     // this.errMsg = this.errorData.error.params.errmsg;
+      error => {
+        this.errorData = error;
+        console.log("downvote error", error);
+        // this.errMsg = this.errorData.error.params.errmsg;
         this.toasterService.error(error);
-    });
+      });
   }
 
   //Flag Action for Thread and Replies
@@ -296,13 +296,13 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
         }
       }
       // this.showNotify(id);
-    
+
     },
-    error => {      
-       this.toasterService.error("Error in Flagging thread");
-         this.loading = false;
-     }
-  );
+      error => {
+        this.toasterService.error("Error in Flagging thread");
+        this.loading = false;
+      }
+    );
   }
 
   public showNotify(id) {
@@ -313,7 +313,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.notifyActions = true;
     setTimeout(() => {
       this.notifyActions = false;
-     
+
     }, 2000);
   }
 
@@ -344,7 +344,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
         this.successMessage = true;
         setTimeout(() => {
           this.successMessage = false;
-         
+
         }, 2000);
       }
       console.log('data from post reply is id', this.replyResult);
@@ -382,25 +382,25 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.discussionService.archiveAction(id).subscribe(data => {
       console.log("Archive data", data['responseCode']);
       if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
-        if(!this.threadDetails.thread.archived === true){        
-        this.archivedState = true;
-        console.log("status", data['result'].status);
-        let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
-        this.threadDetails.thread.archived = true;
-        this.toasterService.success("Thread archived successfully");
-        this.router.navigate(['/thread-list/0124543621061672965']);
-      }
-      else{
-        this.toasterService.error("Thread is already archived ");
-      }
-      //  this.showNotify(id);
+        if (!this.threadDetails.thread.archived === true) {
+          this.archivedState = true;
+          console.log("status", data['result'].status);
+          let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
+          this.threadDetails.thread.archived = true;
+          this.toasterService.success("Thread archived successfully");
+          this.router.navigate(['/thread-list/0124543621061672965']);
+        }
+        else {
+          this.toasterService.error("Thread is already archived ");
+        }
+        //  this.showNotify(id);
       }
     },
       error => {
-        this.errorData = error;  
+        this.errorData = error;
         console.log("error", error);
-         this.errMsg = this.errorData.error.params.errmsg;
-          this.toasterService.error(this.errMsg);
+        this.errMsg = this.errorData.error.params.errmsg;
+        this.toasterService.error(this.errMsg);
       });
   }
 
@@ -423,12 +423,12 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public openThreadEdit: boolean = false;
   //this.openThreadEdit = false;
 
-  public onEditThread(id, title, descId,body, openThreadEdit) {
+  public onEditThread(id, title, descId, body, openThreadEdit) {
     this.discussionsModel.threadTitle = this.threadDetails.thread.newTitle;
     this.discussionsModel.body = this.threadDetails.thread.newBody;
     this.discussionsModel.threadId = id;
     this.discussionsModel.descId = descId;
-  //  this.discussionsModel.body = body;
+    //  this.discussionsModel.body = body;
     console.log("openThreadEdit", openThreadEdit);
     this.discussionService.editThread(this.discussionsModel).subscribe(data => {
       console.log("Edit thread ", data);
@@ -442,14 +442,14 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
         console.log("Error in Editing thread");
       }
     },
-    error => {
-     // this.errorState = true;
-      this.openThreadEdit = false;      
-      this.errorData = error;  
-      console.log("thread edit error", error);
-       this.errMsg = this.errorData.error.params.errmsg;
+      error => {
+        // this.errorState = true;
+        this.openThreadEdit = false;
+        this.errorData = error;
+        console.log("thread edit error", error);
+        this.errMsg = this.errorData.error.params.errmsg;
         this.toasterService.error(this.errMsg);
-    });
+      });
   }
 
 
@@ -531,7 +531,10 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   }
 
   public linkShare() {
-    alert('copied');
+    if (this.isCopied == false) {
+      console.log('inside if');
+      this.isCopied = true;
+    }
   }
 
   public spamAction(id, isSpam) {
@@ -567,9 +570,8 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     console.log("location", this.location + this.threadUrl + "#" + replyId);
 
   }
-  public modalFlag: boolean;
-  public popupId: number;
   showPopup(popupReplyId) {
+    this.isCopied = false;
     this.modalFlag = true;
     this.popupId = popupReplyId;
     this.shareLink = this.currentLocation + "#" + this.popupId;

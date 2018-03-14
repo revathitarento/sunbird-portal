@@ -20,7 +20,8 @@
       "prefix": "app",
       "styles": [
         "styles.css",
-        "../node_modules/izitoast/dist/css/iziToast.min.css"
+        "../node_modules/izitoast/dist/css/iziToast.min.css",
+        "../node_modules/ladda/dist/ladda.min.css"
       ],
       "scripts": [
         "../node_modules/moment/min/moment.min.js",

@@ -72,7 +72,7 @@ export class DiscussionsApiservice extends DataService {
       **/
     public getThreadbyId(threadId: Number): Observable<ServerResponse> {
         const option = {
-            url:this.config.urlConFig.URLS.DISCUSSIONS.THREAD_BY_ID + threadId
+            url: this.config.urlConFig.URLS.DISCUSSIONS.THREAD_BY_ID + threadId
         };
         return this.get(option)
     }
@@ -82,8 +82,8 @@ export class DiscussionsApiservice extends DataService {
      * It calls the post method from data service class
      **/
 
-    postThread(contextId: Number|String, model){
-        console.log("model:",model);
+    postThread(contextId: Number | String, model): Observable<any> {
+        console.log("model:", model);
         const body = {
             // url: '/discussions/v1/thread/create',
             title: model.threadTitle,
@@ -161,7 +161,7 @@ export class DiscussionsApiservice extends DataService {
             data: {
                 'postId': id,
                 'value': 'down',
-               // 'undo': undo
+                // 'undo': undo
             }
         };
         return this.post(option)
@@ -186,7 +186,7 @@ export class DiscussionsApiservice extends DataService {
     markAsCorrect(replyId, isUndo) {
         console.log('inside mark as correct answer', replyId, isUndo);
         const options = {
-            'url':this.config.urlConFig.URLS.DISCUSSIONS.MARK_ANSWER,
+            'url': this.config.urlConFig.URLS.DISCUSSIONS.MARK_ANSWER,
             data: {
                 'postId': replyId,
                 'undo': isUndo
@@ -199,12 +199,12 @@ export class DiscussionsApiservice extends DataService {
        * Method to Reply to a thread     
        **/
     postReply(threadId, model) {
-        console.log("model",model);
+        console.log("model", model);
         const options = {
             'url': this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
             data: {
-            'threadId': threadId,
-            'body': model.description
+                'threadId': threadId,
+                'body': model.description
             }
         };
         // return this.post(options)
@@ -246,10 +246,10 @@ export class DiscussionsApiservice extends DataService {
 
     spamAction(id, isSpam) {
         const options = {
-            url:this.config.urlConFig.URLS.DISCUSSIONS.ARCHIVE_THREAD,
+            url: this.config.urlConFig.URLS.DISCUSSIONS.ARCHIVE_THREAD,
             'id': id,
             'isSpam': isSpam
-        };       
+        };
         return this.post(options)
     }
 }

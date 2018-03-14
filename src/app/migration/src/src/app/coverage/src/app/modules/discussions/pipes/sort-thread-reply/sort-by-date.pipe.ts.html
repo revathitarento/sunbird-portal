@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">31.58% </span>
+        <span class="strong">84.21% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>6/19</span>
+        <span class='fraction'>16/19</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">37.5% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/8</span>
+        <span class='fraction'>3/8</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">33.33% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>1/3</span>
+        <span class='fraction'>3/3</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">23.53% </span>
+        <span class="strong">82.35% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>4/17</span>
+        <span class='fraction'>14/17</span>
       </div>
     </div>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -87,27 +87,27 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,28 +120,28 @@ import { Injectable, Pipe, PipeTransform } from '@angular/core';
 @Injectable()
 export class SortByDatePipe implements PipeTransform {
 &nbsp;
-<span class="fstat-no" title="function not covered" >  transform(</span>array: Array&lt;any&gt;, args: string, param): Array&lt;any&gt; {
-<span class="cstat-no" title="statement not covered" >    console.log('typeof args[0]:, param', typeof args[0], param);</span>
-<span class="cstat-no" title="statement not covered" >    if (typeof args[0] === 'undefined') {</span>
+  transform(array: Array&lt;any&gt;, args: string, param): Array&lt;any&gt; {
+    console.log('typeof args[0]:, param', typeof args[0], param);
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (typeof args[0] === 'undefined') {
 <span class="cstat-no" title="statement not covered" >      return array;</span>
     }
 &nbsp;
-    const direction = <span class="cstat-no" title="statement not covered" >args[0][0];</span>
+    const direction = args[0][0];
 &nbsp;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    array.sort(<span class="fstat-no" title="function not covered" >(</span>a: any, b: any) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >      if (args !== 'voteCount') {</span>
-        const column = <span class="cstat-no" title="statement not covered" >args.replace('-', '');</span>
-        const left = <span class="cstat-no" title="statement not covered" >Number(new Date(a[column]));</span>
-        const right = <span class="cstat-no" title="statement not covered" >Number(new Date(b[column]));</span>
-<span class="cstat-no" title="statement not covered" >        return (direction === '-') ? right - left : left - right;</span>
+    array.sort((a: any, b: any) =&gt; {
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (args !== 'voteCount') {
+        const column = args.replace('-', '');
+        const left = Number(new Date(a[column]));
+        const right = Number(new Date(b[column]));
+        return (direction === '-') ? right - left : <span class="branch-1 cbranch-no" title="branch not covered" >left - right;</span>
       }
 <span class="cstat-no" title="statement not covered" >      if (args === 'voteCount') {</span>
         // return (sortOrder === "asc") ? a[args] - b[args] : b[args] - a[args];
 <span class="cstat-no" title="statement not covered" >        return b[args] - a[args];</span>
       }
     });
-<span class="cstat-no" title="statement not covered" >    return array;</span>
+    return array;
   }
 }
 &nbsp;
@@ -151,7 +151,7 @@ export class SortByDatePipe implements PipeTransform {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Mar 12 2018 17:17:06 GMT+0530 (IST)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Wed Mar 14 2018 11:33:12 GMT+0530 (IST)
 </div>
 </div>
 <script src="../../../../../../prettify.js"></script>
