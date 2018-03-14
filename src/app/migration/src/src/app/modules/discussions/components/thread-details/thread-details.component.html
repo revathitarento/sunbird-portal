@@ -9,7 +9,7 @@
                             <div class="ui text loader">Loading</div>
                         </div>
                         <div class="ui top padded grid">
-                            <!-- full thread details: {{threadDetails | json}} -->
+                     
                             <div class="cardsHeading">
                                 <a class="cursor-pointer go-back-arrow" [routerLink]="['/thread-list/0124543621061672965']">
                                     <i class="medium arrow left icon"></i>
@@ -68,75 +68,38 @@
                                             <span title="Share a link to this thread" class="cursor-pointer" [cbContent]="currentLocation" ngxClipboard (cbOnSuccess)="linkShare()">
                                                     <i class="copy icon"></i>
                                                 </span>
-                                                <!-- <span title="share a link to this thread" class="cursor-pointer" (click)="showPopup(threadDetails.thread.descId)">
-                                                    <i class="linkify icon"></i>
-                                                </span>        -->
-                                           
-                                            <!-- <span title="spam this post" class="cursor-pointer" (click)="spamAction(threadDetails.thread.id, isSpam = deletedState)" >
-                                                <i class="ban icon" [ngClass]="deletedId == threadDetails.thread.id && deletedState == false?'ui brown':''"></i>
-                                            </span>  -->
+                                             
                                             
                                             <span class="date text-align-right">{{threadDetails.thread.createdDate | date : longdate}}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <!-- <sui-modal class="closeModal" *ngIf="threadDetails.thread.descId == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
-                                                   
-                                <div class="content">
-                                    <p>Social share</p>
-                                    Link = {{shareLink}}
-                                    <button shareButton="facebook" sbUrl="{{shareLink}}"><i class="fa fa-facebook"></i>Share</button>
-                                    <button shareButton="twitter" sbUrl="{{shareLink}}"><i class="fa fa-twitter"></i>Tweet</button>
-                                    <button shareButton="linkedin" sbUrl="{{shareLink}}"><i class="fa fa-linkedin"></i>LinkedIn</button> 
-                                    <!-- <a href="mailto:?to=&subject=%5BDiscourse%5D%20"+{{reply.body}}+"&body="{{shareLink}}">
-                                            <i class="fa fa-mail">
-                                                </i></a> -->
-                                <!-- </div>                                               
-                        </sui-modal>  --> 
+                      
                         
 
                         </div>
                         <div class="ui divider"></div>
-                        <div class="ui comments">                               
-                                <!-- <sui-message class="warning" *ngIf="errorState == true">
-                                        <div class="header">
-                                                You are not authorised to perform this action
-                                        </div>                                      
-                                    </sui-message> -->
-                              
-                                <!-- <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId  &&  notifyActions == true && threadDetails.thread.actions.vote == 1">Liked the thread</div>
-                                <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId   && notifyActions == true && threadDetails.thread.actions.vote == 0">Unliked the thread</div>
-    
-                                <div class="ui tiny green message" *ngIf="threadDetails.thread.id == repId && archivedState == true && notifyActions == true">Archived  the thread</div> -->
-                                <!-- <div class="ui tiny red message" *ngIf="threadDetails.thread.id == repId && archivedState == false  && notifyActions == true">Removed the archive</div> -->
-
-<!--                                 
-                                <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId && lockedState == true  && notifyActions == true">Locked the thread</div>
-                                <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId && lockedState == false  && notifyActions == true">UnLocked the thread</div>
-     -->
-                        </div>
-
+                      
                         <div title="sort" class="extra" *ngIf="!openThreadEdit && threadDetails.thread.repliesCount > 1">
                             <div class="ui right floated  button">
-                                <div  class="ui dropdown" suiDropdown >
-                                  Sort by <i class="dropdown icon"></i>
                                     <div class="menu" suiDropdownMenu>
-                                        <div class="item" (click)="ascSortClick()">
-                                            Older
+                                            <div class="item" (click)="param='createdDate'">
+                                                Older
+                                            </div>
+                                            <div class="item" (click)="param='-createdDate'">
+                                                Newer
+                                            </div>
+                                        
+                    
                                         </div>
-                                        <div class="item" (click)="descSortClick()">
-                                            Newer
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                           </div>
                        
                         <div class="ui comments margin-top-10" *ngIf="!openThreadEdit">
                             <!-- <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param; let i = index"> -->
                                     <div class="comment" *ngFor="let reply of threadDetails.thread.replies | sortByDate:param; let i = index">
-                                    <!-- full reply details: {{reply | json}} -->
+                                  
                                 <div class="content padding-top-20 single-reply" id="{{reply.id}}">
                                     <div class="metadata">
                                         <i class="user circle outline black large icon"></i>
@@ -166,20 +129,10 @@
                                                 <i class="custom-vote-icon checkmark icon" [ngClass]="reply.actions.acceptAnswer === 0 ?'':'green'"></i>                                            
                                         </span>
 
-                                        <!-- <div *ngIf="markRepId == reply.id &&  markResValue == true">
-                                            <span title="Undo Marked" class="cursor-pointer" (click)="markAsCorrect(reply.id,true)">
-                                                <i class="custom-vote-icon checkmark icon ui green"></i>
-                                            </span>
-                                        </div> -->
-                                        <!-- <span>{{reply.reads}} views</span> -->
-                                        <!-- <input class="custom-display-none" [value]="href" #copyInput> -->
-                                        <!--[cbContent]="href + '#' + reply.id" ngxClipboard (cbOnSuccess)="replylinkShare()" -->
-                                        <!-- <span title="share a link to this post" class="cursor-pointer" (click)="replylinkShare(this.id, reply.id)" >
-                                            <i class="linkify icon"></i>                                            
-                                        </span>       -->
+                                   
                                         <span title="share a link to this thread" class="cursor-pointer" [cbContent]="shareLink" ngxClipboard (cbOnSuccess)="linkShare()" (click)="showPopup(reply.id)" >Share</span>
 
-                                        <sui-modal class="closeModal" *ngIf="reply.id == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
+                                        <!-- <ng-template class="closeModal" *ngIf="reply.id == popupId" [isClosable]="true" [isInverted]="true" (size)="tiny" (dismissed)="alert($event)" #modal>
                                                
                                                 <div class="content">
                                                     <p>Social share</p>
@@ -192,24 +145,8 @@
                                                             </div>
                                                            </div>
 
-
-
-                                                   <!-- <div class="ui icon input">
-                                                        <input type="text">
-                                                        <i class="search icon"></i>
-                                                      </div>
-                                                   <div class="ui teal button" data-title="Copy Link" data-content="Copied">Click Me</div>
-                                                    <span title="share a link to this thread" class="cursor-pointer" [cbContent]="shareLink" ngxClipboard (cbOnSuccess)="linkShare()">
-                                                <i class="copy icon"></i>
-                                            </span> -->
-                                                    <!-- <button shareButton="facebook" sbUrl="{{shareLink}}"><i class="fa fa-facebook"></i>Share</button>
-                                                    <button shareButton="twitter" sbUrl="{{shareLink}}"><i class="fa fa-twitter"></i>Tweet</button>
-                                                    <button shareButton="linkedin" sbUrl="{{shareLink}}"><i class="fa fa-linkedin"></i>LinkedIn</button> -->
-                                                    <!-- <a href="mailto:?to=&subject=%5BDiscourse%5D%20"+{{reply.body}}+"&body="{{shareLink}}">
-                                                            <i class="fa fa-mail">
-                                                                </i></a> -->
                                                 </div>                                               
-                                        </sui-modal>
+                                            </ng-template> -->
 
                                         <span *ngIf="deletedId !== reply.id || deletedState == false" title="delete this post" class="cursor-pointer" (click)="onDelete(reply.id,false)">
                                             <i class="trash outline icon"></i>
@@ -235,7 +172,7 @@
                                 
                                         <button class="ui primary button margin-top-15" *ngIf="openReplyEdit" 
                                         (click)="onEditReply(threadDetails.thread.id, reply.id, reply.body, openReplyEdit) ">Save </button> 
-                                        <!-- ng-disable="!profileSummary" -->
+                                       
                                     </form>
                                 </div>
                             </div>

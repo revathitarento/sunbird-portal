@@ -114,12 +114,10 @@ export class DiscussionsApiservice extends DataService {
         console.log("model in edit thread", model);
         const body = {
             //url: '/discussions/v1/thread/edit',
-            data:{
             title: model.threadTitle,
             threadId: model.threadId.toString(),
             descId :model.descId.toString(),
             body: model.body
-            }
         };
         return this.http.put(`${this.baseUrl}/thread/edit`, body)
 

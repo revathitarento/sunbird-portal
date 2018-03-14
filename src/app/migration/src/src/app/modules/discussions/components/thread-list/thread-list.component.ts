@@ -12,7 +12,7 @@ import { ResourceService, ToasterService, } from '@sunbird/shared';
     selector: 'app-thread-list',
     templateUrl: './thread-list.component.html',
     styleUrls: ['./thread-list.component.css'],
-   // providers: [SortByDatePipe]
+    // providers: [SortByDatePipe]
 })
 export class ThreadListComponent implements OnInit, OnDestroy {
     /**
@@ -25,24 +25,21 @@ export class ThreadListComponent implements OnInit, OnDestroy {
      */
     private toasterService: ToasterService;
     public threads: any;
-    public result: any;
+    public result: Array<any> = [];
     public sub: any;
     public id: number;
+    public threadId: number;
     public batchId: any;
     public loading: boolean;
-
     public msg: any;
     public param: any;
-
     public query: string;
-    public filteredList: any;
     public discussionsModel = new DiscussionsObject('', '', '');
     constructor(private router: Router, private route: ActivatedRoute,
         private discussionService: DiscussionsApiservice, @Inject(DOCUMENT) document: any, toasterService: ToasterService) {
         this.toasterService = toasterService;
     }
-    public displayThreads() {
-        console.log("Called");
+    public displayThreads() {     
         this.discussionService.getThreads(this.batchId).subscribe(data => {
             console.log('data from getThreads', data);
             this.threads = data;
@@ -53,8 +50,6 @@ export class ThreadListComponent implements OnInit, OnDestroy {
 
             }
             this.loading = false;
-            // this.id = this.result[0].tags[0];
-            // console.log(this.id, this.result[0].tags[0]);
         },
             err => {
                 this.loading = false;
@@ -66,54 +61,27 @@ export class ThreadListComponent implements OnInit, OnDestroy {
     }
     ngOnInit(): void {
         this.loading = true;
-
-
         this.param = '-createdDate';
         this.sub = this.route.params.subscribe(params => {
             console.log('params', params);
             this.batchId = params['id'];
         });
         this.displayThreads();
-
-
-    }
-    ascSortClick() {
-        this.param = 'createdDate';
-    }
-    descSortClick() {
-        this.param = '-createdDate';
-    }
-    likeSortClick() {
-        this.param = 'voteCount';
     }
     ngOnDestroy() {
         this.sub.unsubscribe();
     }
-    createThread() {
-        this.router.navigate(['/create-thread', this.batchId = '0124543621061672965']);
-    }
+  
     gotoThread(threadId: number) {
-        this.router.navigate(['/thread-details', threadId]);
-        console.log('inside gotoThread()', threadId);
+        this.router.navigate(['/thread-details', threadId]);       
         this.discussionService.changeMessage(threadId);
     }
 
     //On Archive of Thread function
     public archivedState: boolean;
     public index: any;
-    public errorData : any;
+    public errorData: any;
     public errMsg: string;
-    //   public onArchive(id, state) {
-    //     console.log('inside onArchive()', id, state);
-    //     this.discussionService.archiveAction(id).subscribe(data => {
-    //       console.log("Archive data", data);
-    //       if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
-    //           console.log("this.threads,", this.threads.result.threads);
-    //      this.index = _.findIndex(this.threads.result.threads, { 'id': id });
-
-    //       } 
-    //     });
-    //   }
 
     //On Archive of Thread function
     public onArchive(id, state) {
@@ -123,14 +91,12 @@ export class ThreadListComponent implements OnInit, OnDestroy {
             if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
                 if (!this.threads.result.archived === true) {
                     this.archivedState = true;
-
+                    this.index = _.findIndex(this.threads.result.threads, { 'id': id });
                     this.toasterService.success("Thread archived successfully");
-
                 }
                 else {
                     this.toasterService.error("Thread is already archived ");
                 }
-                //  this.showNotify(id);
             }
         },
             error => {
@@ -144,30 +110,29 @@ export class ThreadListComponent implements OnInit, OnDestroy {
 
     public lockedState: boolean;
     public lockedId: any;
-
-  public onLock(id) {
-    this.lockedState = false;
-    console.log('inside onLock', id);
-    this.discussionService.lockAction(id).subscribe(data => {
-      console.log("locked data", data);
-      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
-        if (!this.threads.result.locked === true) {
-          this.lockedId = data['result'].id
-          this.lockedState = true;
-          console.log('lock response', data, this.lockedId, this.lockedState);
-          this.toasterService.success("Locked the thread successfully");          
-        }
-        else {
-          this.toasterService.error("Thread is already locked");
-        }
-      }
-    },
-      error => {
-        this.errorData = error;
-        this.errMsg = this.errorData.error.params.errmsg;
-        this.toasterService.error(this.errMsg);
-      });
-  }
+    public onLock(id) {
+        this.lockedState = false;
+        console.log('inside onLock', id);
+        this.discussionService.lockAction(id).subscribe(data => {
+            console.log("locked data", data);
+            if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+                if (!this.threads.result.locked === true) {
+                    this.lockedId = data['result'].id
+                    this.lockedState = true;
+                    console.log('lock response', data, this.lockedId, this.lockedState);
+                    this.toasterService.success("Locked the thread successfully");
+                }
+                else {
+                    this.toasterService.error("Thread is already locked");
+                }
+            }
+        },
+            error => {
+                this.errorData = error;
+                this.errMsg = this.errorData.error.params.errmsg;
+                this.toasterService.error(this.errMsg);
+            });
+    }
     // public filter() {
     //     this.query = this.result;
     //     if (this.query === '' && this.query.length >= 3) {

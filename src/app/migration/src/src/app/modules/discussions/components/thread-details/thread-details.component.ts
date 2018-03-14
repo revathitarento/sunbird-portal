@@ -11,7 +11,7 @@ declare var jquery: any;
 declare var $: any;
 import { PlatformLocation } from '@angular/common';
 import { ShareButtons } from '@ngx-share/core';
-import { SuiModalService, TemplateModalConfig, ModalTemplate, ModalSize } from "ng2-semantic-ui";
+//import { SuiModalService, TemplateModalConfig, ModalTemplate, ModalSize } from "ng2-semantic-ui";
 
 export interface IContext {
   data: boolean;
@@ -74,24 +74,24 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public errorData: any;
   public errMsg: string;
 
-  @ViewChild('modalTemplate')
-  public modalTemplate: ModalTemplate<null, string, string>
+  // @ViewChild('modalTemplate')
+  // public modalTemplate: ModalTemplate<null, string, string>
 
-  public open(dynamicContent: boolean = true) {
-    const config = new TemplateModalConfig<IContext, string, string>(this.modalTemplate);
+  // public open(dynamicContent: boolean = true) {
+  //   const config = new TemplateModalConfig<IContext, string, string>(this.modalTemplate);
 
-    config.closeResult = "closed!";
-    config.context = { data: dynamicContent };
+  //   config.closeResult = "closed!";
+  //   config.context = { data: dynamicContent };
 
-    this.modalService
-      .open(config)
-      .onApprove(result => { /* approve callback */ })
-      .onDeny(result => { /* deny callback */ });
-  }
+  //   this.modalService
+  //     .open(config)
+  //     .onApprove(result => { /* approve callback */ })
+  //     .onDeny(result => { /* deny callback */ });
+  // }
   public size: string;
   constructor(private router: Router, private elementRef: ElementRef,
     private route: ActivatedRoute, private discussionService: DiscussionsApiservice, toasterService: ToasterService,
-    @Inject(DOCUMENT) document: any, platformLocation: PlatformLocation, public modalService: SuiModalService) {
+    @Inject(DOCUMENT) document: any, platformLocation: PlatformLocation) {
     this.isCopied = false;
     this.href = document.location.href;
     this.toasterService = toasterService;
@@ -99,7 +99,6 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.discussionService.currentMessage.subscribe(message => this.message = message);
     console.log('getting from service', this.message);
     this.el = this.elementRef.nativeElement.innerHTML;
-    this.size = ModalSize.Small;
     this.replyHash = (platformLocation as any).location;
     this.currentLocation = ((platformLocation as any).location.href);
    
