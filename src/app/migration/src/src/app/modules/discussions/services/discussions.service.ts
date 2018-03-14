@@ -72,7 +72,7 @@ export class DiscussionsApiservice extends DataService {
       **/
     public getThreadbyId(threadId: Number): Observable<ServerResponse> {
         const option = {
-            url:this.config.urlConFig.URLS.DISCUSSIONS.THREAD_BY_ID + threadId
+            url: this.config.urlConFig.URLS.DISCUSSIONS.THREAD_BY_ID + threadId
         };
         return this.get(option)
     }
@@ -82,8 +82,8 @@ export class DiscussionsApiservice extends DataService {
      * It calls the post method from data service class
      **/
 
-    postThread(contextId: Number|String, model){
-        console.log("model:",model);
+    postThread(contextId: Number | String, model): Observable<any> {
+        console.log("model:", model);
         const body = {
             // url: '/discussions/v1/thread/create',
             title: model.threadTitle,
@@ -114,10 +114,12 @@ export class DiscussionsApiservice extends DataService {
         console.log("model in edit thread", model);
         const body = {
             //url: '/discussions/v1/thread/edit',
-            title: model.threadTitle,
-            threadId: model.threadId.toString(),
-            descId :model.descId.toString(),
-            body: model.body
+            data: {
+                title: model.threadTitle,
+                threadId: model.threadId.toString(),
+                descId: model.descId.toString(),
+                body: model.body
+            }
         };
         return this.http.put(`${this.baseUrl}/thread/edit`, body)
 
@@ -128,7 +130,7 @@ export class DiscussionsApiservice extends DataService {
     editReply(model) {
         const body = {
             // url: '/discussions/v1/reply/edit',
-            postId: model.threadId,
+            postId: model.replyId,
             body: model.replyAnswer,
 
         };
@@ -161,7 +163,7 @@ export class DiscussionsApiservice extends DataService {
             data: {
                 'postId': id,
                 'value': 'down',
-               // 'undo': undo
+                // 'undo': undo
             }
         };
         return this.post(option)
@@ -186,25 +188,29 @@ export class DiscussionsApiservice extends DataService {
     markAsCorrect(replyId, isUndo) {
         console.log('inside mark as correct answer', replyId, isUndo);
         const options = {
-            // 'url':this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
-            'postId': replyId,
-            'undo': isUndo
+            'url': this.config.urlConFig.URLS.DISCUSSIONS.MARK_ANSWER,
+            data: {
+                'postId': replyId,
+                'undo': isUndo
+            }
         };
         // return this.post(options)
-        return this.http.post(`${this.baseUrl}/thread/markanswer`, options)
+        return this.post(options)
     }
     /**     
        * Method to Reply to a thread     
        **/
     postReply(threadId, model) {
-        console.log("model",model);
+        console.log("model", model);
         const options = {
-            // 'url': this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
-            'threadId': threadId,
-            'body': model.description
+            'url': this.config.urlConFig.URLS.DISCUSSIONS.POST_REPLY,
+            data: {
+                'threadId': threadId,
+                'body': model.description
+            }
         };
         // return this.post(options)
-        return this.http.post(`${this.baseUrl}/thread/reply`, options)
+        return this.post(options)
     }
     /**     
        * Method to Lock a thread     
@@ -242,10 +248,10 @@ export class DiscussionsApiservice extends DataService {
 
     spamAction(id, isSpam) {
         const options = {
-            url:this.config.urlConFig.URLS.DISCUSSIONS.ARCHIVE_THREAD,
+            url: this.config.urlConFig.URLS.DISCUSSIONS.ARCHIVE_THREAD,
             'id': id,
             'isSpam': isSpam
-        };       
+        };
         return this.post(options)
     }
 }

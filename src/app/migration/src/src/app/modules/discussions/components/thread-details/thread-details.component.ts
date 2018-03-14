@@ -63,9 +63,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public replyId: number;
   public btnloader: boolean;
   public param: any;
-
   public repId: any;
-
   public currentLocation: any;
   public replyHash: any;
   public shareLink: any;
@@ -73,6 +71,8 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public threadUrl: any;
   public errorData: any;
   public errMsg: string;
+  public modalFlag: boolean;
+  public popupId: number;
 
   @ViewChild('modalTemplate')
   public modalTemplate: ModalTemplate<null, string, string>
@@ -490,6 +490,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
         if (replyId === this.threadDetails.thread.replies[index].id) {
           this.threadDetails.thread.replies[index].body = this.threadDetails.thread.replies[index].newBody;
           this.replyObject.replyAnswer = this.threadDetails.thread.replies[index].newBody;
+          this.toasterService.success("Editted the reply successfully");
         }
         this.openReplyEdit = false;
         console.log("reply  after,", this.threadDetails.thread.replies[index].newBody);
@@ -531,7 +532,10 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   }
 
   public linkShare() {
-    alert('copied');
+    if (this.isCopied == false) {
+      console.log('inside if');
+      this.isCopied = true;
+    }
   }
 
   public spamAction(id, isSpam) {
@@ -567,9 +571,8 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     console.log("location", this.location + this.threadUrl + "#" + replyId);
 
   }
-  public modalFlag: boolean;
-  public popupId: number;
   showPopup(popupReplyId) {
+    this.isCopied = false;
     this.modalFlag = true;
     this.popupId = popupReplyId;
     this.shareLink = this.currentLocation + "#" + this.popupId;
