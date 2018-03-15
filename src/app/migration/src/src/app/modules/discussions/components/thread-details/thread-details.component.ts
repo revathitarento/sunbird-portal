@@ -54,7 +54,8 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   public deletedId: number;
   public deletedState: boolean;
   public isCopied: boolean;
-
+  public responseCode: string;
+  public dataResult: any;
   public archivedState: boolean;
   public discussionsModel = new DiscussionsObject('', '', '');
   public replyObject = new replyObject('', '', '');
@@ -109,7 +110,6 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.loading = true;
-    this.notifyActions = false;
     this.loading = true;
     this.param = '-createdDate';
     this.modalFlag = false;
@@ -124,35 +124,27 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
         this.loading = false;
         this.threadDetails = apiResponse.result;
         this.replies = this.threadDetails.thread.replies;
-        console.log('result this.replies', this.replies);
-        this.highlightReply();
-        console.log("called on init");
-
       },
       err => {
         this.toasterService.error("Error in displaying Thread details");
         this.loading = false;
       });
     this.param = 'createdDate';
-
-
   }
 
   ngAfterViewInit() {
-    this.postDwellTime();
     this.threadDetails.thread.newTitle = this.threadDetails.thread.title;
     this.threadDetails.thread.newBody = this.threadDetails.thread.body;
-    this.highlightReply();
+    if (this.replyHash.hash !== '') {
+      this.highlightReply();
+    }
   }
 
-  private highlightReply() {
-    console.log("called");
-    //alert();
-
+  public highlightReply() {
     var replyPositionId = this.replyHash.hash;
     replyPositionId.split('#').join('');
-    console.log("reply hash", replyPositionId);
-    if (replyPositionId !== undefined) {
+    console.log("reply hash", this.replyHash.hash);
+    if (replyPositionId !== undefined || replyPositionId !== '') {
       var position = $(replyPositionId).offset().top;
       console.log("position: ", position);
       $("body, html").animate({
@@ -163,18 +155,12 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
         $(replyPositionId).removeClass("highlighted");
       }, 2000);
     }
+    else {
+      console.log("Cannot highlight");
+    }
     window.location.href = this.currentLocation;
   }
 
-  private postDwellTime() {
-    let horizontalCenter = Math.floor(window.innerWidth / 2);
-    let verticalCener = Math.floor(window.innerHeight / 2);
-    console.log("verticalCener", verticalCener);
-  }
-
-  showErrfield() {
-    $('.ui.negative.message').show();
-  }
 
   public upVoteAction(id, undo, status) {
     console.log('inside uvoteAction() id', id);
@@ -209,7 +195,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
           }
         }
       }
-      this.showNotify(id);
+
     },
       error => {
         this.errorData = error;
@@ -251,7 +237,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
           }
         }
       }
-      this.showNotify(id);
+
     },
       error => {
         this.errorData = error;
@@ -262,60 +248,50 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
   }
 
   //Flag Action for Thread and Replies
-  public flagAction(id, undo, status) {
-    console.log('inside flagAction() id', id);
-    console.log('inside glagAction() undo', undo);
-    console.log('inside flagAction() status', status);
-    this.discussionService.flagAction(id, undo).subscribe(data => {
-      console.log("flag result", data);
-      if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
-        if (status === 'thread') {
-          if (undo === true) {
-            console.log("thread action", this.threadDetails)
-            this.threadDetails['thread']['actions'].flag = 0;
-            this.toasterService.success("Successfully removed the flag");
-          } else {
-            this.threadDetails['thread']['actions'].flag = 1;
-            this.toasterService.success("Successfully Flagged thread");
-          }
-        }
+  // public flagAction(id, undo, status) {
+  //   console.log('inside flagAction() id', id);
+  //   console.log('inside glagAction() undo', undo);
+  //   console.log('inside flagAction() status', status);
+  //   this.discussionService.flagAction(id, undo).subscribe(data => {
+  //     console.log("flag result", data);
+  //     if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
+  //       if (status === 'thread') {
+  //         if (undo === true) {
+  //           console.log("thread action", this.threadDetails)
+  //           this.threadDetails['thread']['actions'].flag = 0;
+  //           this.toasterService.success("Successfully removed the flag");
+  //         } else {
+  //           this.threadDetails['thread']['actions'].flag = 1;
+  //           this.toasterService.success("Successfully Flagged thread");
+  //         }
+  //       }
 
-        if (status === 'reply') {
-          this.repId = id;
-          console.log("reply replies", this.threadDetails['thread']['replies']);
-          console.log("findindex", _.findIndex(this.threadDetails['thread']['replies'], { 'id': id }));
-          let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
-          if (undo === true) {
-            this.threadDetails['thread']['replies'][index]['actions'].flag = 0;
-            this.toasterService.success("Successfully removed the flag");
-          }
-          else {
-            this.threadDetails['thread']['replies'][index]['actions'].flag = 1;
-            this.toasterService.success("Successfully flagged reply");
-          }
-        }
-      }
-      // this.showNotify(id);
+  //       if (status === 'reply') {
+  //         this.repId = id;
+  //         console.log("reply replies", this.threadDetails['thread']['replies']);
+  //         console.log("findindex", _.findIndex(this.threadDetails['thread']['replies'], { 'id': id }));
+  //         let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });
+  //         if (undo === true) {
+  //           this.threadDetails['thread']['replies'][index]['actions'].flag = 0;
+  //           this.toasterService.success("Successfully removed the flag");
+  //         }
+  //         else {
+  //           this.threadDetails['thread']['replies'][index]['actions'].flag = 1;
+  //           this.toasterService.success("Successfully flagged reply");
+  //         }
+  //       }
+  //     }
+  //     // this.showNotify(id);
 
-    },
-      error => {
-        this.toasterService.error("Error in Flagging thread");
-        this.loading = false;
-      }
-    );
-  }
+  //   },
+  //     error => {
+  //       this.toasterService.error("Error in Flagging thread");
+  //       this.loading = false;
+  //     }
+  //   );
+  // }
 
-  public showNotify(id) {
-    this.repId = id;
-    // this.actId = actionTypeId;
-    // this.actionType = actionType;
-    console.log('shownotify called,repId: ', this.id);
-    this.notifyActions = true;
-    setTimeout(() => {
-      this.notifyActions = false;
 
-    }, 2000);
-  }
 
   changeWidget() {
     console.log('inside changeWidget()');
@@ -371,7 +347,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
           this.threadDetails['thread']['replies'][index].acceptedAnswer = false;
           this.toasterService.success("Removed as correct answer");
         }
-        this.showNotify(replyId);
+
       }
     });
   }
@@ -382,7 +358,7 @@ export class ThreadDetailsComponent implements OnInit, AfterViewInit {
     this.discussionService.archiveAction(id).subscribe(data => {
       console.log("Archive data", data['responseCode']);
       if (data['responseCode'] === 'OK' && data['result'].status === 'done') {
-        if (!this.threadDetails.thread.archived === true) {
+        if (this.threadDetails.thread.archived !== true) {
           this.archivedState = true;
           console.log("status", data['result'].status);
           let index = _.findIndex(this.threadDetails['thread']['replies'], { 'id': id });

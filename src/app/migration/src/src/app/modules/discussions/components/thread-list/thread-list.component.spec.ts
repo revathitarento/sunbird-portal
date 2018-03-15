@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
 import { Observable } from 'rxjs/Observable';
 import { HttpClient } from '@angular/common/http';
+import { async, ComponentFixture, TestBed, inject, fakeAsync, tick } from '@angular/core/testing';
 
 // Modules
 import { SuiModule } from 'ng2-semantic-ui';
@@ -14,7 +14,6 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 import { DiscussionsApiservice } from './../../services/discussions.service';
 
-import { AnnouncementService } from '@sunbird/core';
 import { SharedModule, ResourceService, ToasterService, ConfigService, RouterNavigationService } from '@sunbird/shared';
 import { ThreadListComponent } from './thread-list.component';
 import * as mockData from './thread-list.component.spec.data';
@@ -58,6 +57,15 @@ describe('ThreadListComponent', () => {
   xit('Go to thread with id 55', () => {
     expect(component).toBeTruthy();
     component.gotoThread(55);
+  });
+  it('On Archive thread id 55 and false state', () => {
+    expect(component).toBeTruthy();
+    component.onArchive(55, false);
+  });
+  
+  it('On Lock thread id 55', () => {
+    expect(component).toBeTruthy();
+    component.onLock(55);
   });
 
   it('should parse api response', inject([DiscussionsApiservice], (service: DiscussionsApiservice, ToasterService, ResourceService,

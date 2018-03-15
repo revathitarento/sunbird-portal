@@ -101,26 +101,11 @@
                         </div>
                         <div class="ui divider"></div>
                         <div class="ui comments">
-                            <!-- <sui-message class="warning" *ngIf="errorState == true">
-                                        <div class="header">
-                                                You are not authorised to perform this action
-                                        </div>                                      
-                                    </sui-message> -->
 
-                            <!-- <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId  &&  notifyActions == true && threadDetails.thread.actions.vote == 1">Liked the thread</div>
-                                <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId   && notifyActions == true && threadDetails.thread.actions.vote == 0">Unliked the thread</div>
-    
-                                <div class="ui tiny green message" *ngIf="threadDetails.thread.id == repId && archivedState == true && notifyActions == true">Archived  the thread</div> -->
-                            <!-- <div class="ui tiny red message" *ngIf="threadDetails.thread.id == repId && archivedState == false  && notifyActions == true">Removed the archive</div> -->
-
-                            <!--                                 
-                                <div class="ui tiny green message" *ngIf="threadDetails.thread.descId == repId && lockedState == true  && notifyActions == true">Locked the thread</div>
-                                <div class="ui tiny red message" *ngIf="threadDetails.thread.descId == repId && lockedState == false  && notifyActions == true">UnLocked the thread</div>
-     -->
                         </div>
 
-                        <div title="sort" class="extra" *ngIf="!openThreadEdit && threadDetails.thread.repliesCount > 1">
-                            <div class="ui right floated  button">
+                        <div title="sort" class="extra" >
+                            <div class="ui right floated  button" *ngIf="!openThreadEdit && threadDetails.thread.repliesCount > 1" >
                                 <div class="ui dropdown" suiDropdown>
                                     Sort by
                                     <i class="dropdown icon"></i>
@@ -166,7 +151,7 @@
                                         <span title="Mark as Right Answer" class="cursor-pointer" (click)="markAsCorrect(reply.id, reply.actions.acceptAnswer === 0)">
                                             <i class="custom-vote-icon checkmark icon" [ngClass]="reply.actions.acceptAnswer === 0 ?'':'green'"></i>
                                         </span>
-                                        <!-- <ng-template let-popup #popupTemplate>
+                                        <ng-template let-popup #popupTemplate>
                                             <div class="ui center aligned basic segment">
                                                 <i class="times black icon" (click)="popup.close()"></i>
                                                 <div class="ui left icon action input">
@@ -181,7 +166,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </ng-template> -->
+                                        </ng-template>
                                         <span *ngIf="deletedId !== reply.id || deletedState == false" title="delete this post" class="cursor-pointer" (click)="onDelete(reply.id,false)">
                                             <i class="trash outline icon"></i>
                                         </span>
@@ -193,9 +178,9 @@
                                         </span>
                                         <a class=" cursor-pointer" *ngIf="openReplyEdit  && index === i" (click)="openReplyEdit=false">
                                             Close</a>
-                                        <!-- <button class="ui mini button" suiPopup [popupTemplate]="popupTemplate" popupTrigger="outsideClick" (click)="showPopup(reply.id)">
+                                        <button class="ui mini button" suiPopup [popupTemplate]="popupTemplate" popupTrigger="outsideClick" (click)="showPopup(reply.id)">
                                             Copy link
-                                        </button> -->
+                                        </button>
                                     </div>
 
 
