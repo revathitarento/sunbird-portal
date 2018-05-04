@@ -9,7 +9,7 @@
       "outDir": "../dist",
       "assets": [
         "assets",
-        "favicon.ico"
+        "favicon.png"
       ],
       "index": "index.html",
       "main": "main.ts",
@@ -19,16 +19,9 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "styles.css",
-        "../node_modules/froala-editor/css/froala_editor.min.css",
-        "../node_modules/froala-editor/css/froala_editor.pkgd.min.css"
+        "styles.css"
       ],
-      "scripts": [
-        "../node_modules/moment/min/moment.min.js",
-        "../node_modules/jquery/dist/jquery.min.js",
-        "../node_modules/froala-editor/js/froala_editor.min.js",
-        "../node_modules/froala-editor/js/froala_editor.pkgd.min.js"
-      ],
+      "scripts": ["../node_modules/moment/min/moment.min.js"],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",

@@ -3,8 +3,10 @@
 angular.module('playerApp')
   .controller('BatchController', ['$rootScope', '$timeout', '$state', '$scope', '$stateParams',
     'batchService', '$filter', 'permissionsService', 'toasterService', 'courseService',
-    'learnService', '$window', function ($rootScope, $timeout, $state, $scope, $stateParams, batchService, $filter,
-      permissionsService, toasterService, courseService, learnService, $window) {
+    'learnService', '$window', 'userService', 'telemetryService',
+    function ($rootScope, $timeout, $state, $scope, $stateParams, batchService, $filter,
+      permissionsService, toasterService, courseService, learnService, $window, userService,
+      telemetryService) {
       var batch = this
       batch.userList = []
       batch.menterList = []
@@ -223,7 +225,6 @@ angular.module('playerApp')
             }
           }
         }
-
         batchService.getUserList(request).then(function (response) {
           if (response && response.responseCode === 'OK') {
             _.forEach(response.result.response.content, function (userData) {

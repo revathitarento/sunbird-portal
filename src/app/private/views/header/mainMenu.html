@@ -1,18 +1,15 @@
-<a class="item"  ui-sref="Home" href="home"  ng-class="homeActive">
+<a class="item"  ui-sref="Home" href="home"  ng-class="homeActive" ng-click="$root.generateInteractEvent('home', '', 'home', '1.0', 'home', 'home')">
     {{$root.frmelmnts.tab.home}}
     </a>
-<a class="item" ui-sref="Courses" href="learn" ng-class="courseActive">
+<a class="item" ui-sref="Courses" href="learn" ng-class="courseActive" ng-click="$root.generateInteractEvent('course', '', 'course', '1.0', 'course', 'course')">
     {{$root.frmelmnts.tab.courses}}
     </a>
-<a class="item" ui-sref="Resources" href="resources" ng-class="resourcesActive">
+<a class="item" ui-sref="Resources" href="resources" ng-class="resourcesActive" ng-click="$root.generateInteractEvent('library', '', 'library', '1.0', 'library', 'library')">
       {{$root.frmelmnts.tab.resources}}
     </a>
 <a class="item" href="/migration/groups" > <!-- ui-sref-active="active" ui-sref="Community" -->
       {{$root.frmelmnts.tab.community}}
     </a>
-    <a class="item" href="http://localhost:4200/migration/thread-list" >
-        Discussions
-      </a>
 <a class="item" href="#" ui-sref="Profile" ng-class="profileActive">
       {{$root.frmelmnts.tab.profile}}
     </a>

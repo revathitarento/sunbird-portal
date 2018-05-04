@@ -101,10 +101,14 @@ if (defaultTenant) {
 }
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.static(path.join(__dirname, 'private')))
+<<<<<<< HEAD
 app.use(express.static(path.join(__dirname, 'migration/dist'), {
   extensions: ['ejs'],
   index: false
 }))
+=======
+app.use(express.static(path.join(__dirname, 'migration/dist'), { extensions: ['ejs'], index: false }))
+>>>>>>> 5aec7646197130884065e4936c980e1ba1e45fc5
 // Announcement routing
 app.use('/announcement/v1', bodyParser.urlencoded({
   extended: false
@@ -273,6 +277,57 @@ app.all('/content/*',
     }
   }))
 
+app.post('/learner/content/v1/media/upload',
+  proxyUtils.verifyToken(),
+  permissionsHelper.checkPermission(),
+  proxy(learnerURL, {
+    limit: reqDataLimitOfContentUpload,
+    proxyReqOptDecorator: proxyUtils.decorateRequestHeaders(),
+    proxyReqPathResolver: function (req) {
+      return require('url').parse(learnerURL + '/content/v1/media/upload').path
+    },
+    userResDecorator: function (proxyRes, proxyResData, userReq, userRes) {
+      let data = JSON.parse(proxyResData.toString('utf8'))
+      if (data.responseCode === 'OK') {
+        data.success = true
+      }
+      return JSON.stringify(data)
+    }
+  }))
+
+app.all('/learner/*',
+  proxyUtils.verifyToken(),
+  permissionsHelper.checkPermission(),
+  proxy(learnerURL, {
+    limit: reqDataLimitOfContentUpload,
+    proxyReqOptDecorator: proxyUtils.decorateRequestHeaders(),
+    proxyReqPathResolver: function (req) {
+      let urlParam = req.params['0']
+      let query = require('url').parse(req.url).query
+      if (query) {
+        return require('url').parse(learnerURL + urlParam + '?' + query).path
+      } else {
+        return require('url').parse(learnerURL + urlParam).path
+      }
+    }
+  }))
+
+app.all('/content/*',
+  proxyUtils.verifyToken(),
+  permissionsHelper.checkPermission(),
+  proxy(contentURL, {
+    limit: reqDataLimitOfContentUpload,
+    proxyReqOptDecorator: proxyUtils.decorateRequestHeaders(),
+    proxyReqPathResolver: function (req) {
+      let urlParam = req.params['0']
+      let query = require('url').parse(req.url).query
+      if (query) {
+        return require('url').parse(contentURL + urlParam + '?' + query).path
+      } else {
+        return require('url').parse(contentURL + urlParam).path
+      }
+    }
+  }))
 // Local proxy for content and learner service
 require('./proxy/localProxy.js')(app)
 
@@ -333,6 +388,7 @@ require('./helpers/shareUrlHelper.js')(app)
 
 // Resource bundles apis
 
+<<<<<<< HEAD
 app.use('/resourcebundles/v1', bodyParser.urlencoded({
   extended: false
 }),
@@ -340,6 +396,10 @@ bodyParser.json({
   limit: '50mb'
 }), require('./helpers/resourceBundles')(express))
 
+=======
+app.use('/resourcebundles/v1', bodyParser.urlencoded({ extended: false }),
+  bodyParser.json({ limit: '50mb' }), require('./helpers/resourceBundles')(express))
+>>>>>>> 5aec7646197130884065e4936c980e1ba1e45fc5
 // redirect to home if nothing found
 app.all('*', function (req, res) {
   res.redirect('/')
@@ -388,7 +448,6 @@ resourcesBundlesHelper.buildResources(function (err, result) {
     portal.server = app.listen(port, function () {
       console.log('completed resource bundles' + '\r\n' + 'starting  server...')
       console.log('app running on port ' + port)
-      permissionsHelper.getPermissions()
     })
   }
 })

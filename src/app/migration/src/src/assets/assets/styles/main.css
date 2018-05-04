@@ -386,9 +386,12 @@
 .cursor-pointer {
   cursor: pointer !important;
 }
+<<<<<<< HEAD
 .custom-display-none {
   display: none !important;
 }
+=======
+>>>>>>> 5aec7646197130884065e4936c980e1ba1e45fc5
 .cursor-pointerText {
   cursor: text;
   pointer-events: none !important;
@@ -2840,4 +2843,8 @@ body {
 }
 html {
   height: 100%;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5aec7646197130884065e4936c980e1ba1e45fc5

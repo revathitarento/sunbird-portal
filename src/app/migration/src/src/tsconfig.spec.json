@@ -3,8 +3,18 @@
   "compilerOptions": {
     "outDir": "../out-tsc/spec",
     "baseUrl": "./",
+    "paths": {
+      "@sunbird/core": [
+          "app/modules/core"
+      ],
+      "@sunbird/community": [
+        "app/modules/community"
+      ],
+      "@sunbird/shared": [
+        "app/modules/shared"
+      ]
+    },
     "module": "commonjs",
-    "target": "es5",
     "types": [
       "jasmine",
       "node"

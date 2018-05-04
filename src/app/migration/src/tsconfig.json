@@ -1,7 +1,19 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
+    "paths": {
+      "@sunbird/core": [
+        "src/app/modules/core"
+      ],
+      "@sunbird/community": [
+        "src/app/modules/community"
+      ],
+      "@sunbird/shared": [
+        "app/modules/shared"
+      ]
+    },
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
