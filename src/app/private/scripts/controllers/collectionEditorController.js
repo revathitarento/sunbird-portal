@@ -3,8 +3,8 @@
 angular.module('playerApp')
   .controller('CollectionEditorController', ['config', '$stateParams', 'toasterService', '$sce',
     '$state', '$timeout', '$rootScope', 'contentService', 'permissionsService', 'workSpaceUtilsService',
-    function (config, $stateParams, toasterService, $sce, $state, $timeout, $rootScope, contentService,
-      permissionsService, workSpaceUtilsService) {
+    '$window', 'searchService', function (config, $stateParams, toasterService, $sce, $state, $timeout,
+      $rootScope, contentService, permissionsService, workSpaceUtilsService, $window, searchService) {
       var collectionEditor = this
       collectionEditor.contentId = $stateParams.contentId
       collectionEditor.framework = $stateParams.framework
@@ -35,9 +35,10 @@ angular.module('playerApp')
           contentId: collectionEditor.contentId,
           pdata: {
             id: org.sunbird.portal.appid,
-            ver: '1.0'
+            ver: '1.0',
+            pid: 'sunbird-portal'
           },
-          etags: { app: [], partner: [], dims: org.sunbird.portal.dims },
+          tags: _.concat([], org.sunbird.portal.channel),
           channel: org.sunbird.portal.channel,
           framework: collectionEditor.framework,
           env: data.type.toLowerCase()
@@ -53,7 +54,22 @@ angular.module('playerApp')
           loadingImage: '',
           plugins: [{
             id: 'org.ekstep.sunbirdcommonheader',
-            ver: '1.1',
+            ver: '1.4',
+            type: 'plugin'
+          },
+          {
+            id: 'org.ekstep.lessonbrowser',
+            ver: '1.3',
+            type: 'plugin'
+          },
+          {
+            id: 'org.ekstep.metadata',
+            ver: '1.0',
+            type: 'plugin'
+          },
+          {
+            id: 'org.ekstep.sunbirdmetadata',
+            ver: '1.0',
             type: 'plugin'
           }],
           localDispatcherEndpoint: '/collection-editor/telemetry',
@@ -77,23 +93,48 @@ angular.module('playerApp')
           },
           editorType: data.type
         }
-
+        // Add search criteria
+        if (searchService.updateReqForChannelFilter()) {
+          window.config.searchCriteria = searchService.updateReqForChannelFilter()
+        }
+        if (data.type.toLowerCase() === 'textbook') {
+          window.config.plugins.push({
+            id: 'org.ekstep.suggestcontent',
+            ver: '1.0',
+            type: 'plugin'
+          })
+          window.config.nodeDisplayCriteria = {
+            contentType: ['TextBookUnit']
+          }
+        } else if (data.type.toLowerCase() === 'course') {
+          window.config.nodeDisplayCriteria = {
+            contentType: ['CourseUnit']
+          }
+        } else if (data.type.toLowerCase() === 'lessonplan') {
+          window.config.nodeDisplayCriteria = {
+            contentType: ['LessonPlanUnit']
+          }
+        } else {
+          window.config.nodeDisplayCriteria = {
+            contentType: ['Collection']
+          }
+        }
         window.config.editorConfig.publishMode = false
-        window.config.editorConfig.isFalgReviewer = false
+        window.config.editorConfig.isFlagReviewer = false
         if ($stateParams.state === 'WorkSpace.UpForReviewContent' &&
-                            _.intersection(permissionsService.getCurrentUserRoles(),
-                              ['CONTENT_REVIEWER', 'CONTENT_REVIEW']).length > 0) {
+          _.intersection(permissionsService.getCurrentUserRoles(),
+            ['CONTENT_REVIEWER', 'CONTENT_REVIEW', 'BOOK_REVIEWER', 'FLAG_REVIEWER']).length > 0) {
           window.config.editorConfig.publishMode = true
         } else if ($stateParams.state === 'WorkSpace.FlaggedContent' &&
-                            _.intersection(permissionsService.getCurrentUserRoles(),
-                              ['FLAG_REVIEWER']).length > 0) {
-          window.config.editorConfig.isFalgReviewer = true
+          _.intersection(permissionsService.getCurrentUserRoles(),
+            ['FLAG_REVIEWER']).length > 0) {
+          window.config.editorConfig.isFlagReviewer = true
         }
 
         var validateModal = {
           state: ['WorkSpace.UpForReviewContent', 'WorkSpace.ReviewContent',
             'WorkSpace.PublishedContent', 'WorkSpace.FlaggedContent', 'LimitedPublishedContent'],
-          status: ['Review', 'Draft', 'Live', 'Flagged', 'Unlisted'],
+          status: ['Review', 'Draft', 'Live', 'Flagged', 'Unlisted', 'FlagDraft', 'FlagReview'],
           mimeType: 'application/vnd.ekstep.content-collection'
         }
 
@@ -155,9 +196,7 @@ angular.module('playerApp')
             childrenTypes: [
               'CourseUnit',
               'Collection',
-              'Resource',
-              'Story',
-              'Worksheet'
+              'Resource'
             ],
             addType: 'Editor',
             iconClass: 'fa fa-book'
@@ -196,28 +235,6 @@ angular.module('playerApp')
             ],
             addType: 'Browser',
             iconClass: 'fa fa-file-o'
-          },
-          {
-            type: 'Story',
-            label: 'Story',
-            isRoot: false,
-            editable: false,
-            childrenTypes: [
-
-            ],
-            addType: 'Browser',
-            iconClass: 'fa fa-file-o'
-          },
-          {
-            type: 'Worksheet',
-            label: 'Worksheet',
-            isRoot: false,
-            editable: false,
-            childrenTypes: [
-
-            ],
-            addType: 'Browser',
-            iconClass: 'fa fa-file-o'
           })
           return editorConfig
         case 'Collection':
@@ -228,9 +245,7 @@ angular.module('playerApp')
             editable: true,
             childrenTypes: [
               'Collection',
-              'Resource',
-              'Story',
-              'Worksheet'
+              'Resource'
             ],
             addType: 'Editor',
             iconClass: 'fa fa-folder-o'
@@ -256,28 +271,6 @@ angular.module('playerApp')
             ],
             addType: 'Browser',
             iconClass: 'fa fa-file-o'
-          },
-          {
-            type: 'Story',
-            label: 'Story',
-            isRoot: false,
-            editable: false,
-            childrenTypes: [
-
-            ],
-            addType: 'Browser',
-            iconClass: 'fa fa-file-o'
-          },
-          {
-            type: 'Worksheet',
-            label: 'Worksheet',
-            isRoot: false,
-            editable: false,
-            childrenTypes: [
-
-            ],
-            addType: 'Browser',
-            iconClass: 'fa fa-file-o'
           })
           return editorConfig
         case 'LessonPlan':
@@ -289,9 +282,7 @@ angular.module('playerApp')
             childrenTypes: [
               'LessonPlanUnit',
               'Collection',
-              'Resource',
-              'Story',
-              'Worksheet'
+              'Resource'
             ],
             addType: 'Editor',
             iconClass: 'fa fa-book'
@@ -330,31 +321,10 @@ angular.module('playerApp')
             ],
             addType: 'Browser',
             iconClass: 'fa fa-file-o'
-          },
-          {
-            type: 'Story',
-            label: 'Story',
-            isRoot: false,
-            editable: false,
-            childrenTypes: [
-
-            ],
-            addType: 'Browser',
-            iconClass: 'fa fa-file-o'
-          },
-          {
-            type: 'Worksheet',
-            label: 'Worksheet',
-            isRoot: false,
-            editable: false,
-            childrenTypes: [
-
-            ],
-            addType: 'Browser',
-            iconClass: 'fa fa-file-o'
           })
           return editorConfig
         default:
+
           editorConfig.push({
             type: 'TextBook',
             label: 'Textbook',
@@ -363,9 +333,7 @@ angular.module('playerApp')
             childrenTypes: [
               'TextBookUnit',
               'Collection',
-              'Resource',
-              'Story',
-              'Worksheet'
+              'Resource'
             ],
             addType: 'Editor',
             iconClass: 'fa fa-book'
@@ -397,28 +365,6 @@ angular.module('playerApp')
           {
             type: 'Resource',
             label: 'Resource',
-            isRoot: false,
-            editable: false,
-            childrenTypes: [
-
-            ],
-            addType: 'Browser',
-            iconClass: 'fa fa-file-o'
-          },
-          {
-            type: 'Story',
-            label: 'Story',
-            isRoot: false,
-            editable: false,
-            childrenTypes: [
-
-            ],
-            addType: 'Browser',
-            iconClass: 'fa fa-file-o'
-          },
-          {
-            type: 'Worksheet',
-            label: 'Worksheet',
             isRoot: false,
             editable: false,
             childrenTypes: [

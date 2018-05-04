@@ -2,13 +2,14 @@
 
 angular.module('playerApp')
   .controller('contentPlayerCtrl', ['$state', '$scope', 'contentService', '$timeout', '$stateParams',
-    'config', '$rootScope', '$location', '$anchorScroll', 'toasterService', 'telemetryService',
+    'config', '$rootScope', '$location', '$anchorScroll', 'toasterService', '$window', 'workSpaceUtilsService',
     function ($state, $scope, contentService, $timeout, $stateParams, config, $rootScope,
-      $location, $anchorScroll, toasterService, telemetryService) {
+      $location, $anchorScroll, toasterService, $window, workSpaceUtilsService) {
       $scope.isClose = $scope.isclose
       $scope.isHeader = $scope.isheader
       $scope.showModalInLectureView = true
       $scope.contentProgress = 0
+      $scope.telemetryEnv = ($state.current.name === 'Toc') ? 'course' : 'library'
       var count = 0
 
       $scope.getContentEditorConfig = function (data) {
@@ -28,6 +29,7 @@ angular.module('playerApp')
           }
           configuration.context.dims = cloneDims
         }
+        configuration.context.tags = _.concat([], org.sunbird.portal.channel)
         configuration.context.app = [org.sunbird.portal.appid]
         configuration.context.partner = []
         if ($rootScope.isTocPage) {
@@ -36,11 +38,18 @@ angular.module('playerApp')
             type: 'course'
           }]
         }
+        configuration.context.pdata = {
+          'id': org.sunbird.portal.appid,
+          'ver': '1.0',
+          'pid': 'sunbird-portal'
+        }
         configuration.config = config.ekstep_CP_config.config
         configuration.config.plugins = config.ekstep_CP_config.config.plugins
         configuration.config.repos = config.ekstep_CP_config.config.repos
         configuration.metadata = $scope.contentData
         configuration.data = $scope.contentData.mimeType !== config.MIME_TYPE.ecml ? {} : data.body
+        configuration.config.overlay = config.ekstep_CP_config.config.overlay || {}
+        configuration.config.overlay.showUser = false
         return configuration
       }
 
@@ -54,6 +63,9 @@ angular.module('playerApp')
 
       function showPlayer (data) {
         $scope.contentData = data
+        $scope.contentData.language = contentService.validateContent($scope.contentData.language)
+        $scope.contentData.gradeLevel = contentService.validateContent($scope.contentData.gradeLevel)
+        $scope.contentData.subject = contentService.validateContent($scope.contentData.subject)
         $scope._instance = {
           id: $scope.contentData.identifier,
           ver: $scope.contentData.pkgVersion
@@ -72,8 +84,6 @@ angular.module('playerApp')
             previewContentIframe.contentWindow.initializePreview(configuration)
             $scope.gotoBottom()
           }
-          telemetryService.startTelemetryData($state.params.backState, $rootScope.contentId,
-            $scope.contentData.contentType, '1.0', 'previewContent', 'content-read', 'play')
         }, 0)
 
         /**
@@ -82,10 +92,10 @@ angular.module('playerApp')
          * from renderer
          * Player controller dispatching the event sunbird
          */
-        /* document.getElementById('contentPlayer').addEventListener('renderer:telemetry:event',function (event, data) { // eslint-disable-line
+        document.getElementById('contentPlayer').addEventListener('renderer:telemetry:event', function (event, data) { // eslint-disable-line
           org.sunbird.portal.eventManager.dispatchEvent('sunbird:player:telemetry',
             event.detail.telemetryData)
-        }) */
+        })
         /* window.onbeforeunload = function (e) { // eslint-disable-line
           playerTelemetryUtilsService.endTelemetry({ progress: $scope.contentProgress })
         } */
@@ -105,23 +115,23 @@ angular.module('playerApp')
       function getContent (contentId) {
         var req = { contentId: contentId }
         var qs = {
-          fields: 'body,editorState,stageIcons,templateId,languageCode,template,' +
-                        'gradeLevel,status,concepts,versionKey,name,appIcon,contentType,owner,' +
-                        'domain,code,visibility,createdBy,description,language,mediaType,' +
-                        'osId,languageCode,createdOn,lastUpdatedOn,audience,ageGroup,' +
-                        'attributions,artifactUrl,mimeType,medium,year,publisher'
+          fields: 'body,editorState,templateId,languageCode,template,' +
+            'gradeLevel,status,concepts,versionKey,name,appIcon,contentType,owner,' +
+            'domain,code,visibility,createdBy,description,language,mediaType,' +
+            'osId,languageCode,createdOn,lastUpdatedOn,audience,ageGroup,' +
+            'attributions,artifactUrl,mimeType,medium,year,publisher,creator'
         }
         contentService.getById(req, qs).then(function (response) {
           if (response && response.responseCode === 'OK') {
             if (response.result.content.status === 'Live' || response.result.content.status === 'Unlisted' ||
-             $scope.isworkspace) {
+              $scope.isworkspace) {
               $scope.errorObject = {}
               showPlayer(response.result.content)
             } else {
               if (!count) {
                 count += 1
-                toasterService.warning($rootScope.messages.imsg.m0018)
-                $state.go('Home')
+                toasterService.warning($rootScope.messages.imsg.m0027)
+                $window.history.back()
               }
             }
           } else {
@@ -135,8 +145,6 @@ angular.module('playerApp')
       }
 
       $scope.close = function () {
-        telemetryService.endTelemetryData($stateParams.backState, $rootScope.contentId, 'Resource',
-          '1.0', 'previewContent', 'content-read', 'play')
         if ($scope.closeurl === 'Profile') {
           $state.go($scope.closeurl)
           return
@@ -159,6 +167,12 @@ angular.module('playerApp')
         }
 
         $scope.visibility = false
+        if (document.getElementById('contentPlayer')) {
+          document.getElementById('contentPlayer').removeEventListener('renderer:telemetry:event', function () {
+            org.sunbird.portal.eventManager.dispatchEvent('sunbird:player:telemetry',
+              event.detail.telemetryData)
+          }, false)
+        }
       }
 
       $scope.updateContent = function (scope) {
@@ -174,15 +188,63 @@ angular.module('playerApp')
         getContent($scope.id)
       }
 
-      $scope.getConceptsNames = function (concepts) {
-        var conceptNames = _.map(concepts, 'name').toString()
-        if (concepts && conceptNames.length < concepts.length) {
-          var filteredConcepts = _.filter($rootScope.concepts, function (p) {
-            return _.includes(concepts, p.identifier)
-          })
-          conceptNames = _.map(filteredConcepts, 'name').toString()
+      $scope.copyContent = function () {
+        $scope.showCopyLoader = true
+        var editorData = angular.copy($scope.contentData)
+        editorData.code = editorData.code + '.copy'
+        editorData.name = 'Copy of ' + editorData.name
+        var req = {
+          content: {
+            name: editorData.name,
+            description: editorData.description,
+            code: editorData.code,
+            createdBy: $rootScope.userId
+          }
         }
-        return conceptNames
+        var state = ''
+        if ($scope.contentData.mimeType === 'application/vnd.ekstep.ecml-archive') {
+          state = 'WorkSpace.DraftContent'
+        } else {
+          state = 'WorkSpace.AllUploadedContent'
+        }
+        contentService.copy(req, editorData.identifier).then(function (response) {
+          if (response && response.responseCode === 'OK') {
+            _.forEach(response.result.node_id, function (value) {
+              editorData.identifier = value
+            })
+            var req = { contentId: editorData.identifier }
+            var qs = {
+              fields: 'body,editorState,templateId,languageCode,template,' +
+                            'gradeLevel,status,concepts,versionKey,name,appIcon,contentType,owner,' +
+                            'domain,code,visibility,createdBy,description,language,mediaType,' +
+                            'osId,languageCode,createdOn,lastUpdatedOn,audience,ageGroup,' +
+                            'attributions,artifactUrl,mimeType,medium,year,publisher,creator,framework'
+            }
+            contentService.getById(req, qs).then(function (response) {
+              if (response && response.responseCode === 'OK') {
+                toasterService.success($rootScope.messages.emsg.m0012)
+                $scope.showCopyLoader = false
+                workSpaceUtilsService.openContentEditor(response.result.content, state)
+              } else {
+                toasterService.error($rootScope.messages.emsg.m0013)
+                $scope.showCopyLoader = false
+              }
+            }).catch(function () {
+              toasterService.error($rootScope.messages.emsg.m0013)
+              $scope.showCopyLoader = false
+            })
+          } else {
+            toasterService.error($rootScope.messages.emsg.m0013)
+            $scope.showCopyLoader = false
+          }
+        }).catch(function () {
+          toasterService.error($rootScope.messages.emsg.m0013)
+          $scope.showCopyLoader = false
+        })
+      }
+
+      $scope.getConceptsNames = function (concepts) {
+        return contentService.getConceptsNames(concepts)
       }
 
       // Restore default values(resume course, view dashboard) onAfterUser leave current state

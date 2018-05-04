@@ -9,14 +9,17 @@ angular.module('playerApp').controller('AppCtrl', ['$scope', 'permissionsService
     sessionService, learnService, $http, searchService, toasterService, adminService, $state, $window) {
     $rootScope.userId = $('#userId').attr('value')
     $rootScope.sessionId = $('#sessionId').attr('value')
+    $rootScope.logSession = $('#logSession').attr('value')
     $rootScope.cdnUrl = $('#cdnUrl').attr('value') || ''
     $rootScope.language = $('#defaultPortalLanguage').attr('value') || 'en'
+    $rootScope.content_channel_filter_type = $('#contentChannelFilterType').attr('value')
     $rootScope.messages = messages[$rootScope.language]
     $rootScope.frmelmnts = frmelmnts[$rootScope.language]
     $rootScope.searchKey = ''
     $rootScope.enrolledCourseIds = {}
     telemetryService.setConfigData('env', 'home')
     telemetryService.setConfigData('message', 'Content read')
+    org.sunbird.portal.appid = $('#producerId').attr('value')
     /**
      * This function contentModelSetBackLink is to store back link value for modal popup close dynamically.
      * **/
@@ -77,8 +80,7 @@ angular.module('playerApp').controller('AppCtrl', ['$scope', 'permissionsService
       var organisationNames = []
       var orgRoleMap = {}
 
-      var rootOrg = (profileData.rootOrg && !_.isUndefined(profileData.rootOrg.hashTagId)) ? profileData.rootOrg.hashTagId : md5('sunbird'); //eslint-disable-line
-      org.sunbird.portal.channel = rootOrg
+      org.sunbird.portal.channel = _.get(profileData, 'rootOrg.hashTagId')
       $rootScope.rootOrgId = profileData.rootOrgId
       $rootScope.rootOrgAdmin = false
       var organisationIds = []
@@ -103,20 +105,33 @@ angular.module('playerApp').controller('AppCtrl', ['$scope', 'permissionsService
       if ($rootScope.rootOrgId) {
         organisationIds.push($rootScope.rootOrgId)
       }
+      if (_.get(profileData, 'rootOrg.orgName')) {
+        organisationNames.push(profileData.rootOrg.orgName)
+      }
 
       // set role org map
       permissionsService.setRoleOrgMap(profileData)
 
       organisationIds = _.uniq(organisationIds)
-      $rootScope.organisationNames = organisationNames
+      $rootScope.organisationNames = _.uniq(organisationNames)
       $rootScope.organisationIds = angular.copy(organisationIds)
       org.sunbird.portal.dims = _.concat(organisationIds, org.sunbird.portal.channel)
       permissionsService.setCurrentUserRoleMap(orgRoleMap)
       permissionsService.setCurrentUserRoles(userRoles)
       $rootScope.initializePermissionDirective = true
-      $scope.getTelemetryConfigData(profileData)
       telemetryService.init()
+      $scope.logSessionStartEvent()
       $scope.setRootOrgInfo(profileData)
+    }
+    $scope.logSessionStartEvent = function () {
+      if ($rootScope.logSession === 'false') {
+        $http.get('/v1/user/session/start/' + EkTelemetry.fingerPrintId, {
+          headers: {'X-Channel-Id': org.sunbird.portal.channel}
+        }).then(function (res) {
+        }).catch(function () {
+        })
+      } else {
+      }
     }
 
     $scope.getTelemetryConfigData = function () {
@@ -126,22 +141,21 @@ angular.module('playerApp').controller('AppCtrl', ['$scope', 'permissionsService
       $http.get('/get/envData').then(function (res) {
         org.sunbird.portal.appid = res.data.appId
         org.sunbird.portal.ekstep_env = res.data.ekstep_env
-      })
-        .catch(function () {
-          org.sunbird.portal.appid = 'sunbird.portal'
-          org.sunbird.portal.ekstep_env = 'qa'
-        })
-        .finally(function () {
-          org.sunbird.portal.init()
-          // portalTelemetryService.init()
-        })
-    }
+        org.sunbird.portal.init()
+        telemetryService.init()
+        $scope.logSessionStartEvent()
+      }).catch(function () {
 
+      })
+    }
+    $scope.getTelemetryConfigData()
     $scope.setRootOrgInfo = function (profileData) {
       if (profileData.rootOrg) {
         // set Page Title
         document.title = (!_.isUndefined(profileData.rootOrg.orgName)) ? profileData.rootOrg.orgName : 'Sunbird'
-        $http.get('/v1/tenant/info/' + profileData.rootOrg.slug).then(function (res) {
+        $http.get('/v1/tenant/info/' + profileData.rootOrg.slug, {
+          headers: {'X-Channel-Id': org.sunbird.portal.channel}
+        }).then(function (res) {
           if (res && res.statusText === 'OK') {
             $rootScope.orgLogo = res.data.result.logo
             var link = document.createElement('link')
@@ -259,14 +273,6 @@ angular.module('playerApp').controller('AppCtrl', ['$scope', 'permissionsService
         }
       })
     }
-    // badges
-    $scope.getBadges = function () {
-      adminService.getBadges().then(function (res) {
-        if (res.responseCode === 'OK') {
-          adminService.setBadges(res)
-        }
-      })
-    }
     // orgTypes
     $scope.getOrgTypes = function () {
       searchService.getOrgTypes().then(function (res) {
@@ -300,7 +306,6 @@ angular.module('playerApp').controller('AppCtrl', ['$scope', 'permissionsService
         pageId, mode)
     }
 
-    $scope.getBadges()
     $scope.getOrgTypes()
 
     $window.onbeforeunload = function () {

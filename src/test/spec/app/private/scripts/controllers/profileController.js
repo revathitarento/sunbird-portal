@@ -11,7 +11,6 @@ describe('Controller: ProfileController', function () {
     userService,
     searchService,
     learnService,
-    adminService,
     workSpaceUtilsService,
     deferred,
     deferred1,
@@ -35,7 +34,6 @@ describe('Controller: ProfileController', function () {
     _userService_,
     _searchService_,
     _learnService_,
-    _adminService_,
     _workSpaceUtilsService_,
     _$q_,
     _$timeout_,
@@ -46,7 +44,6 @@ describe('Controller: ProfileController', function () {
     userService = _userService_
     searchService = _searchService_
     learnService = _learnService_
-    adminService = _adminService_
     workSpaceUtilsService = _workSpaceUtilsService_
     formValidation = _formValidation_
     deferred = _$q_.defer()
@@ -105,8 +102,6 @@ describe('Controller: ProfileController', function () {
   it('should get user profile', function (done) {
     spyOn(profileCtrl, 'getProfile').and.callThrough()
     spyOn(profileCtrl, 'processProfileData').and.callThrough()
-
-    spyOn(profileCtrl, 'getUserBadges').and.callThrough()
     var mockProfile = {
       responseCode: 'OK',
       result: { response: {
@@ -115,7 +110,6 @@ describe('Controller: ProfileController', function () {
         address: {},
         education: {},
         lastLoginTime: 3,
-        badges: [],
         missingFields: [],
         completeness: {},
         webPages: [{ type: 'fb', url: '' },
@@ -242,6 +236,7 @@ describe('Controller: ProfileController', function () {
   })
   it('should edit basic profile', function (done) {
     spyOn(profileCtrl, 'EditBasicProfile').and.callThrough()
+    spyOn(profileCtrl, 'getFieldsToValidate').and.returnValue(['firstName', 'lastNmae'])
     spyOn(formValidation, 'validate').and.returnValue(true)
     spyOn(profileCtrl, 'webLink').and.callThrough()
     spyOn(profileCtrl, 'updateUserInfo').and.callThrough()
@@ -255,6 +250,7 @@ describe('Controller: ProfileController', function () {
   })
   it('should edit user phone number ', function (done) {
     spyOn(profileCtrl, 'EditBasicProfile').and.callThrough()
+    spyOn(profileCtrl, 'getFieldsToValidate').and.returnValue(['firstName', 'lastNmae'])
     spyOn(formValidation, 'validate').and.returnValue(true)
     spyOn(profileCtrl, 'webLink').and.callThrough()
     spyOn(profileCtrl, 'updateUserInfo').and.callThrough()
@@ -267,6 +263,7 @@ describe('Controller: ProfileController', function () {
   })
   it('should edit social media links  phone number ', function (done) {
     spyOn(profileCtrl, 'EditBasicProfile').and.callThrough()
+    spyOn(profileCtrl, 'getFieldsToValidate').and.returnValue(['firstName', 'lastNmae'])
     spyOn(formValidation, 'validate').and.returnValue(true)
     spyOn(profileCtrl, 'webLink').and.callThrough()
     spyOn(profileCtrl, 'updateUserInfo').and.callThrough()
@@ -280,56 +277,57 @@ describe('Controller: ProfileController', function () {
   })
   it('should not update basic info ', function (done) {
     spyOn(profileCtrl, 'EditBasicProfile').and.callThrough()
+    spyOn(profileCtrl, 'getFieldsToValidate').and.returnValue(['firstName', 'lastNmae'])
     spyOn(formValidation, 'validate').and.returnValue(false)
     spyOn(profileCtrl, 'webLink').and.callThrough()
     spyOn(profileCtrl, 'updateUserInfo').and.callThrough()
-
+    profileCtrl.user = {firstName: ''}
     profileCtrl.EditBasicProfile()
     scope.$apply()
-
     expect(profileCtrl.updateUserInfo).not.toHaveBeenCalled()
     done()
   })
   it('should add a new address info ', function (done) {
     spyOn(profileCtrl, 'addAddress').and.callThrough()
+    spyOn(profileCtrl, 'getFieldsToValidate').and.returnValue(['firstName', 'lastNmae'])
     spyOn(formValidation, 'validate').and.returnValue(true)
     spyOn(profileCtrl, 'updateUserInfo').and.callThrough()
-    var address = {}
+    var address = {addressLine1: 'test', city: 'test'}
     profileCtrl.address = []
     profileCtrl.addAddress(address)
     scope.$apply()
-
     expect(profileCtrl.updateUserInfo).toHaveBeenCalled()
     done()
   })
-  it('should show add a new address link ', function (done) {
-    spyOn(profileCtrl, 'processProfileData').and.callThrough()
-    spyOn(profileCtrl, 'showAddAddress').and.callThrough()
-    profileCtrl.address = []
-    scope.$apply()
-    expect(profileCtrl.isAddAddress).toBe(true)
-    done()
-  })
+  // it('should show add a new address link ', function (done) {
+  //   spyOn(profileCtrl, 'processProfileData').and.callThrough()
+  //   spyOn(profileCtrl, 'showAddAddress').and.callThrough()
+  //   profileCtrl.address = []
+  //   scope.$apply()
+  //   expect(profileCtrl.isAddAddress).toBe(true)
+  //   done()
+  // })
 
-  it('should not show add a new address link ', function (done) {
-    spyOn(profileCtrl, 'processProfileData').and.callThrough()
-    spyOn(profileCtrl, 'showAddAddress').and.callThrough()
-    profileCtrl.showAddAddress(userProfile.result.response.address)
-    expect(profileCtrl.isAddAddress).toBe(false)
-    done()
-  })
-  it('should Permanent radio button  checked by default', function (done) {
-    spyOn(profileCtrl, 'processProfileData').and.callThrough()
-    spyOn(profileCtrl, 'showAddAddress').and.callThrough()
-    profileCtrl.showAddAddress(isPermanentChecked.result.response.address)
-    expect(profileCtrl.ischekedCurrent).toBe(false)
-    done()
-  })
+  // it('should not show add a new address link ', function (done) {
+  //   spyOn(profileCtrl, 'processProfileData').and.callThrough()
+  //   spyOn(profileCtrl, 'showAddAddress').and.callThrough()
+  //   profileCtrl.showAddAddress(userProfile.result.response.address)
+  //   expect(profileCtrl.isAddAddress).toBe(false)
+  //   done()
+  // })
+  // it('should Permanent radio button  checked by default', function (done) {
+  //   spyOn(profileCtrl, 'processProfileData').and.callThrough()
+  //   spyOn(profileCtrl, 'showAddAddress').and.callThrough()
+  //   profileCtrl.showAddAddress(isPermanentChecked.result.response.address)
+  //   expect(profileCtrl.ischekedCurrent).toBe(false)
+  //   done()
+  // })
   it('should not validate new address values ', function (done) {
     spyOn(profileCtrl, 'addAddress').and.callThrough()
+    spyOn(profileCtrl, 'getFieldsToValidate').and.returnValue(['firstName', 'lastNmae'])
     spyOn(formValidation, 'validate').and.returnValue(false)
     spyOn(profileCtrl, 'updateUserInfo').and.callThrough()
-    var address = []
+    var address = {}
     profileCtrl.addAddress(address)
     scope.$apply()
     expect(profileCtrl.updateUserInfo).not.toHaveBeenCalled()
@@ -372,9 +370,10 @@ describe('Controller: ProfileController', function () {
   // education
   it('should add a new education info ', function (done) {
     spyOn(profileCtrl, 'addEducation').and.callThrough()
+    spyOn(profileCtrl, 'getFieldsToValidate').and.returnValue(['firstName', 'lastNmae'])
     spyOn(formValidation, 'validate').and.returnValue(true)
     spyOn(profileCtrl, 'updateUserInfo').and.callThrough()
-    var education = {}
+    var education = {degree: 'test', name: 'test'}
     profileCtrl.education = []
     profileCtrl.addEducation(education)
     scope.$apply()
@@ -384,9 +383,10 @@ describe('Controller: ProfileController', function () {
   })
   it('should not validate new education values ', function (done) {
     spyOn(profileCtrl, 'addEducation').and.callThrough()
+    spyOn(profileCtrl, 'getFieldsToValidate').and.returnValue(['firstName', 'lastNmae'])
     spyOn(formValidation, 'validate').and.returnValue(false)
     spyOn(profileCtrl, 'updateUserInfo').and.callThrough()
-    var education = {}
+    var education = {degree: '', name: ''}
     profileCtrl.education = []
     profileCtrl.addEducation(education)
     scope.$apply()
@@ -431,9 +431,10 @@ describe('Controller: ProfileController', function () {
   // experience
   it('should add a new experience info ', function (done) {
     spyOn(profileCtrl, 'addExperience').and.callThrough()
+    spyOn(profileCtrl, 'getFieldsToValidate').and.returnValue(['firstName', 'lastNmae'])
     spyOn(formValidation, 'validate').and.returnValue(true)
     spyOn(profileCtrl, 'updateUserInfo').and.callThrough()
-    var experience = {}
+    var experience = {jobName: 'test', orgName: 'test'}
     profileCtrl.experience = []
     profileCtrl.addExperience(experience)
     scope.$apply()
@@ -443,6 +444,7 @@ describe('Controller: ProfileController', function () {
   })
   it('should not validate new experience values ', function (done) {
     spyOn(profileCtrl, 'addExperience').and.callThrough()
+    spyOn(profileCtrl, 'getFieldsToValidate').and.returnValue(['firstName', 'lastNmae'])
     spyOn(formValidation, 'validate').and.returnValue(false)
     spyOn(profileCtrl, 'updateUserInfo').and.callThrough()
     var experience = {}
@@ -542,18 +544,6 @@ describe('Controller: ProfileController', function () {
     expect(profileCtrl.contentList).not.toBeUndefined()
     done()
   })
-  it('should return badges list ', function (done) {
-    spyOn(profileCtrl, 'getbadges').and.callThrough()
-    spyOn(learnService, 'enrolledCourses').and.returnValue(deferred.promise)
-    deferred.resolve({ responseCode: 'OK',
-      result: {
-        courses: [{ leafNodesCount: 1, progress: 1 }] } })
-    profileCtrl.getbadges()
-    learnService.enrolledCourses()
-    scope.$apply()
-    expect(profileCtrl.badges).not.toBeUndefined()
-    done()
-  })
 
   it('should open previewCollection player ', function (done) {
     spyOn(profileCtrl, 'openContentPlayer').and.callThrough()
@@ -631,19 +621,6 @@ describe('Controller: ProfileController', function () {
     profileCtrl.updateAction('profileSummary')
     scope.$apply()
     expect(profileCtrl.openDiscriptionEdit).toBe(true)
-    done()
-  })
-
-  it('should get user Badges', function (done) {
-    spyOn(profileCtrl, 'getUserBadges').and.callThrough()
-    spyOn(adminService, 'getBadgesList').and.returnValue([{ badgeTypeId: 123, name: 'test' },
-      { badgeTypeId: 222, name: 'test' }])
-    profileCtrl.user = { badges: [{ id: 123, name: 'test' }, { id: 222, name: 'test' }] }
-    profileCtrl.getUserBadges()
-    adminService.getBadgesList()
-
-    scope.$apply()
-    expect(profileCtrl.badges).not.toBe(null)
     done()
   })
 

@@ -21,11 +21,18 @@ angular.module('loginApp')
           id: $stateParams.courseId,
           type: 'course'
         }]
+        configuration.context.pdata = {
+          'id': $('#producerId').attr('value'),
+          'ver': '1.0',
+          'pid': 'sunbird-portal'
+        }
         configuration.config = config.ekstep_CP_config.config
         configuration.config.plugins = config.ekstep_CP_config.config.plugins
         configuration.config.repos = config.ekstep_CP_config.config.repos
         configuration.metadata = $scope.contentData
         configuration.data = $scope.contentData.mimeType !== config.MIME_TYPE.ecml ? {} : data.body
+        configuration.config.overlay = config.ekstep_CP_config.config.overlay || {}
+        configuration.config.overlay.showUser = false
         return configuration
       }
 
@@ -37,8 +44,15 @@ angular.module('loginApp')
         }
       }
 
+      function validateContentData (fieldData) {
+        return (_.isArray(fieldData)) ? (_.compact(fieldData).join(', ')) : ''
+      }
+
       function showPlayer (data) {
         $scope.contentData = data
+        $scope.contentData.language = validateContentData($scope.contentData.language)
+        $scope.contentData.gradeLevel = validateContentData($scope.contentData.gradeLevel)
+        $scope.contentData.subject = validateContentData($scope.contentData.subject)
         $scope._instance = {
           id: $scope.contentData.identifier,
           ver: $scope.contentData.pkgVersion
@@ -63,10 +77,10 @@ angular.module('loginApp')
         var req = { contentId: contentId }
         var qs = {
           fields: 'body,editorState,stageIcons,templateId,languageCode,template,' +
-                        'gradeLevel,status,concepts,versionKey,name,appIcon,contentType,owner,' +
-                        'domain,code,visibility,createdBy,description,language,mediaType,' +
-                        'osId,languageCode,createdOn,lastUpdatedOn,audience,ageGroup,' +
-                        'attributions,artifactUrl,mimeType,medium,year,publisher'
+            'gradeLevel,status,concepts,versionKey,name,appIcon,contentType,owner,' +
+            'domain,code,visibility,createdBy,description,language,mediaType,' +
+            'osId,languageCode,createdOn,lastUpdatedOn,audience,ageGroup,' +
+            'attributions,artifactUrl,mimeType,medium,year,publisher,creator'
         }
         contentService.getById(req, qs).then(function (response) {
           if (response && response.responseCode === 'OK') {
@@ -78,7 +92,7 @@ angular.module('loginApp')
             if (response.result.content.mimeType === config.MIME_TYPE.collection) {
               var contentData = response.result.content
               window.localStorage.setItem('redirectUrl', '/preview/collection/' +
-              contentId + '/' + contentData.name + '/')
+                contentId + '/' + contentData.name + '/')
               $state.go('PublicCollection', { contentId: contentData.identifier, name: contentData.name })
             } else {
               showPlayer(response.result.content)
@@ -109,6 +123,17 @@ angular.module('loginApp')
       $scope.init = function () {
         $scope.errorObject = {}
         getContent($scope.id)
+      }
+
+      $scope.$watch('id', function (newId, oldId) {
+        getContent(newId)
+      })
+
+      $scope.getConceptsNames = function (concepts) {
+        if (_.isArray(concepts)) {
+          var conceptNames = _.map(concepts, 'name')
+          return conceptNames.join(', ')
+        }
       }
 
       $scope.gotoBottom = function () {

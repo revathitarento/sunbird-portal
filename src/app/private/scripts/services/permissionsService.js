@@ -189,6 +189,6 @@ angular.module('playerApp')
       }
 
       this.getRoleOrgMap = function () {
-        return this.roleOrgMap
+        return _.cloneDeep(this.roleOrgMap)
       }
     }])

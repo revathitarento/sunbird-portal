@@ -9,19 +9,32 @@ angular.module('playerApp')
      * @memberOf Services
      */
   .service('telemetryService', ['$rootScope', 'config', '$window', function ($rootScope, config, $window) {
+    this.context = []
+    this.configData = {
+      message: 'api call default message'
+    }
+    this.visitData = []
+    this.config = {}
+    this.getConfigData = function (key) {
+      if (this.configData[key]) {
+        return this.getConfigData[key]
+      } else {
+        return this.config[key]
+      }
+    }
     this.config = {
       'pdata': {
-        'id': org.sunbird.portal.appid || 'org.sunbird',
-        'ver': '1.0',
-        'pid': ''
+        'id': org.sunbird.portal.appid || 'sunbird.portal',
+        'ver': '1.5.1',
+        'pid': 'sunbird-portal'
       },
-      'env': 'Home',
+      'env': this.getConfigData('env') || 'Home',
       'channel': org.sunbird.portal.channel || 'sunbird',
       'did': undefined,
       'authtoken': undefined,
       'uid': $rootScope.userId,
       'sid': $rootScope.sessionId,
-      'batchsize': 10 || config.TELEMETRY.MAX_BATCH_SIZE,
+      'batchsize': config.TELEMETRY.MAX_BATCH_SIZE || 10,
       'host': '',
       'endpoint': config.TELEMETRY.SYNC,
       'apislug': config.URL.BASE_PREFIX + config.URL.CONTENT_PREFIX,
@@ -83,13 +96,9 @@ angular.module('playerApp')
       location: 'add-current-location'
     }
 
-    this.context = []
-    this.configData = {}
-    this.visitData = []
-
     this.setConfig = function () {
-      this.config.pdata.id = org.sunbird.portal.appid || 'org.sunbird'
-      this.config.channel = org.sunbird.portal.channel || 'sunbird'
+      this.config.pdata.id = org.sunbird.portal.appid
+      this.config.channel = org.sunbird.portal.channel
       this.config.uid = $rootScope.userId
       this.config.sid = $rootScope.sessionId
     }
@@ -108,12 +117,11 @@ angular.module('playerApp')
          * data object have these properties {'edata', 'contentId', 'contentVer', 'context', 'object', 'tags'}
          */
     this.start = function (data) {
-      console.log('Portal Start event', data)
       if (data.context) { this.context.push(data.context) }
       EkTelemetry.start(this.config, data.contentId, data.contentVer, data.edata, { // eslint-disable-line no-undef
         context: data.context,
         object: data.object,
-        tags: data.tags
+        tags: _.compact(data.tags) || _.concat([], org.sunbird.portal.channel)
       })
     }
 
@@ -124,7 +132,7 @@ angular.module('playerApp')
     this.end = function (data) {
       console.log('Portal end event')
       var context = this.context.pop()
-      EkTelemetry.end(data.edata, { context: context, tags: data.tags }) // eslint-disable-line no-undef
+      EkTelemetry.end(data.edata, { context: context, tags: _.compact(data.tags) || _.concat([], org.sunbird.portal.channel) }) // eslint-disable-line no-undef
       EkTelemetry.resetContext(context) // eslint-disable-line no-undef
     }
 
@@ -136,7 +144,7 @@ angular.module('playerApp')
       EkTelemetry.impression(data.edata, { // eslint-disable-line no-undef
         context: data.context,
         object: data.object,
-        tags: data.tags
+        tags: _.compact(data.tags) || _.concat([], org.sunbird.portal.channel)
       })
     }
 
@@ -148,7 +156,7 @@ angular.module('playerApp')
       EkTelemetry.interact(data.edata, { // eslint-disable-line no-undef
         context: data.context,
         object: data.object,
-        tags: data.tags
+        tags: _.compact(data.tags) || _.concat([], org.sunbird.portal.channel)
       })
     }
 
@@ -160,7 +168,7 @@ angular.module('playerApp')
       EkTelemetry.log(data.edata, { // eslint-disable-line no-undef
         context: data.context,
         object: data.object,
-        tags: data.tags
+        tags: _.compact(data.tags) || _.concat([], org.sunbird.portal.channel)
       })
     }
 
@@ -172,7 +180,7 @@ angular.module('playerApp')
       EkTelemetry.error(data.edata, { // eslint-disable-line no-undef
         context: data.context,
         object: data.object,
-        tags: data.tags
+        tags: _.compact(data.tags) || _.concat([], org.sunbird.portal.channel)
       })
     }
 
@@ -184,7 +192,7 @@ angular.module('playerApp')
       EkTelemetry.share(data.edata, { // eslint-disable-line no-undef
         context: data.context,
         object: data.object,
-        tags: data.tags
+        tags: _.compact(data.tags) || _.concat([], org.sunbird.portal.channel)
       })
     }
 
@@ -371,6 +379,9 @@ angular.module('playerApp')
       if (data.rollup && Object.keys(data.rollup).length > 0) {
         object.rollup = data.rollup
       }
+      if (data.section) {
+        object.section = data.section
+      }
       return JSON.parse(JSON.stringify(object))
     }
 
@@ -401,14 +412,6 @@ angular.module('playerApp')
       this.configData[key] = value
     }
 
-    this.getConfigData = function (key) {
-      if (this.configData[key]) {
-        return this.configData[key]
-      } else {
-        return this.config[key]
-      }
-    }
-
     this.interactTelemetryData = function (env, objId, objType, objVer, edataId, pageId, objRollup) {
       var contextData = {
         env: env,
@@ -425,7 +428,7 @@ angular.module('playerApp')
         edata: this.interactEventData('CLICK', '', edataId, pageId),
         context: this.getContextData(contextData),
         object: this.getObjectData(objectData),
-        tags: $rootScope.organisationIds
+        tags: _.concat([], org.sunbird.portal.channel)
       }
 
       this.interact(data)
@@ -437,19 +440,20 @@ angular.module('playerApp')
         env: env,
         rollup: this.getRollUpData($rootScope.organisationIds)
       }
-
-      var objectData = {
-        id: objId,
-        type: objType,
-        ver: objVer,
-        rollup: this.getRollUpData(objRollup)
+      var objectData = {}
+      if (objId && objId.length > 0) {
+        objectData = {
+          id: objId,
+          type: objType,
+          ver: objVer,
+          rollup: this.getRollUpData(objRollup)
+        }
       }
-
       var data = {
         edata: this.impressionEventData('view', subtype, pageId, uri, visit),
         context: this.getContextData(contextData),
         object: this.getObjectData(objectData),
-        tags: $rootScope.organisationIds
+        tags: _.concat([], org.sunbird.portal.channel)
       }
       this.impression(data)
     }
@@ -472,7 +476,7 @@ angular.module('playerApp')
         contentVer: $rootScope.version,
         context: this.getContextData(contextData),
         object: this.getObjectData(objectData),
-        tags: $rootScope.organisationIds
+        tags: _.concat([], org.sunbird.portal.channel)
       }
       this.start(data)
     }
@@ -495,7 +499,7 @@ angular.module('playerApp')
         contentVer: $rootScope.version,
         context: this.getContextData(contextData),
         object: this.getObjectData(objectData),
-        tags: $rootScope.organisationIds
+        tags: _.concat([], org.sunbird.portal.channel)
       }
       this.end(data)
     }
@@ -518,7 +522,7 @@ angular.module('playerApp')
         edata: this.shareEventData('Link', items, 'Out'),
         context: this.getContextData(contextData),
         object: this.getObjectData(objectData),
-        tags: $rootScope.organisationIds
+        tags: _.concat([], org.sunbird.portal.channel)
       }
       this.share(data)
     }
@@ -539,7 +543,7 @@ angular.module('playerApp')
         edata: this.errorEventData(errCode, errType, stacktrace, pageId),
         context: this.getContextData(contextData),
         object: this.getObjectData(objectData),
-        tags: $rootScope.organisationIds
+        tags: _.concat([], org.sunbird.portal.channel)
       }
       this.error(data)
     }

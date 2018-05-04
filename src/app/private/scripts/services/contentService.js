@@ -23,10 +23,33 @@ angular.module('playerApp')
              * @instance
              */
       this.create = function (req) {
+        var resourceType = _.get(req, 'content.resourceType')
+        if (_.isString(resourceType)) {
+          req.content.resourceType = [resourceType]
+        }
         req.content.organization = $rootScope.organisationNames
         req.content.createdFor = $rootScope.organisationIds
         req.content.creator = $rootScope.firstName + ' ' + $rootScope.lastName
         return restfulContentService.post(config.URL.CONTENT.CREATE, req)
+      }
+      /**
+             * @method copy
+             * @desc Copy a content
+             * @memberOf Services.contentService
+             * @param {Object} request - Request object
+             * @param {Object} request.content - Content data
+             * @param {string} request.content.description - Description about content
+             * @param {string} request.content.code - Code of content
+             * @param {string} request.content.createdBy - User identifier of owner
+             * @returns {Promise} Promise object contains response code and content Id
+             * @instance
+             */
+      this.copy = function (req, id) {
+        req.content.createdFor = $rootScope.organisationIds
+        req.content.creator = $rootScope.firstName + ' ' + $rootScope.lastName
+        req.content.organization = $rootScope.organisationNames
+        var url = config.URL.CONTENT.COPY + '/' + id
+        return restfulContentService.post(url, req)
       }
       /**
              * @method publish
@@ -112,5 +135,25 @@ angular.module('playerApp')
       this.discardContentFlag = function (req, contentId) {
         var url = config.URL.CONTENT.DISCARD_FLAG + '/' + contentId
         return restfulContentService.post(url, req)
+      }
+
+      this.validateContent = function (fieldData) {
+        if (_.isString(fieldData)) {
+          var contentFieldData = [fieldData]
+          return (_.isArray(contentFieldData)) ? (_.compact(contentFieldData).join(', ')) : ''
+        } else {
+          return (_.isArray(fieldData)) ? (_.compact(fieldData).join(', ')) : ''
+        }
+      }
+
+      this.getConceptsNames = function (concepts) {
+        var conceptNames = _.map(concepts, 'name')
+        if (concepts && _.isArray(concepts) && conceptNames.length < concepts.length) {
+          var filteredConcepts = _.filter($rootScope.concepts, function (p) {
+            return _.includes(concepts, p.identifier)
+          })
+          conceptNames = _.map(filteredConcepts, 'name')
+        }
+        return conceptNames.join(', ')
       }
     }])

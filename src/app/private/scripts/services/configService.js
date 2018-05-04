@@ -1,8 +1,8 @@
 'use strict'
 
 angular.module('playerApp')
-  .service('configService', ['restfulContentService', 'config', '$q',
-    function (restfulContentService, config, $q) {
+  .service('configService', ['restfulContentService', 'config', '$q', 'permissionsService',
+    function (restfulContentService, config, $q, permissionsService) {
       /**
      * @class configService
      */
@@ -13,7 +13,7 @@ angular.module('playerApp')
 
       this.getProfileAddInfformElmnt = function () {
         return {
-          'languages': config.DROPDOWN.COMMON.languages,
+          'languages': config.PROFILE.languages,
           'subjects': config.DROPDOWN.COMMON.subjects,
           'grades': config.DROPDOWN.COMMON.grades
         }
@@ -30,7 +30,7 @@ angular.module('playerApp')
           'medium': config.DROPDOWN.COMMON.medium,
           'subjects': config.DROPDOWN.COMMON.subjects,
           'grades': config.DROPDOWN.COMMON.grades,
-          'resourceType': config.FILTER.RESOURCES.resourceType
+          'resourceType': config.WORKSPACE.CREATE.RESOURCE.RESOURCE_TYPES
         }
       }
 
@@ -57,14 +57,21 @@ angular.module('playerApp')
                */
 
       this.getWorkspaceUpforReviewdrpdwn = function () {
-        return {
+        var data = {
           'boards': config.DROPDOWN.COMMON.boards,
           'medium': config.DROPDOWN.COMMON.medium,
           'languages': config.DROPDOWN.COMMON.languages,
           'subjects': config.DROPDOWN.COMMON.subjects,
           'grades': config.DROPDOWN.COMMON.grades,
-          'contentTypes': config.FILTER.RESOURCES.contentTypes
+          'contentTypes': config.WORKSPACE.UP_FOR_REVIEW.contentTypes
         }
+        if (_.indexOf(permissionsService.getCurrentUserRoles(), 'BOOK_REVIEWER') !== -1) {
+          data.contentTypes.unshift({
+            'key': 'TextBook',
+            'value': 'Text Book'
+          })
+        }
+        return data
       }
 
       /**

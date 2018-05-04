@@ -39,13 +39,9 @@ angular.module('playerApp')
       profile.isError = false
       profile.contentSortBy = 'desc'
       profile.quantityOfContent = 4
-      profile.badges = []
       profile.isViewMore = true
-      profile.isAddAddress = true
-      profile.ischekedCurrent = true
-      profile.disabledCurrent = false
-      profile.disabledPermanent = false
-
+      profile.isSameAddressTypeExist = false
+      profile.fieldsToBeValidate = []
       var today = new Date()
 
       var orgIds = []
@@ -70,28 +66,12 @@ angular.module('playerApp')
           }, this)
         }
       }
-      // user badges
-      profile.getUserBadges = function () {
-        var badges = adminService.getBadgesList()
-        if (profile.user.badges.length) {
-          profile.user.badges.forEach(function (badge) {
-            var userBadge = badges.find(function (badgE) {
-              return badgE.id === badge.badgeTypeId
-            })
-
-            profile.badges.push({
-              title: userBadge.name
-            })
-          })
-        }
-      }
       // processing profile data
       profile.processProfileData = function (userProfile) {
         profile.loader.showLoader = false
         if (userProfile && userProfile.responseCode === 'OK') {
           var profileData = angular.copy(userProfile.result.response)
           profile.user = profileData
-          profile.showAddAddress(profile.user.address)
           // temp mock data
           profile.user.profileVisibility = profileData.profileVisibility
           profile.fullName = profileData.firstName + ' ' + profileData.lastName
@@ -116,9 +96,7 @@ angular.module('playerApp')
           if (profile.user.lastLoginTime > 0) {
             profile.lastLoginTime = angular.copy(profile.user.lastLoginTime)
           }
-          if (profile.user.badges) {
-            profile.getUserBadges()
-          }
+          profile.badgeAssertions = profileData.badgeAssertions
           if (profileData.completeness) {
             $rootScope.profileCompleteness = profileData.completeness
             $('.profile-progress').progress({
@@ -226,8 +204,8 @@ angular.module('playerApp')
         var err = config.ERROR.PROFILE_IMAGE_UPLOAD.err
         var errType = config.ERROR.PROFILE_IMAGE_UPLOAD.errorType
         if (files[0] &&
-                    files[0].name.match(/.(jpg|jpeg|png)$/i) &&
-                    files[0].size < 4000000) {
+          files[0].name.match(/.(jpg|jpeg|png)$/i) &&
+          files[0].size < 4000000) {
           formData.append('file', files[0])
           reader.readAsDataURL(files[0])
           profile.icon = formData
@@ -287,56 +265,81 @@ angular.module('playerApp')
         return []
       }
       profile.EditBasicProfile = function () {
-        var isValid = formValidation.validate('#basicInfoForm')
-        if (isValid === true) {
-          var dob = $('#editDob').calendar('get date')
-          var basicInfo = {
-            firstName: profile.user.firstName,
-            lastName: profile.user.lastName,
-            gender: profile.user.gender,
-            dob: dob instanceof Date ? $filter('date')(dob, 'yyyy-MM-dd') : null,
-            language: profile.user.language,
-            subject: profile.user.subject,
-            grade: profile.user.grade,
-            location: profile.user.location
-          }
-          if (profile.user.phone !== profile.basicProfile.phone) {
-            basicInfo.phone = profile.user.phone
-          }
-          if (!profile.user.email) {
-            basicInfo.email = profile.user.email
-          }
-          var webPages = profile.webLink()
-          profile.webPages = webPages
+        profile.fieldsToBeValidate = profile.getFieldsToValidate('#basicInfoForm')
+        var isValid
+        var dob = $('#editDob').calendar('get date')
+        var basicInfo = {
+          firstName: profile.user.firstName,
+          lastName: profile.user.lastName,
+          gender: profile.user.gender,
+          dob: dob instanceof Date ? $filter('date')(dob, 'yyyy-MM-dd') : null,
+          language: profile.user.language,
+          subject: profile.user.subject,
+          grade: profile.user.grade,
+          location: profile.user.location
+        }
+        if (profile.fieldsToBeValidate.length) {
+          isValid = formValidation.validate('#basicInfoForm', profile.fieldsToBeValidate)
+          if (isValid === true) {
+            var webPages = profile.webLink()
+            profile.webPages = webPages
 
-          basicInfo.webPages = profile.webPages
+            basicInfo.webPages = profile.webPages
 
-          profile.updateUserInfo(
+            profile.updateUserInfo(
 
-            basicInfo,
-            'basicProfileForm',
-            $rootScope.messages.smsg.m0022,
-            $rootScope.messages.fmsg.m0039)
-        } else return false
+              basicInfo,
+              'basicProfileForm',
+              $rootScope.messages.smsg.m0022,
+              $rootScope.messages.fmsg.m0039)
+          } else return false
+        } else {
+          if (!profile.user.firstName || !profile.user.language.length) {
+            toasterService.error($rootScope.messages.fmsg.m0076)
+          } else {
+            profile.updateUserInfo(
+              basicInfo,
+              'basicProfileForm',
+              $rootScope.messages.smsg.m0022,
+              $rootScope.messages.fmsg.m0039)
+          }
+        }
       }
-
       // CURD address
       profile.addAddress = function (newAddress) {
-        var isValid = formValidation.validate('#addressForm')
-        if (isValid === true) {
-          profile.address.push(newAddress)
-          var req = { address: profile.address }
-          profile.updateUserInfo(
-            req,
-            'addressForm',
-            $rootScope.messages.smsg.m0026,
-            $rootScope.messages.fmsg.m0046
-          )
-        } else return false
+        profile.fieldsToBeValidate = profile.getFieldsToValidate('#addressForm')
+        var isValid
+        var req
+        if (!newAddress.addressLine1 || !newAddress.city) {
+          toasterService.error($rootScope.messages.fmsg.m0076)
+        } else {
+          if (profile.fieldsToBeValidate.length) {
+            isValid = formValidation.validate('#addressForm', profile.fieldsToBeValidate)
+            if (isValid === true) {
+              profile.address.push(newAddress)
+              req = { address: profile.address }
+              profile.updateUserInfo(
+                req,
+                'addressForm',
+                $rootScope.messages.smsg.m0026,
+                $rootScope.messages.fmsg.m0046
+              )
+            } else return false
+          } else {
+            req = { address: profile.address }
+            profile.updateUserInfo(
+              req,
+              'addressForm',
+              $rootScope.messages.smsg.m0026,
+              $rootScope.messages.fmsg.m0046
+            )
+          }
+        }
       }
 
       profile.editAddress = function (address) {
-        var isValid = formValidation.validate('.addressForm')
+        profile.fieldsToBeValidate = profile.getFieldsToValidate('#addressForm')
+        var isValid = formValidation.validate('.addressForm', profile.fieldsToBeValidate)
         if (isValid === true || !isValid.includes(false)) {
           var req = { address: address }
           profile.updateUserInfo(
@@ -364,35 +367,52 @@ angular.module('playerApp')
 
       // CURD education
       profile.addEducation = function (edu) {
+        profile.fieldsToBeValidate = profile.getFieldsToValidate('.educationForm')
         var newEducation = angular.copy(edu)
-        var isValid = formValidation.validate('.educationForm')
-        if (isValid === true) {
-          newEducation.percentage = newEducation.percentage
-            ? parseFloat(newEducation.percentage)
-            : 0
-          newEducation.yearOfPassing = newEducation.yearOfPassing
-            ? parseInt(newEducation.yearOfPassing)
-            : 0
-          var education = angular.copy(profile.education)
-          education.push(newEducation)
-          education.forEach(function (edu) {
-            edu.percentage = edu.percentage ? parseFloat(edu.percentage) : 0
-            edu.yearOfPassing = edu.yearOfPassing ? parseInt(edu.yearOfPassing)
-              : 0
-          })
-          var req = { education: education }
-          profile.updateUserInfo(
-            req,
-            'educationForm',
-            $rootScope.messages.smsg.m0024,
-            $rootScope.messages.fmsg.m0044
-          )
-        } else return false
+        var isValid
+        var req
+        if (!edu.degree || !edu.name) {
+          toasterService.error($rootScope.messages.fmsg.m0076)
+        } else {
+          if (profile.fieldsToBeValidate.length) {
+            isValid = formValidation.validate('.educationForm', profile.fieldsToBeValidate)
+            if (isValid === true) {
+              newEducation.percentage = newEducation.percentage
+                ? parseFloat(newEducation.percentage)
+                : 0
+              newEducation.yearOfPassing = newEducation.yearOfPassing
+                ? parseInt(newEducation.yearOfPassing)
+                : 0
+              var education = angular.copy(profile.education)
+              education.push(newEducation)
+              education.forEach(function (edu) {
+                edu.percentage = edu.percentage ? parseFloat(edu.percentage) : 0
+                edu.yearOfPassing = edu.yearOfPassing ? parseInt(edu.yearOfPassing)
+                  : 0
+              })
+              req = { education: education }
+              profile.updateUserInfo(
+                req,
+                'educationForm',
+                $rootScope.messages.smsg.m0024,
+                $rootScope.messages.fmsg.m0044
+              )
+            } else return false
+          } else {
+            req = { education: profile.education }
+            profile.updateUserInfo(
+              req,
+              'educationForm',
+              $rootScope.messages.smsg.m0024,
+              $rootScope.messages.fmsg.m0044
+            )
+          }
+        }
       }
 
       profile.editEducation = function (education) {
-        var isValid = formValidation.validate('.educationForm')
-
+        profile.fieldsToBeValidate = profile.getFieldsToValidate('.educationForm')
+        var isValid = formValidation.validate('.educationForm', profile.fieldsToBeValidate)
         if (isValid === true || !isValid.includes(false)) {
           education.forEach(function (edu) {
             edu.percentage = edu.percentage ? parseFloat(edu.percentage) : 0
@@ -426,33 +446,51 @@ angular.module('playerApp')
 
       // edit experience
       profile.addExperience = function (newExperience) {
-        var isValid = formValidation.validate('.jobProfileForm')
-        if (isValid === true) {
-          var startDate = $('#rangestartAdd').calendar('get date')
-          var endDate = $('#rangeendAdd').calendar('get date')
-          newExperience.isCurrentJob = newExperience.isCurrentJob
-            ? newExperience.isCurrentJob === 'true' : null
-          endDate = newExperience.isCurrentJob ? null : endDate
-          newExperience.joiningDate = startDate instanceof Date
-            ? $filter('date')(startDate, 'yyyy-MM-dd')
-            : null
-          newExperience.endDate = endDate instanceof Date
-            ? $filter('date')(endDate, 'yyyy-MM-dd')
-            : null
-          newExperience.userId = $rootScope.userId
-          profile.experience.push(newExperience)
-          var req = { jobProfile: profile.experience }
-          profile.updateUserInfo(
-            req,
-            'experienceForm',
-            $rootScope.messages.smsg.m0025,
-            $rootScope.messages.fmsg.m0045
-          )
-        } else return false
+        profile.fieldsToBeValidate = profile.getFieldsToValidate('.jobProfileForm')
+        var isValid
+        var req
+        if (!newExperience.jobName || !newExperience.orgName) {
+          toasterService.error($rootScope.messages.fmsg.m0076)
+        } else {
+          if (profile.fieldsToBeValidate.length) {
+            isValid = formValidation.validate('.jobProfileForm', profile.fieldsToBeValidate)
+            if (isValid === true) {
+              var startDate = $('#rangestartAdd').calendar('get date')
+              var endDate = $('#rangeendAdd').calendar('get date')
+              newExperience.isCurrentJob = newExperience.isCurrentJob
+                ? newExperience.isCurrentJob === 'true' : null
+              endDate = newExperience.isCurrentJob ? null : endDate
+              newExperience.joiningDate = startDate instanceof Date
+                ? $filter('date')(startDate, 'yyyy-MM-dd')
+                : null
+              newExperience.endDate = endDate instanceof Date
+                ? $filter('date')(endDate, 'yyyy-MM-dd')
+                : null
+              newExperience.userId = $rootScope.userId
+              profile.experience.push(newExperience)
+              req = { jobProfile: profile.experience }
+              profile.updateUserInfo(
+                req,
+                'experienceForm',
+                $rootScope.messages.smsg.m0025,
+                $rootScope.messages.fmsg.m0045
+              )
+            } else return false
+          } else {
+            req = { jobProfile: profile.experience }
+            profile.updateUserInfo(
+              req,
+              'experienceForm',
+              $rootScope.messages.smsg.m0025,
+              $rootScope.messages.fmsg.m0045
+            )
+          }
+        }
       }
 
       profile.editExperience = function (experiences) {
-        var isValid = formValidation.validate('.jobProfileForm')
+        profile.fieldsToBeValidate = profile.getFieldsToValidate('.jobProfileForm')
+        var isValid = formValidation.validate('.jobProfileForm', profile.fieldsToBeValidate)
         if (isValid === true || !isValid.includes(false)) {
           if (experiences.length) {
             experiences.forEach(function (element, index) {
@@ -475,7 +513,6 @@ angular.module('playerApp')
               }
             }, this)
           }
-
           var req = { jobProfile: experiences }
           profile.updateUserInfo(
             req,
@@ -517,14 +554,15 @@ angular.module('playerApp')
       profile.setDob = function () {
         $('#editDob').calendar('set date', profile.user.dob)
         $('#editDob').calendar({
-          maxDate: new Date(today.getFullYear(), today.getMonth(), today.getDate())
+          maxDate: new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+          type: 'date'
         })
         $timeout(function () { $scope.dobVis = true }, 100)
       }
       $timeout(function () {
         $('.ui.radio.checkbox')
           .checkbox('attach events', '.toggle.button').checkbox({
-            onChange: function () {}
+            onChange: function () { }
           })
       }, 1000)
 
@@ -634,23 +672,6 @@ angular.module('playerApp')
         }
       }
 
-      profile.getbadges = function () {
-        learnService.enrolledCourses($rootScope.userId).then(function (res) {
-          if (res && res.responseCode === 'OK') {
-            var courses = res.result.courses
-            _.forEach(courses, function (course) {
-              if (course.leafNodesCount && course.progress && course.leafNodesCount === course.progress) {
-                profile.badges.push({
-                  title: course.courseName
-                })
-              }
-            })
-          }
-        })
-      }
-
-      profile.getbadges()
-
       profile.setSelectedGrades = function () {
         $timeout(function () {
           $('#selectGrades').dropdown()
@@ -734,7 +755,6 @@ angular.module('playerApp')
                 output += '" <strong>' + search + '</strong> "'
                 return output
               }
-
               $('#addSkill').dropdown({
                 allowAdditions: true,
                 // action: 'select',
@@ -767,7 +787,7 @@ angular.module('playerApp')
               })
             },
 
-            onHide: function () {}
+            onHide: function () { }
           }).modal('show')
         }, 50)
         $('#addSkillModal').modal('refresh')
@@ -810,23 +830,34 @@ angular.module('playerApp')
       profile.setLimit = function (lim) {
         profile.limit = (lim <= 0) ? profile.userSkills.length : lim
       }
-      profile.showAddAddress = function (data) {
-        if (data && data.length < 2) {
-          profile.isAddAddress = true
-          var address = data.filter(function (e) {
-            return e.addType === 'current'
-          })
-          if (address.length === 0) {
-            profile.ischekedCurrent = true
-            profile.disabledPermanent = true
-            profile.disabledCurrent = false
-          } else {
-            profile.ischekedCurrent = false
-            profile.disabledCurrent = true
-            profile.disabledPermanent = false
+      profile.disableAddressOption = function(addressOption){
+        console.log
+        var address = profile.address.filter(function (e) {
+          return e.addType === addressOption
+        })
+        if(address.length>0){
+          return true
+        }
+        return false
+      }
+
+      profile.getFieldsToValidate = function (FormName) {
+        var dirtyInput = $(FormName + ' .ng-dirty')
+        var change = {}
+        var filedKey = []
+        if (dirtyInput.length > 0) {
+          for (var i = 0; i < dirtyInput.length; i++) {
+            change[dirtyInput[i].name] = dirtyInput[i].value
+            filedKey = Object.keys(change)
           }
+        }
+        return filedKey
+      }
+      profile.checkAddress = function (value) {
+        if (profile.address.length > 1 && profile.address[0].addType === profile.address[1].addType) {
+          profile.isSameAddressTypeExist = true
         } else {
-          profile.isAddAddress = false
+          profile.isSameAddressTypeExist = false
         }
       }
     }

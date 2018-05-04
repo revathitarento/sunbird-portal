@@ -55,7 +55,12 @@ angular.module('loginApp')
           }
         })
       }
-
+      newUser.dropdown = function () {
+        $('#headerSearchtab')
+          .dropdown()
+        $('#headerSearchmob')
+          .dropdown()
+      }
       newUser.showModal = function () {
         newUser.firstName = ''
         newUser.lastName = ''
@@ -176,7 +181,7 @@ angular.module('loginApp')
             }, 2000)
           } else {
             newUser.loader.showLoader = false
-            var errorMessage = newUser.getErrorMsg(successResponse.params.err)
+            var errorMessage = _.get(successResponse, 'params.errmsg') || $rootScope.messages.fmsg.m0051
             toasterService.error(errorMessage)
           }
         }).catch(function () {

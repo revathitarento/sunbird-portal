@@ -59,11 +59,12 @@ angular.module('playerApp').controller('SearchResultController', [
     $rootScope.search.selectedOrgType = []
     $rootScope.search.pageLimit = 20
     $rootScope.search.pager = {}
-    $rootScope.inviewLogs = []
+    $rootScope.userDownloadButtonVisibility = config.USER_SEARCH.DOWNLOAD_BUTTON_VISIBILITY
     // search select dropdown changes
     $rootScope.$watch('searchKey', function () {
       $timeout(function () {
         $rootScope.search.selectedSearchKey = $rootScope.searchKey
+        $rootScope.$emit('DynSearchKey', { key: $rootScope.searchKey })
         $scope.search.isSearchTypeKey = $scope.search.searchTypeKeys
           .includes($rootScope.search.selectedSearchKey)
         $('#headerSearch').dropdown('set selected',
@@ -254,11 +255,15 @@ angular.module('playerApp').controller('SearchResultController', [
       var req = {
         query: $rootScope.search.searchKeyword,
         filters: $rootScope.search.filters,
-        sort_by: $rootScope.search.sortBy,
+
         offset: (pageNumber - 1) * $rootScope.search.pageLimit,
         limit: $rootScope.search.pageLimit
 
       }
+      if (_.keys($rootScope.search.sortBy)[0] !== 'null') {
+        req.sort_by = $rootScope.search.sortBy
+      }
+
       if (!$scope.search.autoSuggest || $scope.search.autoSuggest === false) {
         if (!$rootScope.search.loader) {
           $rootScope.search.loader = toasterService.loader('', $rootScope.messages.stmsg.m0005)
@@ -294,6 +299,9 @@ angular.module('playerApp').controller('SearchResultController', [
             'Game'
           ]
         }
+        librarySearchReq['softConstraints'] = {
+          badgeAssertions: 1
+        }
         $scope.search.searchFn = searchService.contentSearch(librarySearchReq)
         $scope.search.resultType = 'content'
         req.filters.objectType = ['Content']
@@ -326,7 +334,9 @@ angular.module('playerApp').controller('SearchResultController', [
           $rootScope.search.selectedOrgType = undefined
         }
         req.filters.objectType = ['user']
-
+        req['softConstraints'] = {
+          badgeAssertions: 1
+        }
         $scope.search.currentUserRoles = permissionsService.getCurrentUserRoles()
         var isSystemAdmin = $scope.search.currentUserRoles
           .includes('SYSTEM_ADMINISTRATION')
@@ -436,7 +446,7 @@ angular.module('playerApp').controller('SearchResultController', [
         $rootScope.search.filters.concepts = $rootScope.search.selectedConcepts
         $rootScope.search.filters.contentType = $rootScope.search.selectedContentType
       }
-      $rootScope.generateInteractEvent('filter', 'filter-content', 'content', 'filter')
+      // $rootScope.generateInteractEvent('filter', 'filter-content', 'content', 'filter')
       $rootScope.isSearchResultsPage = false
       $scope.search.searchRequest()
     }
@@ -457,7 +467,7 @@ angular.module('playerApp').controller('SearchResultController', [
       $rootScope.search.selectedOrgType = []
       $scope.search.searchRequest()
       // $state.go($rootScope.search.selectedSearchKey);
-      $rootScope.generateInteractEvent('resetFilter', 'resetfilter-content', 'content', 'resetFilter')
+      // $rootScope.generateInteractEvent('resetFilter', 'resetfilter-content', 'content', 'resetFilter')
     }
     $rootScope.search.applySorting = function () {
       var sortByField = $rootScope.search.sortByOption
@@ -482,6 +492,7 @@ angular.module('playerApp').controller('SearchResultController', [
     }
     $rootScope.search.setSearchKey = function (key) {
       $rootScope.$emit('setSearchKey', { key: key })
+      $rootScope.$emit('DynsetSearchKey', { key: key })
     }
     $scope.$on('$destroy', function () {
       conceptSelHandler()
@@ -523,7 +534,6 @@ angular.module('playerApp').controller('SearchResultController', [
           index: index
         })
       }
-      console.log('----------', $rootScope.inviewLogs)
       telemetryService.setVisitData($rootScope.inviewLogs)
     }
   }])

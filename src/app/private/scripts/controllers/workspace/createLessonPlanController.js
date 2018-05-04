@@ -2,8 +2,8 @@
 
 angular.module('playerApp')
   .controller('LessonPlanController', ['contentService', '$timeout', '$state', 'config',
-    '$rootScope', 'toasterService', 'configService', function (contentService, $timeout, $state, config,
-      $rootScope, toasterService, configService) {
+    '$rootScope', 'toasterService', 'configService', '$scope', function (contentService, $timeout, $state, config,
+      $rootScope, toasterService, configService, $scope) {
       var lessonPlan = this
       lessonPlan.formDropdown = configService.getWorkspaceFormDropdown()
       lessonPlan.boards = lessonPlan.formDropdown.boards
@@ -16,6 +16,7 @@ angular.module('playerApp')
       lessonPlan.mimeType = 'application/vnd.ekstep.content-collection'
       lessonPlan.defaultName = 'Untitled lesson plan'
       lessonPlan.contentType = 'LessonPlan'
+      lessonPlan.resourceType = ['Lesson Plan']
 
       lessonPlan.hideCreateLessonPlanModal = function () {
         $('#createLessonPlanModal').modal('hide')
@@ -31,6 +32,7 @@ angular.module('playerApp')
           $('#subjectDropDown').dropdown()
           $('#gradeDropDown').dropdown()
           $('#createLessonPlanModal').modal({
+            observeChanges: true,
             onHide: function () {
               lessonPlan.data = {}
               if (!lessonPlan.isLessonPlanCreated) {
@@ -60,12 +62,15 @@ angular.module('playerApp')
         })
       }
 
-      lessonPlan.saveMetaData = function (data) {
+      lessonPlan.saveMetaData = function (data, framework) {
+        lessonPlan.framework = framework
         var requestBody = angular.copy(data)
         requestBody.name = requestBody.name ? requestBody.name : lessonPlan.defaultName
         requestBody.mimeType = lessonPlan.mimeType
         requestBody.createdBy = lessonPlan.userId
         requestBody.contentType = lessonPlan.contentType
+        requestBody.resourceType = lessonPlan.resourceType
+        requestBody.framework = lessonPlan.framework
         if (requestBody.language) {
           requestBody.language = [requestBody.language]
         }
@@ -76,8 +81,16 @@ angular.module('playerApp')
       }
 
       lessonPlan.initEKStepCE = function (contentId) {
-        var params = { contentId: contentId, type: lessonPlan.contentType }
+        var params = { contentId: contentId, type: lessonPlan.contentType, framework: lessonPlan.framework }
         $state.go('CollectionEditor', params)
       }
+      var CreateLessonPlanFromDataDrivenForm = $rootScope.$on('CreateLessonPlan',
+        function (event, args) {
+          lessonPlan.saveMetaData(args.Data, args.framework)
+        })
+
+      $scope.$on('$destroy', function () {
+        CreateLessonPlanFromDataDrivenForm()
+      })
     }
   ])

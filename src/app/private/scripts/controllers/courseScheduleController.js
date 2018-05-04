@@ -3,12 +3,12 @@
 angular.module('playerApp')
   .controller('courseScheduleCtrl', ['$rootScope', '$stateParams', 'courseService', 'toasterService',
     '$timeout', 'contentStateService', '$scope', '$location', 'batchService', 'dataService', 'sessionService',
-    '$anchorScroll', 'permissionsService', '$state', 'telemetryService',
+    '$anchorScroll', 'permissionsService', '$state', 'telemetryService', '$window',
     function ($rootScope, $stateParams, courseService, toasterService, $timeout, contentStateService,
       $scope, $location, batchService, dataService, sessionService, $anchorScroll, permissionsService,
-      $state, telemetryService) {
+      $state, telemetryService, $window) {
       var toc = this
-
+      toc.isTelemtryStarted = false
       toc.getCourseToc = function () {
         toc.loader = toasterService.loader('', $rootScope.messages.stmsg.m0003)
         courseService.courseHierarchy(toc.courseId).then(function (res) {
@@ -31,8 +31,10 @@ angular.module('playerApp')
                 toc.courseHierarchy = res.result.content
               }
             } else {
-              toasterService.warning($rootScope.messages.imsg.m0019)
-              $state.go('Home')
+              toc.loader.showLoader = false
+              toasterService.warning($rootScope.messages.imsg.m0026)
+              var previousState = JSON.parse($window.localStorage.getItem('previousURl'))
+              $state.go(previousState.name, previousState.params)
               return
             }
           } else {
@@ -327,6 +329,14 @@ angular.module('playerApp')
 
       toc.resumeCourse = function () {
         toc.showCourseDashboard = false
+        // trigger course concumption telemetry-start event when first content is started
+        if (toc.isTelemtryStarted === false) {
+          telemetryService.startTelemetryData('course', toc.courseId, 'course', '1.0', 'player',
+            'course-read', 'play')
+          toc.isTelemtryStarted = true
+          // save to service to trigger telemetry end event on exit
+          dataService.setData('isTelemtryStarted', true)
+        }
         if (toc.courseContents.length > 0) {
           // if current page is TOC then load 'contentID' through Url Hash or lastReadContentId value.Else play first content by default
           if ($rootScope.isTocPage) {

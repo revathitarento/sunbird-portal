@@ -126,7 +126,9 @@ var paths = {
     'dist/public/scripts/controllers/publicContentPlayerController.js',
     'dist/public/scripts/controllers/courseScheduleController.js',
     'dist/public/scripts/controllers/collectionPlayerController.js',
-    'dist/public/scripts/filters/dateFilter.js'
+    'dist/public/scripts/filters/dateFilter.js',
+    'dist/public/scripts/controllers/dialCodeController.js',
+    'dist/public/scripts/filters/fileSize.js'
   ],
   private_bower_js: [
     'dist/thirdparty/libs/eventbus.min.js',
@@ -287,8 +289,14 @@ var paths = {
     'dist/private/scripts/services/dashboard/datasources/orgConsumptionDataSource.js',
     'dist/private/scripts/services/dashboard/datasources/dataSourceUtils.js',
     'dist/private/scripts/services/dashboard/datasources/downloadReportDataSource.js',
-    'dist/private/scripts/services/telemetryService.js'
-
+    'dist/private/scripts/services/telemetryService.js',
+    'dist/private/scripts/controllers/dataDrivenFiltersController.js',
+    'dist/private/scripts/directives/badge/contentBadgeDirective.js',
+    'dist/private/scripts/directives/badge/profileBadgeDirective.js',
+    'dist/private/scripts/controllers/badge/contentBadgeController.js',
+    'dist/private/scripts/services/badgeService.js',
+    'dist/private/scripts/controllers/workspace/DataDrivenFormController.js',
+    'dist/private/scripts/controllers/badge/profileBadgeController.js'
   ],
   telemetry_js: [
     'dist/private/scripts/telemetry/TelemetryEvent.js',

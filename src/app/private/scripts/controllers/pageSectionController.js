@@ -17,8 +17,6 @@ angular.module('playerApp')
         $state.go('Player', params)
         telemetryService.interactTelemetryData($scope.type, item.identifier, item.contentType,
           $rootScope.version, $scope.type, $scope.type + '-read')
-        telemetryService.startTelemetryData($scope.type, item.identifier, item.contentType,
-          $rootScope.version, item.contentType, $scope.type + '-read', 'play')
       }
 
       section.openCourseView = function (course) {
@@ -43,8 +41,6 @@ angular.module('playerApp')
         $state.go('Toc', params)
         telemetryService.interactTelemetryData($scope.type, courseId, courseType, $rootScope.version,
           $scope.type, $scope.type + '-read')
-        telemetryService.startTelemetryData($scope.type, courseId, courseType,
-          $rootScope.version, courseType, $scope.type + '-read', 'play')
       }
 
       section.sections = function () {
@@ -154,8 +150,16 @@ angular.module('playerApp')
       var initSearchHandler = $rootScope.$on('initPageSearch', function (event, args) {
         section.sections()
       })
+      var initSearchHandlerForDynamicSearchPage = $rootScope.$on('initPageSearchFromDynamicPage',
+        function (event, args) {
+          $rootScope.search.filters = args.FilterData
+          $rootScope.search.sortBy = args.sortByData
+          section.sections()
+        })
+
       $scope.$on('$destroy', function () {
         initSearchHandler()
+        initSearchHandlerForDynamicSearchPage()
       })
 
       // telemetry visit spec
@@ -164,7 +168,6 @@ angular.module('playerApp')
         var obj = _.filter(inviewLogs, function (o) {
           return o.objid === item.identifier
         })
-        console.log('@@@@--------@@@', $rootScope.visitData)
         var visiblity = angular.element('#' + pageSectionId + '_' + item.identifier).attr('aria-hidden')
         if (inview === true && obj.length === 0 && visiblity === 'false') {
           inviewLogs.push({
@@ -178,7 +181,6 @@ angular.module('playerApp')
           // inviewLogs.concat($rootScope.visitData)
           inviewLogs = _.union(inviewLogs, $rootScope.visitData)
         }
-        console.log('----------', inviewLogs)
         telemetryService.setVisitData(inviewLogs)
       }
     }])

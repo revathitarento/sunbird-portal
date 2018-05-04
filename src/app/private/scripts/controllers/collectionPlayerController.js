@@ -2,9 +2,10 @@
 
 (function () {
   angular.module('playerApp').controller('CollectionPlayerCtrl', ['$state', '$timeout',
-    'courseService', '$rootScope', '$stateParams', 'toasterService', 'telemetryService',
+    'courseService', '$rootScope', '$stateParams', 'toasterService', 'telemetryService', '$window',
+    'contentService', 'workSpaceUtilsService',
     function ($state, $timeout, courseService, $rootScope, $stateParams, toasterService,
-      telemetryService) {
+      telemetryService, $window, contentService, workSpaceUtilsService) {
       var cpvm = this
       cpvm.treeKey = 0
       cpvm.loader = {
@@ -20,7 +21,7 @@
         showEnrollError: false
       }
       cpvm.collectionMeta = {
-        author: '-',
+        creator: '-',
         language: '-',
         gradeLevel: '-',
         subject: '-',
@@ -43,7 +44,7 @@
                 ['index'])
               cpvm.courseHierachy = res.result.content
               cpvm.name = cpvm.courseHierachy.name
-              cpvm.collectionMeta.author = cpvm.courseHierachy.author
+              cpvm.collectionMeta.creator = cpvm.courseHierachy.creator
               cpvm.collectionMeta.language = cpvm.courseHierachy.language
               cpvm.collectionMeta.gradeLevel = cpvm.courseHierachy.gradeLevel
               cpvm.collectionMeta.subject = cpvm.courseHierachy.subject
@@ -53,12 +54,13 @@
               cpvm.applyAccordion()
             } else {
               toasterService.warning($rootScope.messages.imsg.m0018)
-              $state.go('Home')
+              var previousState = JSON.parse($window.localStorage.getItem('previousURl'))
+              $state.go(previousState.name, previousState.params)
             }
 
-            /* -----------telemetry start event------------ */
-            telemetryService.startTelemetryData($state.params.backState, $state.params.Id,
-              res.result.content.contentType, cpvm.version, 'collection', 'content-read', 'play')
+            // /* -----------telemetry start event------------ */
+            // telemetryService.startTelemetryData('library', $state.params.Id,
+            //   res.result.content.contentType, cpvm.version, 'collection', 'content-read', 'play')
           } else {
             cpvm.showError($rootScope.messages.emsg.m0004)
           }
@@ -165,8 +167,8 @@
         cpvm.showPlayer = true
       }
       cpvm.closePlayer = function (contentType) {
-        telemetryService.endTelemetryData($stateParams.backState, $state.params.Id, contentType,
-          cpvm.version, 'collection', 'content-read', 'play')
+        // telemetryService.endTelemetryData('library', $state.params.Id, contentType,
+        //   cpvm.version, 'collection', 'content-read', 'play')
         if ($stateParams.backState === 'Profile') {
           $state.go($stateParams.backState)
           return
@@ -180,6 +182,63 @@
         }
       }
 
+      cpvm.copyContent = function () {
+        cpvm.showCopyLoader = true
+        var editorData = angular.copy(cpvm.courseHierachy)
+        editorData.code = editorData.code + '.copy'
+        editorData.name = 'Copy of ' + editorData.name
+        var req = {
+          content: {
+            name: editorData.name,
+            description: editorData.description,
+            code: editorData.code,
+            createdBy: $rootScope.userId
+          }
+        }
+        contentService.copy(req, editorData.identifier).then(function (response) {
+          if (response && response.responseCode === 'OK') {
+            _.forEach(response.result.node_id, function (value) {
+              editorData.identifier = value
+            })
+            var req = { contentId: editorData.identifier }
+            var qs = {
+              fields: 'body,editorState,templateId,languageCode,template,' +
+                            'gradeLevel,status,concepts,versionKey,name,appIcon,contentType,owner,' +
+                            'domain,code,visibility,createdBy,description,language,mediaType,' +
+                            'osId,languageCode,createdOn,lastUpdatedOn,audience,ageGroup,' +
+                            'attributions,artifactUrl,mimeType,medium,year,publisher,creator,framework'
+            }
+            contentService.getById(req, qs).then(function (response) {
+              if (response && response.responseCode === 'OK') {
+                toasterService.success($rootScope.messages.emsg.m0012)
+                cpvm.showCopyLoader = false
+                workSpaceUtilsService.openContentEditor(response.result.content, 'WorkSpace.DraftContent')
+              } else {
+                toasterService.error($rootScope.messages.emsg.m0013)
+                cpvm.showCopyLoader = false
+              }
+            }).catch(function () {
+              toasterService.error($rootScope.messages.emsg.m0013)
+              cpvm.showCopyLoader = false
+            })
+          } else {
+            toasterService.error($rootScope.messages.emsg.m0013)
+            cpvm.showCopyLoader = false
+          }
+        }).catch(function () {
+          toasterService.error($rootScope.messages.emsg.m0013)
+          cpvm.showCopyLoader = false
+        })
+      }
+
+      cpvm.isShowBadgeAssign = function (contentData) {
+        switch (contentData.contentType) {
+        case 'TextBook':
+          return true
+        default:
+          return false
+        }
+      }
       cpvm.loadData()
     }])
 }())
