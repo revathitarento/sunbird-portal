@@ -61,6 +61,7 @@ module.exports = {
     let port = headerHost[1] || ''
     let protocol = req.headers['x-forwarded-proto'] || req.protocol
     let baseUrl = envHelper.TENANT_CDN_URL || protocol + '://' + host + (port === '' ? '' : ':' + port)
+    let hostUrl = protocol + '://' + host + (port === '' ? '' : ':' + port)
     let responseObj = {
       titleName: envHelper.PORTAL_TITLE_NAME
     }
@@ -81,11 +82,11 @@ module.exports = {
       }, function (err, results) {
         if (err) { }
         responseObj.logo = results.logo
-          ? results.logo : baseUrl + '/assets/images/sunbird_logo.png'
+          ? results.logo : hostUrl + '/assets/images/sunbird_logo.png'
         responseObj.poster = results.poster
-          ? results.poster : baseUrl + '/assets/images/sunbird_logo.png'
+          ? results.poster : hostUrl + '/assets/images/sunbird_logo.png'
         responseObj.favicon = results.favicon
-          ? results.favicon : baseUrl + '/assets/images/favicon.ico'
+          ? results.favicon : hostUrl + '/assets/images/favicon.ico'
         responseObj.appLogo = results.appLogo
           ? results.appLogo : responseObj.logo
         module.exports.getSucessResponse(res, 'api.tenant.info', responseObj, req)
