@@ -158,7 +158,8 @@ export class SearchService {
           limit: requestParam.limit,
           offset: (requestParam.pageNumber - 1) * requestParam.limit,
           query: requestParam.query,
-          softConstraints: { badgeAssertions: 1 }
+          softConstraints: { badgeAssertions: 1 },
+          sort_by: requestParam.sort_by
         }
       }
     };
@@ -175,7 +176,8 @@ export class SearchService {
           filters: requestParam.filters,
           limit: requestParam.limit,
           offset: (requestParam.pageNumber - 1) * requestParam.limit,
-          query: requestParam.query
+          query: requestParam.query,
+          sort_by: requestParam.sort_by
         }
       }
     };

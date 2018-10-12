@@ -47,8 +47,8 @@
         <div class="item padding-top-10 padding-bottom-5">
             <div class="ui grid">
                 <div class="three wide column">
-                    <div class="content content-detail">
-                        {{resourceService.frmelmnts.lbl.medium}}
+                    <div class="content content-detail"><!--/////////lebal change forwater////-->
+                        {{resourceService.frmelmnts.lbl.lang}}
                     </div>
                 </div>
                 <div class="nine wide column">
@@ -58,16 +58,17 @@
                 </div>
             </div>
         </div>
-        <div class="item padding-top-10 padding-bottom-5">
+        <!--///////// changes of forwater////-->
+        <div class="item padding-top-10 padding-bottom-5" *ngIf="metadata.gradeLevel">
             <div class="ui grid">
                 <div class="three wide tablet computer only column">
                     <div class="content content-detail">
-                        {{resourceService.frmelmnts.lbl.board}}
+                        {{resourceService.frmelmnts.lbl.gradeLevel}}
                     </div>
                 </div>
                 <div class="nine wide tablet computer only column">
-                    <div class="content" *ngIf="metadata.board">
-                        {{metadata.board}}
+                    <div class="content" *ngIf="metadata.gradeLevel">
+                        {{metadata.gradeLevel}}
                     </div>
                 </div>
                 <div class="six wide mobile only column">
@@ -82,7 +83,8 @@
                 </div>
             </div>
         </div>
-        <div class="item padding-top-10 padding-bottom-5">
+        <!--/////////commentd below line changes forwater////////////-->
+        <!--<div class="item padding-top-10 padding-bottom-5">
             <div class="ui grid">
                 <div class="three wide column">
                     <div class="content content-detail">
@@ -110,7 +112,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
 
         <div class="item padding-top-10 padding-bottom-5" *ngIf="metadata.createdOn">
             <div class="ui grid">
@@ -140,21 +142,22 @@
                 </div>
             </div>
         </div>
-        <div class="item padding-top-10 padding-bottom-5">
+        <!--////////////changes for water concept replace by topic//////-->
+        <div class="item padding-top-10 padding-bottom-5" *ngIf="metadata.topic && metadata.topic.length > 0">
             <div class="ui grid">
                 <div class="three wide column">
                     <div class="content content-detail overflow-word-wrap">
-                        {{resourceService.frmelmnts.lbl.concept}}
+                        {{resourceService.frmelmnts.lbl.jdtopic}}
                     </div>
                 </div>
                 <div class="nine wide column">
-                    <div class="content" *ngIf="metadata.concepts && metadata.concepts.length > 0">
-                        {{metadata.concepts}}
+                    <div class="content" *ngIf="metadata.topic && metadata.topic.length > 0">
+                        {{metadata.topic}}
                     </div>
                 </div>
             </div>
         </div>
-        <div class="item padding-top-10 padding-bottom-5">
+        <div class="item padding-top-10 padding-bottom-5" *ngIf="metadata.keywords">
             <div class="ui grid">
                 <div class="three wide column">
                     <div class="content content-detail">

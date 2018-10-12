@@ -10,3 +10,4 @@ export * from './sort-by/sort-by.component';
 export * from './content-player-metadata/content-player-metadata.component';
 export * from './language-dropdown/language-dropdown.component';
 export * from './prominent-filter/prominent-filter.component';
+export * from './main-footer/main-footer.component';

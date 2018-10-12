@@ -13,29 +13,40 @@
                     alt={{tenantName}} src="{{logo}}">
             </a>
         </div>
-        <div class="six wide column padding-top-1rem" *ngIf="userService.userid">
+        <div class="five wide column padding-top-1rem" *ngIf="userService.userid">
             <app-search></app-search>
         </div>
         <div class="one wide column">
         </div>
-        <div class="one wide column" *ngIf="userService.userid; else showLoginBtn">
-            <i class="float-ContentLeft alarm-icon-header alarm icon large alaramIconColor"></i>
-            <div suiDropdown [(isOpen)]="isOpen" class="ui floating dropdown right top pointing
-                header-user-container padding-top-circular-human-icon" id="dropdown-menu-list-header">
-                <img src="{{ userProfile?.avatar || 'assets/images/user_logo.png' | cdnprefixurl}}" class="ui circular image logged-in-user"
-                />
-                <div class="menu" suiDropdownMenu>
-                    <div *ngIf='userProfile' class="item headerDropdownProfile">{{userProfile?.firstName}}&nbsp;{{userProfile?.lastName}}</div>
-                    <div *ngIf='userProfile' class="ui divider"></div>
 
-                    <a class="item" routerLink="profile">{{resourceService.frmelmnts?.lnk?.profile}}</a>
-                    <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='adminDashboard' routerLink="orgDashboard">{{resourceService.frmelmnts?.lnk?.dashboard}}</a>
-                    <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='announcementRole' routerLink="announcement/outbox/1">{{resourceService.frmelmnts?.lnk?.announcement}}</a>
-                    <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='workSpaceRole' (click)="navigateToWorkspace()">{{resourceService.frmelmnts?.lnk?.workSpace}}</a>
-                    <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='myActivityRole' routerLink="myActivity">{{resourceService.frmelmnts?.lnk?.myactivity}}</a>
-                    <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='orgSetupRole' routerLink="orgType">{{resourceService.frmelmnts?.lbl?.orgtypes}}</a>
-                    <a class="item" (click)="logout()">{{resourceService.frmelmnts?.lnk?.logout}}</a>
+        <!--///////////forwater changes//////////////-->
+        <div class="two wide column" *ngIf="userService.userid; else showLoginBtn">
+            <div class="ui grid">
+                <div class="twelve column row">
+                    <div class="eight wide tablet computer only column">
+                        <i class="float-ContentRight alarm-icon-header alarm icon large alaramIconColor"></i>
+                        <a href="{{confluenceDiscussUrl}}" target="blank" title="Discussion"><i class="float-ContentRight alarm-icon-header black comments icon large"></i></a>
+                        <a href="{{confluenceIssueUrl}}" target="blank" title="Issues"><i class="float-ContentRight alarm-icon-header black bug icon large"></i></a>
+                    </div>
+                    <div class="four wide tablet computer only column">
+                        <div suiDropdown [(isOpen)]="isOpen" class="ui floating dropdown right top pointing
+                            header-user-container padding-top-circular-human-icon float-ContentLeft" id="dropdown-menu-list-header">
+                                <img src="{{ userProfile?.avatar || 'assets/images/user_logo.png' | cdnprefixurl}}" class="ui circular image logged-in-user" />
+                                <div class="menu" suiDropdownMenu>
+                                    <div *ngIf='userProfile' class="item headerDropdownProfile">{{userProfile?.firstName}}&nbsp;{{userProfile?.lastName}}</div>
+                                    <div *ngIf='userProfile' class="ui divider"></div>
 
+                                    <a class="item" routerLink="profile">{{resourceService.frmelmnts?.lnk?.profile}}</a>
+                                    <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='adminDashboard' routerLink="orgDashboard">{{resourceService.frmelmnts?.lnk?.dashboard}}</a>
+                                    <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='announcementRole' routerLink="announcement/outbox/1">{{resourceService.frmelmnts?.lnk?.announcement}}</a>
+                                    <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='workSpaceRole' (click)="navigateToWorkspace()">{{resourceService.frmelmnts?.lnk?.workSpace}}</a>
+                                    <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='myActivityRole' routerLink="myActivity">{{resourceService.frmelmnts?.lnk?.myactivity}}</a>
+                                    <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='orgSetupRole' routerLink="orgType">{{resourceService.frmelmnts?.lbl?.orgtypes}}</a>
+                                    <a class="item" href="/logoff">{{resourceService.frmelmnts?.lnk?.logout}}</a>
+
+                                </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,6 +78,19 @@
                 </div>
             </div>
         </ng-template>
+        <!--///////forwater changes to show language drop down after login/////////-->
+        <div class="center aligned twelve wide tablet computer only column" *ngIf="userService.userid;">
+            <div class="ui grid margin-top-0">
+                <div class="one wide column"></div>
+                <div class="two wide column">
+                </div>
+                <div class="six wide column"></div>
+                <div class="two wide right floated right aligned column">
+                    <app-language-dropdown></app-language-dropdown>
+                </div>
+                <div class="one wide column"></div>
+            </div>
+        </div>
         <div class="one wide tablet computer only column"></div>
     </div>
 </div>
