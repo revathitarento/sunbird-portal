@@ -6,7 +6,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IPagination } from '@sunbird/announcement';
 import * as _ from 'lodash';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+import { Angular5Csv } from 'angular5-csv/Angular5-csv';
 import { UserSearchService } from './../../services';
 import { IInteractEventObject, IInteractEventEdata, IImpressionEventInput } from '@sunbird/telemetry';
 
@@ -102,6 +102,10 @@ export class UserSearchComponent implements OnInit {
   rootOrgId: string;
   userProfile: any;
   inviewLogs: any = [];
+
+  // Forwater related changes
+  order = 'firstName';
+  reverse = false;
   /**
      * Constructor to create injected service(s) object
      * Default method of Draft Component class
@@ -136,14 +140,16 @@ export class UserSearchComponent implements OnInit {
         'objectType': ['user'],
         'rootOrgId': this.rootOrgId,
         'grade': this.queryParams.Grades,
-        'language': this.queryParams.Medium,
+        'language': this.queryParams.Language,
         'subject': this.queryParams.Subjects,
         'location': this.queryParams.Location,
-        'organisations.roles': this.queryParams.Roles
+        'organisations.roles': this.queryParams.Roles,
+        'organisations.organisationId': this.queryParams.Organization
       },
       limit: this.pageLimit,
       pageNumber: this.pageNumber,
-      query: this.queryParams.key
+      query: this.queryParams.key,
+      sort_by:  {firstName: 'asc' }
     };
     this.searchService.userSearch(searchParams).subscribe(
       (apiResponse: ServerResponse) => {
@@ -249,7 +255,7 @@ export class UserSearchComponent implements OnInit {
       });
     });
 
-    return new Angular2Csv(downloadArray, 'Users', options);
+    return new Angular5Csv(downloadArray, 'Users', options);
   }
 
 

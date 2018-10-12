@@ -29,14 +29,14 @@
         {{resourceService?.frmelmnts?.lbl?.gender}}
       </div>
     </div>
-    <div class="item ">
+    <!--<div class="item ">
       <div class="right floated content ">
         <span>{{userProfile.dob | date : "dd/MM/y"}}</span>
       </div>
       <div class="iniformationcontent content ">
         {{resourceService.frmelmnts.lbl.birthdate}}
       </div>
-    </div>
+    </div> -->
     <div class="item ">
       <div class="right floated content ">
         <span>
@@ -61,14 +61,14 @@
         {{resourceService?.frmelmnts?.lbl?.subjects}}
       </div>
     </div>
-    <div class="item ">
+    <!-- <div class="item ">
       <div class="right floated content ">
         <span>
           <span *ngFor="let grade of userProfile.grade; let last = last ">{{grade}}
             <span *ngIf="!last">, </span>
           </span>
         </span>
-      </div>
+      </div>-->
       <div class="iniformationcontent content ">
         {{resourceService?.frmelmnts?.lbl?.grades}}
       </div>
@@ -81,7 +81,7 @@
         {{resourceService?.frmelmnts?.lbl?.currentlocation}}
       </div>
     </div>
-    <div class="item ">
+    <!-- <div class="item ">
       <div class="right floated content ">
         <a *ngIf="webPages.fb" href="{{webPages.fb}}" target="_blank">
           <i class="large facebook f icon"></i>
@@ -99,8 +99,8 @@
       <div class="iniformationcontent content ">
         {{resourceService?.frmelmnts?.lbl?.socialmedia}}
       </div>
-    </div>
-  </div>
+    </div> 
+  </div>-->
   <div class="" *ngIf="action !== 'view'">
     <div class="ui" *ngIf="action === 'edit'">
       <app-edit-user-additional-info #edit [basicInfo]="userProfile"></app-edit-user-additional-info>

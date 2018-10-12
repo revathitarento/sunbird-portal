@@ -1,7 +1,8 @@
 export interface IHomeQueryParams {
     key?: string;
-    Curriculum?: Array<string>;
-    Medium?: Array<string>;
-    Subjects?: Array<string>;
     Concepts?: any ;
+    Topic?: Array<string>;
+    Proficiency?: Array<string>;
+    WaterResource?: Array<string>;
+    Language?: Array<string>;
 }

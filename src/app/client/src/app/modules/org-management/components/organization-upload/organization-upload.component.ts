@@ -2,7 +2,7 @@ import { Component, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/co
 import { ResourceService, ToasterService, ServerResponse, ConfigService } from '@sunbird/shared';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OrgManagementService } from '../../services';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+import { Angular5Csv } from 'angular5-csv/Angular5-csv';
 import { IInteractEventInput, IImpressionEventInput, IInteractEventEdata, IInteractEventObject } from '@sunbird/telemetry';
 import { UserService } from '@sunbird/core';
 import { takeUntil } from 'rxjs/operators';
@@ -92,24 +92,10 @@ export class OrganizationUploadComponent implements OnInit, OnDestroy {
       { instructions: this.resourceService.frmelmnts.instn.t0013 },
       { instructions: this.resourceService.frmelmnts.instn.t0002 },
       { instructions: this.resourceService.frmelmnts.instn.t0007 },
+      { instructions: this.resourceService.frmelmnts.instn.tjd0006 },
       { instructions: this.resourceService.frmelmnts.instn.t0021 },
-      {
-        instructions: this.resourceService.frmelmnts.instn.t0022,
-        subinstructions: [
-          { instructions: this.resourceService.frmelmnts.instn.t0023 },
-          { instructions: this.resourceService.frmelmnts.instn.t0024 },
-          { instructions: this.resourceService.frmelmnts.instn.t0025 },
-          { instructions: this.resourceService.frmelmnts.instn.t0026 },
-          { instructions: this.resourceService.frmelmnts.instn.t0027 },
-          { instructions: this.resourceService.frmelmnts.instn.t0028 },
-          { instructions: this.resourceService.frmelmnts.instn.t0029 },
-          { instructions: this.resourceService.frmelmnts.instn.t0030 },
-          { instructions: this.resourceService.frmelmnts.instn.t0031 },
-          { instructions: this.resourceService.frmelmnts.instn.t0032 },
-          { instructions: this.resourceService.frmelmnts.instn.t0049 },
-          { instructions: this.resourceService.frmelmnts.instn.t0050 }
-        ]
-      }
+      { instructions: this.resourceService.frmelmnts.instn.tjd0004 },
+      { instructions: this.resourceService.frmelmnts.instn.tjd0007 }
     ];
     this.telemetryImpression = {
       context: {
@@ -141,9 +127,14 @@ export class OrganizationUploadComponent implements OnInit, OnDestroy {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
-      showLabels: true
+      showLabels: true,
+      headers: this.config.appConfig.ADMIN_UPLOAD.SAMPLE_ORGANIZATION_HEADERS_CSV,
+      useBom: false
     };
-    const csv = new Angular2Csv(this.config.appConfig.ADMIN_UPLOAD.SAMPLE_ORGANIZATION_CSV, 'Sample_Organizations', options);
+    const csv = new Angular5Csv([{orgName: '',
+    isRootOrg: '',
+    channel: 'Jaldhara',
+    description: ''}], 'Sample_Organizations', options);
   }
   /**
  * This method helps to call uploadOrg method to upload a csv file

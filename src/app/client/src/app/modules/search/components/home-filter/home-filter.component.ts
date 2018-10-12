@@ -27,9 +27,11 @@ export class HomeFilterComponent implements OnInit {
    * To navigate to other pages
    */
   private router: Router;
-  searchBoards: Array<string>;
+  searchWaterResource: Array<string>;
   searchLanguages: Array<string>;
   searchSubjects: Array<string>;
+  searchGradelevel: Array<string>;
+  searchBoard: Array<string>;
   label: Array<string>;
   selectedConcepts: Array<object>;
   refresh = true;
@@ -112,9 +114,11 @@ export class HomeFilterComponent implements OnInit {
   * seting initial filter values.
   */
   setFilters() {
-    this.searchBoards = this.config.dropDownConfig.FILTER.RESOURCES.boards;
+    this.searchWaterResource = this.config.dropDownConfig.FILTER.RESOURCES.topics;
     this.searchLanguages = this.config.dropDownConfig.FILTER.RESOURCES.languages;
     this.searchSubjects = this.config.dropDownConfig.FILTER.RESOURCES.subjects;
+    this.searchGradelevel = this.config.dropDownConfig.FILTER.RESOURCES.gradeLevels;
+    this.searchBoard = this.config.dropDownConfig.FILTER.RESOURCES.board;
     if (this.queryParams && this.queryParams.Concepts) {
       this.queryParams.Concepts = this.conceptPickerService.processConcepts(this.queryParams.Concepts, this.selectedConcepts);
     }
@@ -128,12 +132,12 @@ export class HomeFilterComponent implements OnInit {
   }
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
-      this.conceptPickerService.conceptData$.subscribe(conceptData => {
-        if (conceptData && !conceptData.err) {
-          this.selectedConcepts = conceptData.data;
-          this.showConcepts = true;
-        }
-      });
+      // this.conceptPickerService.conceptData$.subscribe(conceptData => {
+      //   if (conceptData && !conceptData.err) {
+      //     this.selectedConcepts = conceptData.data;
+      //     this.showConcepts = true;
+      //   }
+      // });
       this.queryParams = { ...params };
       _.forIn(params, (value, key) => {
         if (typeof value === 'string' && key !== 'key') {

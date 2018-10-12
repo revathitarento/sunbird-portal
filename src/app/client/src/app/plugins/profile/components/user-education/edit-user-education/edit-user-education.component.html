@@ -16,7 +16,8 @@
   <div class="margin-top-0 margin-bottom-10 ui pointing red basic label below" *ngIf="educationForm.controls.degree.invalid && educationForm.controls['degree'].errors.required && !educationForm.controls['degree'].pristine">
     {{resourceService?.messages?.stmsg?.m0062}}
   </div>
-  <div class="two fields">
+  <!--Don't need for forwater-->
+  <!-- <div class="two fields">
     <div class="field" [ngClass]="educationForm.controls['percentage'].errors?.pattern ? 'error' : ''">
       <label>{{resourceService?.frmelmnts?.lbl?.percentage}}</label>
       <input type="text" name="percentage" formControlName="percentage">
@@ -31,7 +32,8 @@
         {{resourceService?.messages?.stmsg?.m0104}}
       </div>
     </div>
-  </div>
+  </div> -->
+
   <div class="two fields">
     <div class="required field" [ngClass]="educationForm.controls.name.invalid && educationForm.controls['name'].errors.required && !educationForm.controls['name'].pristine ? 'error' : ''">
       <label>{{resourceService?.frmelmnts?.lbl?.institute}}</label>

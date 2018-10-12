@@ -1823,16 +1823,12 @@ ul.fancytree-container li {
   border-radius: 0;
 }
 .searchinput {
-  width: 600px;
+  width: 100%;
 }
-@media only screen and (max-width: 1400px) {
-  .searchinput {
-    width: 500px;
-  }
-}
+
 @media only screen and (max-width: 1097px) {
   .searchinput {
-    width: 405px;
+    width: 100%;
   }
 }
 .searchicon.ui.icon.input input {
@@ -2769,4 +2765,11 @@ iframe.iziModal-iframe {
   display: inline-block;
   font-size: 1.4em;
   line-height: 1.35;
+}
+
+.node-readmore{
+  display: none;
+}
+.disqus_comments_num{
+  display: none;
 }

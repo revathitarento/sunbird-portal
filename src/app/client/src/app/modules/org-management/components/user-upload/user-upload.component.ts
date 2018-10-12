@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ResourceService, ToasterService, ServerResponse, ConfigService } from '@sunbird/shared';
-import { Angular2Csv } from 'angular2-csv';
+import { Angular5Csv } from 'angular5-csv/Angular5-csv';
 import { OrgManagementService } from '../../services/org-management/org-management.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { IInteractEventInput, IImpressionEventInput, IInteractEventEdata, IInteractEventObject } from '@sunbird/telemetry';
@@ -127,7 +127,7 @@ export class UserUploadComponent implements OnInit, OnDestroy {
         instructions: this.resourceService.frmelmnts.instn.t0033,
         subinstructions: [
           { instructions: this.resourceService.frmelmnts.instn.t0034 },
-          { instructions: this.resourceService.frmelmnts.instn.t0035 },
+          { instructions: this.resourceService.frmelmnts.instn.tjd0008 },
           { instructions: this.resourceService.frmelmnts.instn.t0036 },
           { instructions: this.resourceService.frmelmnts.instn.t0037 }
         ]
@@ -135,23 +135,14 @@ export class UserUploadComponent implements OnInit, OnDestroy {
       {
         instructions: this.resourceService.frmelmnts.instn.t0038,
         subinstructions: [
-          { instructions: this.resourceService.frmelmnts.instn.t0039 },
-          { instructions: this.resourceService.frmelmnts.instn.t0040 },
-          { instructions: this.resourceService.frmelmnts.instn.t0041 },
-          { instructions: this.resourceService.frmelmnts.instn.t0042 },
-          { instructions: this.resourceService.frmelmnts.instn.t0043 },
-          { instructions: this.resourceService.frmelmnts.instn.t0044 },
-          { instructions: this.resourceService.frmelmnts.instn.t0045 },
-          { instructions: this.resourceService.frmelmnts.instn.t0046 },
-          { instructions: this.resourceService.frmelmnts.instn.t0047 },
+          { instructions: this.resourceService.frmelmnts.instn.tjd0009 },
+          { instructions: this.resourceService.frmelmnts.instn.tjd0001 },
           { instructions: this.resourceService.frmelmnts.instn.t0048 },
-          { instructions: this.resourceService.frmelmnts.instn.t0066 },
-          { instructions: this.resourceService.frmelmnts.instn.t0067 },
-          { instructions: this.resourceService.frmelmnts.instn.t0068 },
-          { instructions: this.resourceService.frmelmnts.instn.t0069 }
+          { instructions: this.resourceService.frmelmnts.instn.tjd0002 },
+          { instructions: this.resourceService.frmelmnts.instn.tjd0005 },
         ]
       },
-      { instructions: this.resourceService.frmelmnts.instn.t0065 }];
+      { instructions: this.resourceService.frmelmnts.instn.tjd0003 }];
     this.showLoader = false;
     this.telemetryImpression = {
       context: {
@@ -183,9 +174,11 @@ export class UserUploadComponent implements OnInit, OnDestroy {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
-      showLabels: true
+      showLabels: true,
+      headers: this.config.appConfig.ADMIN_UPLOAD.SAMPLE_USER_HEADERS_CSV,
+      useBom: false
     };
-    const csv = new Angular2Csv(this.config.appConfig.ADMIN_UPLOAD.SAMPLE_USER_CSV, 'Sample_Users', options);
+    const csv = new Angular5Csv(this.config.appConfig.ADMIN_UPLOAD.SAMPLE_USER_CSV, 'Sample_Users', options);
   }
   /**
   * This method helps to call uploadOrg method to upload a csv file

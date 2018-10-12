@@ -1,0 +1,12 @@
+.ui.list>.item, ol.ui.list li, ul.ui.list li {
+  display: list-item;
+  table-layout: fixed;
+  list-style-type: none;
+  list-style-position: outside;
+  padding: .21428571em 0;
+  line-height: 1.14285714em;
+  cursor: pointer !important;
+}
+.ui.checkbox label {
+  cursor: pointer !important;
+} 

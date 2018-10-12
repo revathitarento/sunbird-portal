@@ -3,7 +3,7 @@
     "userReadParam": {
       "fields": "completeness,missingFields,lastLoginTime"
     },
-    "contentGet": "creator,body,editorState,templateId,template,gradeLevel,status,concepts,versionKey,name,appIcon,contentType,owner,domain,code,visibility,createdBy,description,language,mediaType,osId,languageCode,audience,ageGroup,attributions,artifactUrl,mimeType,medium,year,publisher,subject,author,flagReasons,flaggedBy,flags,createdOn,lastUpdatedOn,board,keywords,resourceType,framework,license,badgeAssertions"
+    "contentGet": "creator,body,editorState,templateId,template,gradeLevel,status,concepts,versionKey,name,appIcon,contentType,owner,domain,code,visibility,createdBy,description,language,mediaType,osId,languageCode,audience,ageGroup,attributions,artifactUrl,mimeType,medium,year,publisher,subject,author,flagReasons,flaggedBy,flags,createdOn,lastUpdatedOn,board,keywords,resourceType,framework,license,badgeAssertions,topic"
   },
   "URLS": {
     "LEARNER_PREFIX": "/learner/",
@@ -127,6 +127,13 @@
     "TELEMETRY": {
        "APISLUG": "service/v1/content/",
       "SYNC": "data/v1/telemetry"
+    },
+    "RSSFEED": {
+      "RSS_PREFIX": "/rssfeed",
+      "NEWS": "/news",
+      "JOBS": "/opportunities",
+      "QUESTIONS": "/questions",
+      "RESEARCH_PAPERS": "/research/papers"
     }
   }
 }

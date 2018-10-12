@@ -12,6 +12,8 @@ import { CourseSearchComponent, UserFilterComponent, UserEditComponent, UserDele
 import { TelemetryModule } from '@sunbird/telemetry';
 import { NgInviewModule } from 'angular-inport';
 
+import { OrgDropdownComponent } from './components';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -26,7 +28,7 @@ import { NgInviewModule } from 'angular-inport';
   ],
   declarations: [ UserSearchComponent, CourseSearchComponent, LibrarySearchComponent,
   UserFilterComponent, UserEditComponent, UserDeleteComponent, OrgSearchComponent, OrgFilterComponent,
-   UserProfileComponent, HomeSearchComponent, HomeFilterComponent],
+   UserProfileComponent, HomeSearchComponent, HomeFilterComponent, OrgDropdownComponent],
   providers: [UserSearchService]
 })
 export class SearchModule { }

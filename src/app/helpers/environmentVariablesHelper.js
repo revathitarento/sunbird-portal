@@ -39,7 +39,7 @@ let envVariables = {
   ANDROID_APP_URL: env.sunbird_android_app_url || 'http://www.sunbird.org',
   EXPLORE_BUTTON_VISIBILITY: env.sunbird_explore_button_visibility || 'true',
   ENABLE_SIGNUP: env.sunbird_enable_signup || 'true',
-  BUILD_NUMBER: env.build_number || packageObj.version+'.'+packageObj.buildNumber,
+  BUILD_NUMBER: env.build_number || packageObj.version + '.' + packageObj.buildNumber,
   TELEMETRY_SERVICE_LOCAL_URL: env.sunbird_telemetry_service_local_url || 'http://telemetry-service:9001/',
   PORTAL_API_CACHE_TTL: env.sunbird_api_response_cache_ttl || '600',
   SUNBIRD_EXTCONT_WHITELISTED_DOMAINS: env.sunbird_extcont_whitelisted_domains || 'youtube.com,youtu.be',
@@ -49,5 +49,22 @@ let envVariables = {
 
 envVariables.PORTAL_CASSANDRA_URLS = (env.sunbird_cassandra_urls && env.sunbird_cassandra_urls !== '')
   ? env.sunbird_cassandra_urls.split(',') : ['localhost']
+
+// Forwater related chnages
+const jaldhara_env_variables = {
+  JALDHARA_NEWS_RSS_FEED_URL: env.jaldhara_news_rssfeed_url || 'http://www.indiawaterportal.org/articles/feed',
+  JALDHARA_OPPORTUNITIES_RSS_FEED_URL: env.jaldhara_opportunities_rssfeed_url || 'http://www.indiawaterportal.org/rss-opportunities-feed',
+  JALDHARA_QUESTION_RSS_FEED_URL: env.jaldhara_question_rssfeed_url || 'http://www.indiawaterportal.org/rss-questions-feed',
+  JALDHARA_RESEARCH_PAPERS_RSS_FEED_URL: env.jaldhara_research_papers_rssfeed_url || 'http://www.indiawaterportal.org/rss-research-papers-feeds',
+  ISSUE_FORWATER_URL: env.jaldhara_issue_forwater_url || 'https://issues.jaldhara.in',
+  DISCUSS_FORWATER_URL: env.jaldhara_discuss_forwater_url || 'https://discuss.jaldhara.in'
+}
+// Combine both env variables
+envVariables = Object.assign({}, envVariables, jaldhara_env_variables)
+
+// For run development
+if (process.env.NODE_ENV === 'local') {
+  envVariables = Object.assign({}, envVariables, require('./jaldhara.localVariables'))
+}
 
 module.exports = envVariables

@@ -1,0 +1,6 @@
+<div>
+  <sui-multi-select class="selection ui filtersearch" [(ngModel)]="selectedOrganization" labelField="orgName" valueField="id" (ngModelChange)="onChange($event)" [hasLabels]="false" 
+    defaultSelectionText="Organization" zeroSelectionText="Select" #multiSelect>
+    <sui-select-option *ngFor="let option of orgData" [value]="option"></sui-select-option>
+  </sui-multi-select>
+</div>

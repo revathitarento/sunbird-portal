@@ -48,7 +48,7 @@
           <app-profile-visibility appTelemetryInteract [telemetryInteractObject]="telemetryInteractObject" [telemetryInteractEdata]="genderVisibilityInteractEdata" field="gender"></app-profile-visibility>
         </div>
       </div>
-      <div class="field">
+      <!-- <div class="field">
         <label>{{resourceService?.frmelmnts?.lbl?.birthdate}}</label>
         <div class="ui left icon input">
           <i class="calendar icon"></i>
@@ -57,7 +57,7 @@
             <app-profile-visibility appTelemetryInteract [telemetryInteractObject]="telemetryInteractObject" [telemetryInteractEdata]="dobVisibilityInteractEdata" field="dob"></app-profile-visibility>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
   <div class="one field">
@@ -69,14 +69,14 @@
       </div>
     </div>
   </div>
-  <div class=" field">
+  <!-- <div class=" field">
     <label>{{resourceService?.frmelmnts?.lbl?.grades}}</label>
     <div class="field">
       <sui-multi-select class="selection" formControlName="grade" [options]="grades" #multiSelect>
         <sui-select-option *ngFor="let option of grades" [value]="option"> </sui-select-option>
       </sui-multi-select>
     </div>
-  </div>
+  </div> -->
   <div class="required field">
     <label>{{resourceService?.frmelmnts?.lbl?.language}}</label>
     <div class="field" [ngClass]="basicInfoForm.controls.language.invalid && basicInfoForm.controls['language'].errors.required && !basicInfoForm.controls['language'].pristine ? 'error' : ''">
@@ -96,11 +96,11 @@
       </sui-multi-select>
     </div>
   </div>
-  <div class="header announcementCard-header margin-top-30 margin-bottom-10">
+  <!-- <div class="header announcementCard-header margin-top-30 margin-bottom-10">
     <span class="header cardsHeading margin-left-10">{{resourceService?.frmelmnts?.lbl?.socialmedialinks}}</span> &nbsp;&nbsp;&nbsp;&nbsp;
     <app-profile-visibility appTelemetryInteract [telemetryInteractObject]="telemetryInteractObject" [telemetryInteractEdata]="webPagesVisibilityInteractEdata" update="'true'" field="webPages"></app-profile-visibility>
-  </div>
-  <div class="two fields">
+  </div> -->
+  <!--<div class="two fields">
     <div class=" field">
       <label>{{resourceService?.frmelmnts?.lbl?.facebook}}</label>
       <input type="text" name="fb" formControlName="fb">
@@ -119,7 +119,7 @@
       <label>{{resourceService?.frmelmnts?.lbl?.blog}}</label>
       <input type="text" name="blog" formControlName="blog">
     </div>
-  </div>
+  </div> -->
   <div class="ui error message">
   </div>
 </form>

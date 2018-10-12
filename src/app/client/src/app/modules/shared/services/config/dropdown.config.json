@@ -17,30 +17,28 @@
             "Worksheet"
         ],
         "subjects": [
-            "Assamese",
-            "Bengali",
-            "Biology",
+            "Geology",
+            "Hydrogeology", 
+            "Geo-chemistry", 
+            "Geophysics",
+            "Rural Communication",
+            "Rural Development", 
+            "Rural Management",
+            "Agriculture/ Irrigation",
             "Chemistry",
-            "Economics",
-            "English",
-            "Environmental Studies",
-            "Geography",
-            "Gujarati",
-            "Hindi",
-            "History",
-            "Kannada",
-            "Malayalam",
-            "Marathi",
-            "Mathematics",
-            "Nepali",
-            "Oriya",
-            "Physics",
-            "Political Science",
-            "Punjabi",
-            "Sanskrit",
-            "Tamil",
-            "Telugu",
-            "Urdu"
+            "Water Quality",
+            "Civil Engineering",
+            "Sociology/ Social Work", 
+            "Environment Sciences",
+            "Environment Management",
+            "Environment Engineering",
+            "Natural Resources Management", 
+            "Gender",
+            "Remote Sensing/ GIS",
+            "Finance",
+            "Medicine",
+            "Nutritionist",
+            "Information Technology"
         ],
         "grades": [
             "Kindergarten",
@@ -157,16 +155,26 @@
                 }
             ],
             "languages": [
-                "Bengali",
                 "English",
-                "Gujarati",
                 "Hindi",
                 "Kannada",
+                "Assamese",
+                "Bengali",
+                "Bhojpuri",
+                "Bishnupriya Manipuri",
+                "Gujarati",
+                "Kashmiri",
+                "Konkani",
+                "Maithili",
+                "Malayalam",
                 "Marathi",
+                "Nepali",
+                "Odia",
                 "Punjabi",
-                "Tamil",
+                "Sanskrit",
+                "Sindhi",
                 "Telugu",
-                "Urdu"
+                "Tulu"
             ],
             "contentTypes": [
                 {
@@ -205,30 +213,28 @@
                 "Activity"
             ],
             "subjects": [
-                "Assamese",
-                "Bengali",
-                "English",
-                "Gujarati",
-                "Hindi",
-                "Kannada",
-                "Malayalam",
-                "Marathi",
-                "Nepali",
-                "Oriya",
-                "Punjabi",
-                "Tamil",
-                "Telugu",
-                "Urdu",
-                "Biology",
+                "Geology",
+                "Hydrogeology", 
+                "Geo-chemistry", 
+                "Geophysics",
+                "Rural Communication",
+                "Rural Development", 
+                "Rural Management",
+                "Agriculture/ Irrigation",
                 "Chemistry",
-                "Physics",
-                "Mathematics",
-                "Environmental Studies",
-                "Geography",
-                "History",
-                "Political Science",
-                "Economics",
-                "Sanskrit"
+                "Water Quality",
+                "Civil Engineering",
+                "Sociology/ Social Work", 
+                "Environment Sciences",
+                "Environment Management",
+                "Environment Engineering",
+                "Natural Resources Management", 
+                "Gender",
+                "Remote Sensing/ GIS",
+                "Finance",
+                "Medicine",
+                "Nutritionist",
+                "Information Technology"
             ],
             "boards": [
                 "AP Board",
@@ -264,6 +270,20 @@
                     "field": "name",
                     "name": "Name A-Z"
                 }
+            ],
+            "gradeLevels": [
+                "Ground Water",
+                "Surface Water",
+                "Glaciers",
+                "River",
+                "Lake",
+                "Wastewater",
+                "Springs"   
+            ],
+            "board": [
+                "Basic",
+                "Intermediate",
+                "Advanced"
             ]
         },
         "SEARCH": {
@@ -293,30 +313,30 @@
             ],
             "All": {
                 "DROPDOWN": {
-                    "Curriculum": [],
-                    "Subjects": [],
-                    "Medium": [],
-                    "Concepts": []
+                    "WaterResource": [],
+                    "Language": [],
+                    "Board": []
                 },
                 "label": [
-                    "Curriculum",
-                    "Medium",
-                    "Subjects",
-                    "Concepts"
+                    "WaterResource",
+                    "Language",
+                    "Proficiency"
                 ]
             },
             "Users": {
                 "DROPDOWN": {
                     "Grades": [],
-                    "Medium": [],
+                    "Language": [],
                     "Subjects": [],
-                    "Roles": []
+                    "Roles": [],
+                    "Organization": []
                 },
                 "label": [
                     "Grades",
-                    "Medium",
+                    "Language",
                     "Subjects",
-                    "Roles"
+                    "Roles",
+                    "Organization"
                 ]
             },
             "Organisations": {

@@ -68,6 +68,11 @@ export class RequestChangesPopupComponent implements OnInit {
    * To close url
   */
   closeUrl: any;
+
+  /**
+   * Forwater related variable
+   */
+  checkboolen: any;
   /**
 	 * Constructor to create injected service(s) object
 	 *
@@ -170,5 +175,17 @@ export class RequestChangesPopupComponent implements OnInit {
       this.contentId = params.contentId;
     });
     this.closeUrl = this.navigationHelperService.getPreviousUrl();
+  }
+
+  /**
+   * This method pushes all the checked reason into a array
+   */
+  checkedArray(checkedItem) {
+    console.log('checked item', checkedItem);
+    if (checkedItem && (_.indexOf(this.reasons, checkedItem) === -1)) {
+      return false;
+    } else if (checkedItem && (_.indexOf(this.reasons, checkedItem) !== -1)) {
+      return true;
+    }
   }
 }

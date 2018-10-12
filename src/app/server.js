@@ -138,6 +138,11 @@ function getLocals(req) {
   locals.buildNumber = envHelper.BUILD_NUMBER
   locals.apiCacheTtl = envHelper.PORTAL_API_CACHE_TTL
   locals.cloudStorageUrls = envHelper.CLOUD_STORAGE_URLS
+
+  // Forwater related variables
+  locals.editorChannelFilter = envHelper.EDITOR_CHANNEL_FILTER_TYPE;
+  locals.issueForwateUrl = envHelper.ISSUE_FORWATER_URL;
+  locals.discussForwaterUrl = envHelper.DISCUSS_FORWATER_URL;
   return locals;
 }
 
@@ -198,6 +203,10 @@ app.all('/explore', indexPage)
 app.all('/explore/*', indexPage)
 app.all(['/groups', '/groups/*'], keycloak.protect(), indexPage)
 app.all('/play/*', indexPage)
+
+// Forwater related routes
+app.all('/guideline', indexPage)
+app.all('/guideline/*', indexPage)
 
 // Mobile redirection to app
 require('./helpers/mobileAppHelper.js')(app)
@@ -434,6 +443,10 @@ require('./helpers/shareUrlHelper.js')(app)
 
 app.use('/resourcebundles/v1', bodyParser.urlencoded({ extended: false }),
   bodyParser.json({ limit: '50mb' }), require('./helpers/resourceBundles')(express))
+
+// FOrwater related change
+// Used for show rss feed
+require('./helpers/rssfeed/rssfeed.news.controller')(app)
 
 
 // redirect to home if nothing found

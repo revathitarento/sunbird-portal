@@ -31,31 +31,31 @@
                 <span class="ShowFilterSubTitle">{{resourceService.frmelmnts?.lbl?.filterby}}</span>
               </div>
               <div class="two wide column ">
-                <sui-multi-select class="selection ui filtersearch" [(ngModel)]="queryParams.Curriculum" [options]="options" [hasLabels]=false
-                defaultSelectionText="Board" zeroSelectionText="Select" #multiSelect>
+                <sui-multi-select class="selection ui filtersearch" [(ngModel)]="queryParams.Proficiency" [options]="options" [hasLabels]=false
+                defaultSelectionText="Proficiency" zeroSelectionText="Select" #multiSelect>
                   <sui-select-option *ngFor="let board of searchBoards" [value]="board"> </sui-select-option>
                 </sui-multi-select>
               </div>
               <div class="two wide column">
-                <sui-multi-select class="selection ui filtersearch" [(ngModel)]="queryParams.Medium" [options]="options" [hasLabels]=false
-                defaultSelectionText="Medium" zeroSelectionText="Select"  #multiSelect>
+                <sui-multi-select class="selection ui filtersearch" [(ngModel)]="queryParams.Language" [options]="options" [hasLabels]=false
+                defaultSelectionText="Language" zeroSelectionText="Select"  #multiSelect>
                   <sui-select-option *ngFor="let language of searchLanguages" [value]="language"> </sui-select-option>
                   <i class="dropdown icon"></i>
                 </sui-multi-select>
               </div>
               <div class="two wide column">
-                <sui-multi-select class="selection ui filtersearch" [(ngModel)]="queryParams.Subjects" [options]="options" [hasLabels]=false
-                defaultSelectionText="Subjects" zeroSelectionText="Select" #multiSelect>
-                  <sui-select-option *ngFor="let subject of searchSubjects" [value]="subject"> </sui-select-option>
+                <sui-multi-select class="selection ui filtersearch" [(ngModel)]="queryParams.WaterResource" [options]="options" [hasLabels]=false
+                defaultSelectionText="Water Resource" zeroSelectionText="Select" #multiSelect>
+                  <sui-select-option *ngFor="let gradelevel of searchGradelevel" [value]="gradelevel"> </sui-select-option>
                 </sui-multi-select>
               </div>
-              <div class="two wide column" *ngIf='queryParams != undefined && showConcepts'>
+              <!-- <div class="two wide column" *ngIf='queryParams != undefined && showConcepts'>
                 <div class="field">
                   <form class="conceptSelector ui form">
                     <app-concept-picker [selectedConcepts]="queryParams.Concepts" (Concepts)="concepts($event)"></app-concept-picker>
                   </form>
                 </div>
-              </div>
+              </div> -->
               <div class="three wide column filter-button">
                 <a class="searchfilterbutton ui blue tiny  button" (click)="applyFilters()">{{resourceService.frmelmnts?.btn?.apply}}</a>
                 <a class="searchfilterbutton ui primary tiny basic button" (click)="resetFilters()">{{resourceService.frmelmnts?.btn?.reset}}</a>

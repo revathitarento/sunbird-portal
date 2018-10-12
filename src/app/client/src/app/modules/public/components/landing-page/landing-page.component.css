@@ -21,7 +21,18 @@
     opacity: 0.2;
 }
 .ui.card .article-header-padding {
-    padding: 0 0 1em 1em;
+    padding: 7px 0 1em 1em;
     font-family: 'sunbirdboldfont';
     font-size: 1.25em;
+}
+.ui.list>.item a.header {
+   cursor: pointer;
+   color: #009fda!important;
+}
+.ui.list>.item a:hover {
+   color: #00b2f3!important;
+}
+
+.ui.card>.card-opacity-descrptn {
+    opacity: 0.5;
 }

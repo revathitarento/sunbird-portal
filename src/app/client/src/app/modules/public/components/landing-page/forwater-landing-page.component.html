@@ -1,0 +1,94 @@
+<div class="ui stackable grid landing-page-section">
+  <div class="one wide column"></div>
+  <div class="five wide column landing-page-image">
+      <img class="ui fluid image" src="{{'assets/images/landingPage.png' |  cdnprefixurl}} " />
+  </div>
+  <div class="five wide column">
+      <div class="ui left aligned container landing-page-description">
+              <p *ngIf="!readMore">{{homepageContent}}</p>
+              <br/>
+              <p *ngIf="!readMore">{{homepageContentP1}}</p>
+              <span class="ui cardsKnowMore mouse-pointer" *ngIf="readMore === false" (click)="readMore = !readMore;">...Read More</span>
+            
+            <p *ngIf="readMore"> {{homepageContent}} </p>
+                <br/>
+                <p *ngIf="readMore">{{homepageContentP1}}</p>
+                <br/>
+                <p *ngIf="readMore">{{homepageContentP2}}</p>
+                <br/>
+                <p *ngIf="readMore">{{homepageContentP3}}</p>
+             <span *ngIf="readMore" class="ui cardsKnowMore mouse-pointer" (click)="readMore = false;">Read Less...</span>
+            
+    </div>
+  </div>
+  <div class="one wide column"></div>
+</div>
+<div class="ui stackable grid">
+  <div class="one wide column"></div>
+  <div class="seven wide column ">
+      <div class="ui segment">
+          <div class="header padding-10 segment-heading">
+              <span>Featured Articles</span>
+              <a class="expand-or-minimize right-float" href="http://www.indiawaterportal.org/news" target="blank">View All</a>
+          </div><br>
+          <div class="ui two stackable cards">
+              <div class="ui card" *ngFor="let newsContent of rssFeedNews | slice:0:4;">
+                    <h4 class="article-header-padding">
+                            <a class="header" href="{{newsContent.link}}" target="blank">
+                              {{newsContent.title}}
+                            </a>
+                     </h4>
+                  <div class="content card-opacity-descrptn">
+                      <div class="description">
+                          <p>{{newsContent.description}}</p>
+                      </div>
+                  </div>
+              </div> 
+          </div>
+      </div>
+  </div>
+  <div class="three wide column">
+      <div class="ui segment">
+          <div class="content">
+              <div class="header segment-heading">
+                  <span>Announcements</span>
+                  <a class="right-float expand-or-minimize" href="http://www.indiawaterportal.org/opportunities" target="blank">View All</a>
+              </div>
+              <div class="description margin-top-10">
+                  <div class="ui relaxed divided list">
+                      <div class="item" *ngFor="let rssFeedOpportunity of rssFeedOpportunities | slice:0:5;">
+                          <div class="content">
+                            <a class="header" href="{{rssFeedOpportunity.link}}" target="blank">
+                                {{rssFeedOpportunity.title}} </a><br>
+                            <div class="description"></div>
+                          </div>
+                      </div><br/>               
+                  </div>
+              </div>
+          </div>
+      </div>
+      <br>
+      <!-- <div class="ui segment">
+          <div class="content">
+              <div class="header segment-heading">
+                  <span></span>
+                  <a class="right-float expand-or-minimize" ></a>
+              </div>
+          </div>
+          <div class="description margin-top-10">
+                <div class="ui relaxed divided list">
+                <div class="item" *ngFor="let rssFeedOpportunity of rssFeedOpportunities | slice:5:7;">
+                        <div class="content">
+                            <a class="header" href="{{rssFeedOpportunity.link}}" target="blank">
+                                {{rssFeedOpportunity.title}} </a><br>
+                            <div class="description"></div>
+                        </div>
+                    </div> 
+                </div>
+          </div>
+      </div> -->
+      <!--<button type="button" onclick="openModal()" class="ui basic fluid button margin-top--5">ORGANIZATIONS</button>-->
+  </div>
+  <div class="one wide column"></div>
+</div>
+<router-outlet></router-outlet>

@@ -418,21 +418,9 @@
         "email": "email",
         "userName": "userName",
         "password": "password",
-        "externalId": "externalId",
-        "externalIdType": "externalIdType",
-        "externalIdProvider": "externalIdProvider",
-        "externalIds": "externalIds",
         "phoneVerified": "phoneVerified",
         "emailVerified": "emailVerified",
-        "roles": "roles",
-        "position": "position",
-        "grade": "grade",
-        "location": "location",
-        "dob": "dob",
-        "gender": "gender",
-        "language": "language",
-        "profileSummary": "profileSummary",
-        "subject": "subject"
+        "roles": "roles"
       }
     ],
     "SAMPLE_ORGANIZATION_CSV": [
@@ -440,15 +428,25 @@
         "orgName": "orgName",
         "isRootOrg": "isRootOrg",
         "channel": "channel",
-        "externalId": "externalId",
-        "provider": "provider",
-        "description": "description",
-        "homeUrl": "homeUrl",
-        "orgCode": "orgCode",
-        "orgType": "orgType",
-        "preferredLanguage": "preferredLanguage",
-        "contactDetail": "contactDetail"
+        "description": "description"
       }
+    ],
+    "SAMPLE_USER_HEADERS_CSV": [
+        "firstName",
+        "lastName",
+        "phone",
+        "email",
+        "userName",
+        "password",
+        "phoneVerified",
+        "emailVerified",
+        "roles"
+    ],
+    "SAMPLE_ORGANIZATION_HEADERS_CSV":[
+      "orgName",
+      "isRootOrg",
+      "channel",
+      "description"
     ]
   },
   "contentCreateType": {
@@ -563,9 +561,9 @@
           "name": "Appropriateness",
           "index": 1,
           "checkList": [
-            "Has Hate speech, Abuse, Violence, Profanity",
-            "Has Sexual content, Nudity or Vulgarity",
-            "Has Discriminatory or Defamatory content",
+            "Has Hate Speech, Abuse, Violence, Profanity",
+            "Has sexual content, nudity or vulgarity",
+            "Has discriminatory or defamation",
             "Is not suitable for children"
           ]
         },
@@ -573,21 +571,20 @@
           "name": "Content details",
           "index": 2,
           "checkList": [
-            "Inappropriate Title or Description",
-            "Incorrect Board, Grade, Subject or Medium",
-            "Inappropriate tags such as Resource Type or Concepts",
-            "Irrelevant Keywords"
+            "Inappropriate Title and Description",
+            "Inappropriate tags such as Water Resource Type, Proficiency and Topic",
+            "Irrelevant Keywords and Language"
           ]
         },
         {
           "name": "Usability",
           "index": 3,
           "checkList": [
-            "Content is NOT playing correctly",
-            "CANNOT see the content clearly on Desktop and App",
-            "Audio is NOT clear or NOT easy to understand",
-            "Spelling mistakes found in text used",
-            "Language is NOT simple to understand"
+            "Content does not play correctly",
+            "Cannot see the content clearly on the desktop",
+            "Audio (if any) is unclear and difficult to understand",
+            "Spelling mistakes in the text",
+            "Language is not simple to understand"
           ]
         }
       ],
@@ -608,20 +605,19 @@
           "name": "Appropriateness",
           "index": 1,
           "checkList": [
-            "No Hate speech, Abuse, Violence, Profanity",
-            "No Sexual content, Nudity or Vulgarity",
-            "No Discrimination or Defamation",
-            "Is suitable for children"
+            "No Hate Speech, Abuse, Violence, Profanity",
+            "No sexual content, nudity or vulgarity",
+            "No discrimination or defamation",
+            "Is suitable for children"     
           ]
         },
         {
           "name": "Content details",
           "index": 2,
           "checkList": [
-            "Appropriate Title, Description",
-            "Correct Board, Grade, Subject, Medium",
-            "Appropriate tags such as Resource Type, Concepts",
-            "Relevant Keywords"
+            "Appropriate Title and Description",
+            "Appropriate tags such as Water Resource Type, Proficiency and Topic",
+            "Relevant Keywords and Language"
           ]
         },
         {
@@ -629,9 +625,9 @@
           "index": 3,
           "checkList": [
             "Content plays correctly",
-            "Can see the content clearly on Desktop and App",
+            "Can see the content clearly on the desktop",
             "Audio (if any) is clear and easy to understand",
-            "No Spelling mistakes in the text",
+            "No spelling mistakes in the text",
             "Language is simple to understand"
           ]
         }
