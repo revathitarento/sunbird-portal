@@ -25,6 +25,7 @@ export class LanguageDropdownComponent implements OnInit, OnDestroy {
   formAction = 'search';
   filterEnv = 'resourcebundle';
   public unsubscribe = new Subject<void>();
+  slug: string;
 
   constructor(public router: Router, public activatedRoute: ActivatedRoute,
     public orgDetailsService: OrgDetailsService,
@@ -33,6 +34,7 @@ export class LanguageDropdownComponent implements OnInit, OnDestroy {
     public configService: ConfigService, public resourceService: ResourceService) { }
 
   ngOnInit() {
+    this.slug = this.activatedRoute.snapshot.params.slug;
     this.getChannelId();
    this.isCachedDataExists = this._cacheService.exists('portalLanguage');
    if (this.isCachedDataExists) {
@@ -45,14 +47,20 @@ export class LanguageDropdownComponent implements OnInit, OnDestroy {
   }
 
   getChannelId() {
-    this.orgDetailsUnsubscribe = this.orgDetailsService.orgDetails$.subscribe(((data) => {
-      if (data && !data.err) {
-        this.channelId = data.orgDetails.hashTagId;
+    // this.orgDetailsUnsubscribe = this.orgDetailsService.orgDetails$.subscribe(((data) => {
+    //   if (data && !data.err) {
+    //     this.channelId = data.orgDetails.hashTagId;
+    //     this.getLanguage();
+    //   } else if (data && data.err) {
+    //     // error
+    //   }
+    // }));
+    this.orgDetailsService.getOrgDetails(this.slug).subscribe(
+      (apiResponse: any) => {
+        this.channelId = apiResponse.hashTagId;
         this.getLanguage();
-      } else if (data && data.err) {
-        // error
-      }
-    }));
+      },
+    );
   }
 
   getLanguage() {

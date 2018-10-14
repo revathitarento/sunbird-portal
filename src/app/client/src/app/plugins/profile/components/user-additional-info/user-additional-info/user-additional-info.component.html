@@ -1,8 +1,10 @@
 <div id="additionalInfo" *ngIf="userProfile" class="margin-top-20 ui raised segment">
   <div class="header">
     <span class="segment-heading "> {{resourceService?.frmelmnts?.lbl?.addlInfo}}</span>
-    <a appTelemetryInteract [telemetryInteractObject]="telemetryInteractObject" [telemetryInteractEdata]="editAdditionalInfoInteractEdata" class="add-edit-btn-profile" *ngIf="action === 'view'" routerLink="/profile/additionalInfo/edit">{{resourceService?.frmelmnts?.btn?.edit}}</a>
-    <a appTelemetryInteract [telemetryInteractObject]="telemetryInteractObject" [telemetryInteractEdata]="closeAdditionalInfoInteractEdata" class="add-edit-btn-profile" *ngIf="action !== 'view'" routerLink="/profile">{{resourceService?.frmelmnts?.btn?.close}}</a>
+    <a appTelemetryInteract [telemetryInteractObject]="telemetryInteractObject" [telemetryInteractEdata]="editAdditionalInfoInteractEdata"
+      class="add-edit-btn-profile" *ngIf="action === 'view'" routerLink="/profile/additionalInfo/edit">{{resourceService?.frmelmnts?.btn?.edit}}</a>
+    <a appTelemetryInteract [telemetryInteractObject]="telemetryInteractObject" [telemetryInteractEdata]="closeAdditionalInfoInteractEdata"
+      class="add-edit-btn-profile" *ngIf="action !== 'view'" routerLink="/profile">{{resourceService?.frmelmnts?.btn?.close}}</a>
   </div>
   <div class="profileitems profile-des ui relaxed aligned list " *ngIf="action === 'view'">
     <div class="item ">
@@ -61,17 +63,16 @@
         {{resourceService?.frmelmnts?.lbl?.subjects}}
       </div>
     </div>
-    <!-- <div class="item ">
-      <div class="right floated content ">
-        <span>
-          <span *ngFor="let grade of userProfile.grade; let last = last ">{{grade}}
-            <span *ngIf="!last">, </span>
-          </span>
+    <!-- <div class="item "> -->
+    <!-- <div class="right floated content ">
+      <span>
+        <span *ngFor="let grade of userProfile.grade; let last = last ">{{grade}}
+          <span *ngIf="!last">, </span>
         </span>
-      </div>-->
-      <div class="iniformationcontent content ">
-        {{resourceService?.frmelmnts?.lbl?.grades}}
-      </div>
+      </span>
+    </div> -->
+    <div class="iniformationcontent content ">
+      {{resourceService?.frmelmnts?.lbl?.grades}}
     </div>
     <div class="item ">
       <div class="right floated content ">
@@ -81,7 +82,8 @@
         {{resourceService?.frmelmnts?.lbl?.currentlocation}}
       </div>
     </div>
-    <!-- <div class="item ">
+  </div>
+  <!-- <div class="item ">
       <div class="right floated content ">
         <a *ngIf="webPages.fb" href="{{webPages.fb}}" target="_blank">
           <i class="large facebook f icon"></i>
@@ -105,6 +107,8 @@
     <div class="ui" *ngIf="action === 'edit'">
       <app-edit-user-additional-info #edit [basicInfo]="userProfile"></app-edit-user-additional-info>
     </div>
-    <button appTelemetryInteract [telemetryInteractObject]="telemetryInteractObject" [telemetryInteractEdata]="saveEditAdditionalInfoInteractEdata" *ngIf="action === 'edit'" class="ui primary button margin-top-15" (click)="editBasicInfo()">{{resourceService?.frmelmnts?.btn?.save}} </button>
+    <button appTelemetryInteract [telemetryInteractObject]="telemetryInteractObject" [telemetryInteractEdata]="saveEditAdditionalInfoInteractEdata"
+      *ngIf="action === 'edit'" class="ui primary button margin-top-15" (click)="editBasicInfo()">{{resourceService?.frmelmnts?.btn?.save}}
+    </button>
   </div>
-  </div>
+</div>
