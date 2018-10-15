@@ -122,12 +122,12 @@ export class UserUploadComponent implements OnInit, OnDestroy {
     });
     this.userUploadInstructions = [
       { instructions: this.resourceService.frmelmnts.instn.t0013 },
-      { instructions: this.resourceService.frmelmnts.instn.t0001 },
+      { instructions: this.resourceService.frmelmnts.instn.tjd0011 },
       {
         instructions: this.resourceService.frmelmnts.instn.t0033,
         subinstructions: [
           { instructions: this.resourceService.frmelmnts.instn.t0034 },
-          { instructions: this.resourceService.frmelmnts.instn.t0035 },
+          { instructions: this.resourceService.frmelmnts.instn.tjd0008 },
           { instructions: this.resourceService.frmelmnts.instn.tjd0010 },
           { instructions: this.resourceService.frmelmnts.instn.t0037 },
           { instructions: this.resourceService.frmelmnts.instn.tjd0009 },
@@ -173,7 +173,7 @@ export class UserUploadComponent implements OnInit, OnDestroy {
       headers: this.config.appConfig.ADMIN_UPLOAD.SAMPLE_USER_HEADERS_CSV,
       useBom: false
     };
-    const csv = new Angular5Csv(this.config.appConfig.ADMIN_UPLOAD.SAMPLE_USER_CSV, 'Sample_Users', options);
+    const csv = new Angular5Csv({}, 'Sample_Users', options);
   }
   /**
   * This method helps to call uploadOrg method to upload a csv file
