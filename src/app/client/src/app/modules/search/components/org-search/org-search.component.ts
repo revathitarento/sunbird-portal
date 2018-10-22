@@ -273,4 +273,24 @@ export class OrgSearchComponent implements OnInit {
     this.telemetryImpression.edata.subtype = 'pageexit';
     this.telemetryImpression = Object.assign({}, this.telemetryImpression);
   }
+
+  /**
+   * This function helps to show org id
+   * @param id : org Id : string
+   */
+  checkOrgIdAccess(id) {
+    const roles = this.userService.userProfile && this.userService.userProfile.userRoles || [];
+    if (_.indexOf(roles, 'ORG_ADMIN') > -1 || _.indexOf(roles, 'SYSTEM_ADMINISTRATION') > -1) {
+      const orgAdminRoleOrgIds = this.userService.RoleOrgMap['ORG_ADMIN'] || [];
+      const sysAdminRoleOrgIds = this.userService.RoleOrgMap['SYSTEM_ADMINISTRATION'] || [];
+      const rootOrgId = this.userService.userProfile.rootOrgId;
+      if (_.indexOf(orgAdminRoleOrgIds, id) > -1 || _.indexOf(sysAdminRoleOrgIds, rootOrgId) > -1 ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
 }
