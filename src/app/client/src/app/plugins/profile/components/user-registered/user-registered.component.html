@@ -1,0 +1,121 @@
+<div >
+  <div  (click)="openModal()">
+      <div class="ui link card width-100">
+          <div class="content ">
+              <div class="workspace-navigate">
+                  <i class='user big icon primary-text-color-sunbird'></i>
+                  <span class="workspace-navigate-heading"> Add User</span>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+
+
+<sui-modal  *ngIf="showModal" [isClosable]="false" [size]="'normal'"  #addUserModal>
+  <div class="header">
+    <div class="ui grid">
+      <div class="eleven wide tablet computer only column">
+        <span class="ui header">User Registration</span>
+      </div>
+      <div class="one wide tablet computer only column">
+        <i class="close icon" (click)="closeModal()"></i>
+      </div>
+      <div class="ten wide mobile only column">
+          <span class="ui header">User Registration</span>
+        </div>
+        <div class="two wide mobile only column">
+          <i class="close icon" (click)="closeModal()"></i>
+        </div>
+    </div>
+  </div>
+  <div class="content">
+    <form *ngIf="!showLoader" [formGroup]="userReg" autocomplete="off" id="userREg" class="ui form">
+      <div class="field">
+        <div class=" two fields">
+          <div class="required field" [ngClass]="userReg.controls.userName.invalid && userReg.controls['userName'].errors.required && !userReg.controls['userName'].pristine || (userReg.controls['userName'].errors && userReg.controls['userName'].errors.pattern) ? 'error' : ''">
+            <label>User Name</label>
+            <input type="text" formControlName="userName" placeholder="eg:user.name , min 5 character required">
+            <div class="margin-bottom-10 ui pointing red basic label below" *ngIf="userReg.controls.userName.invalid && userReg.controls['userName'].errors.required && !userReg.controls['userName'].pristine || (userReg.controls['userName'].errors && userReg.controls['userName'].errors.pattern)">
+              
+            </div>
+          </div>
+          <div class="required field" [ngClass]="userReg.controls.password.invalid && userReg.controls['password'].errors.required && !userReg.controls['password'].pristine || (userReg.controls['password'].errors && userReg.controls['password'].errors.pattern) ? 'error' : ''">
+            <label>Password</label>
+            <input type="password" formControlName="password" placeholder="Password" />
+            <div class="margin-bottom-10 ui pointing red basic label below" *ngIf="userReg.controls.password.invalid && userReg.controls['password'].errors.required && !userReg.controls['password'].pristine || (userReg.controls['password'].errors && userReg.controls['password'].errors.pattern)">
+              {{resourceService?.messages?.stmsg?.m0088}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="two fields">
+          <div class="required field" [ngClass]="userReg.controls.firstName.invalid && userReg.controls['firstName'].errors.required && !userReg.controls['firstName'].pristine || (userReg.controls['firstName'].errors && userReg.controls['firstName'].errors.pattern) ? 'error' : ''">
+            <label>Name</label>
+            <input type="text" formControlName="firstName" placeholder="First Name">
+          </div>
+          <div class="field">
+            <label>&nbsp; </label>
+            <input type="text" formControlName="lastName" placeholder="Last Name">
+          </div>
+        </div>
+      </div>
+      <div class="margin-top-0 margin-bottom-10 ui pointing red basic label below" *ngIf="userReg.controls.firstName.invalid && userReg.controls['firstName'].errors.required && !userReg.controls['firstName'].pristine || (userReg.controls['firstName'].errors && userReg.controls['firstName'].errors.pattern)">
+        {{resourceService?.messages?.stmsg?.m0092}}
+      </div>
+      <div class="two fields">
+        <div class="required field" [ngClass]="userReg.controls.phone.invalid && userReg.controls['phone'].errors.required && !userReg.controls['phone'].pristine || (userReg.controls['phone'].errors && userReg.controls['phone'].errors.pattern) ? 'error' : ''">
+          <label>Phone Number</label>
+          <input type="text" formControlName="phone" placeholder="eg:XXXXXXXXXX">
+          <div class="margin-bottom-10 ui pointing red basic label below" *ngIf="userReg.controls.phone.invalid && userReg.controls['phone'].errors.required && !userReg.controls['phone'].pristine || (userReg.controls['phone'].errors && userReg.controls['phone'].errors.pattern)">
+            {{resourceService?.messages?.stmsg?.m0091}}
+          </div>
+        </div>
+        <div class="required field" [ngClass]="userReg.controls.email.invalid && userReg.controls['email'].errors.required && !userReg.controls['email'].pristine || (userReg.controls['email'].errors && userReg.controls['email'].errors.pattern) ? 'error' : ''">
+          <label>Email ID</label>
+          <input type="text" formControlName="email" placeholder="User@example.com">
+          <div class="margin-bottom-10 ui pointing red basic label below" *ngIf="userReg.controls.email.invalid && userReg.controls['email'].errors.required && !userReg.controls['email'].pristine || (userReg.controls['email'].errors && userReg.controls['email'].errors.pattern)">
+            {{resourceService?.messages?.stmsg?.m0089}}
+          </div>
+        </div>
+      </div>
+      <div class="two fields">
+        <div class="required field" [ngClass]="userReg.controls.language.invalid && userReg.controls['language'].errors.required && !userReg.controls['language'].pristine ? 'error' : ''">
+          <label>Roles</label>
+          <div class="field">
+            <sui-multi-select class="selection" formControlName="language" labelField="name" valueField="id" #multiSelect>
+              <sui-select-option *ngFor="let option of allRoles" [value]="option"> </sui-select-option>
+            </sui-multi-select>
+          </div>
+       
+        <div class="margin-top-0 margin-bottom-10 ui pointing red basic label below" *ngIf="userReg.controls.language.invalid && userReg.controls['language'].errors.required && !userReg.controls['language'].pristine">
+          Error: Language is invalid
+        </div>
+      </div>
+      <div class="required field" [ngClass]="userReg.controls.organization.invalid && userReg.controls['organization'].errors.required && !userReg.controls['organization'].pristine ? 'error' : ''">
+        <label>Organization</label>
+        <div class="field">
+          <sui-multi-select class="selection" formControlName="organization" labelField="orgName" valueField="id" #multiSelectOrg>
+            <sui-select-option *ngFor="let option of orgs" [value]="option"> </sui-select-option>
+          </sui-multi-select>
+        </div>
+     
+      <div class="margin-top-0 margin-bottom-10 ui pointing red basic label below" *ngIf="userReg.controls.organization.invalid && userReg.controls['organization'].errors.required && !userReg.controls['organization'].pristine">
+        Error: Organization is invalid
+      </div>
+    </div>
+
+      </div>
+      
+      <div class="ui error message">
+      </div>
+    </form>
+    <div>
+    </div>
+  </div>
+  <div class="actions">
+    <button [disabled]="userReg.invalid" class="ui primary button" (click)="onSubmitForm()">Add User</button>
+  </div>
+</sui-modal>
