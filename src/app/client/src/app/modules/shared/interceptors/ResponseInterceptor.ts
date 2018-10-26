@@ -5,6 +5,7 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/catch';
 import { ToasterService } from './../services/toaster/toaster.service';
 import { ResourceService } from './../services/resource/resource.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ResponseInterceptor implements HttpInterceptor {
@@ -15,7 +16,7 @@ export class ResponseInterceptor implements HttpInterceptor {
   public resourceService: ResourceService;
   count: number;
 
-    constructor(toasterService: ToasterService, resourceService: ResourceService) {
+    constructor(toasterService: ToasterService, resourceService: ResourceService, public router: Router) {
        this.toasterService = toasterService;
        this.resourceService = resourceService;
        this.count = 0;
@@ -34,6 +35,8 @@ intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
         console.log('interceptor called');
         this.toasterService.error(this.resourceService.messages.fmsg.m0082);
         this.count++;
+      } else if (err.status === 502 && this.count === 0) {
+        this.router.navigate(['/maintainence']);
       }
     }
   });

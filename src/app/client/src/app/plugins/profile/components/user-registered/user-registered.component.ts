@@ -116,12 +116,12 @@ export class UserRegisteredComponent implements OnInit {
     } else {
       this.showcommonerror = false;
       this.showLoader = true;
-      this.showModal = false;
 
       this.signupService.signup(this.userReg.value).pipe(
       takeUntil(this.unsubscribe$))
       .subscribe(res => {
         this.showLoader = false;
+        this.showModal = false;
         this.maptoOrg(res, this.userReg.value.organisations, this.userReg.value.roles);
         this.userReg.reset();
       },

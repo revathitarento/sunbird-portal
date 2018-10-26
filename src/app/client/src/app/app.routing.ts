@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { ErrorPageComponent, AuthGuard } from '@sunbird/core';
+import { ErrorPageComponent, AuthGuard, MaintainenceErrorComponent } from '@sunbird/core';
 import { RouterModule, Routes } from '@angular/router';
 const appRoutes: Routes = [
   {
@@ -9,6 +9,10 @@ const appRoutes: Routes = [
   {
     path: 'error',
     component: ErrorPageComponent
+  },
+  {
+    path: 'maintainence',
+    component: MaintainenceErrorComponent
   },
   {
     path: '**',
