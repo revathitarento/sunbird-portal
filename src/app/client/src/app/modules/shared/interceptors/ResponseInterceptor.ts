@@ -32,10 +32,10 @@ intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> 
   }, (err: any) => {
     if (err instanceof HttpErrorResponse) {
       if (err.status === 401 && this.count === 0) {
-        console.log('interceptor called');
+        // console.log('interceptor called');
         this.toasterService.error(this.resourceService.messages.fmsg.m0082);
         this.count++;
-      } else if (err.status === 502 && this.count === 0) {
+      } else if (err.status === 502) {
         this.router.navigate(['/maintainence']);
       }
     }
