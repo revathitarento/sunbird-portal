@@ -44,7 +44,9 @@ let envVariables = {
   PORTAL_API_CACHE_TTL: env.sunbird_api_response_cache_ttl || '600',
   SUNBIRD_EXTCONT_WHITELISTED_DOMAINS: env.sunbird_extcont_whitelisted_domains || 'youtube.com,youtu.be',
   TENANT_CDN_URL: env.sunbird_tenant_cdn_url || '',
-  CLOUD_STORAGE_URLS: env.sunbird_cloud_storage_urls
+  CLOUD_STORAGE_URLS: env.sunbird_cloud_storage_urls,
+  PRIVACY_POLICY_URL: env.jaldhara_privacy_policies || 'https://jaldhara.blob.core.windows.net/policies/Arghyam Privacy Policy.pdf',
+  TERM_OF_SERVICE_URL: env.jaldhara_terms_of_service || 'https://jaldhara.blob.core.windows.net/policies/Arghyam Terms of Use.pdf',
 }
 
 envVariables.PORTAL_CASSANDRA_URLS = (env.sunbird_cassandra_urls && env.sunbird_cassandra_urls !== '')
