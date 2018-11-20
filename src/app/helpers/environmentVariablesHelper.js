@@ -69,8 +69,8 @@ const jaldhara_env_variables = {
 envVariables = Object.assign({}, envVariables, jaldhara_env_variables)
 
 // For run development
-// if (process.env.NODE_ENV === 'local') {
+ if (process.env.NODE_ENV === 'local') {
   envVariables = Object.assign({}, envVariables, require('./jaldhara.localVariables'))
-// }
+ }
 
 module.exports = envVariables
