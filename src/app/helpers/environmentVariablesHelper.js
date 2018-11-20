@@ -59,14 +59,18 @@ const jaldhara_env_variables = {
   JALDHARA_QUESTION_RSS_FEED_URL: env.jaldhara_question_rssfeed_url || 'http://www.indiawaterportal.org/rss-questions-feed',
   JALDHARA_RESEARCH_PAPERS_RSS_FEED_URL: env.jaldhara_research_papers_rssfeed_url || 'http://www.indiawaterportal.org/rss-research-papers-feeds',
   ISSUE_FORWATER_URL: env.jaldhara_issue_forwater_url || 'https://issues.jaldhara.in',
-  DISCUSS_FORWATER_URL: env.jaldhara_discuss_forwater_url || 'https://discuss.jaldhara.in'
+  DISCUSS_FORWATER_URL: env.jaldhara_discuss_forwater_url || 'https://discuss.jaldhara.in',
+
+  // branding
+  LOGO_URL: env.jaldhara_logo || 'https://jaldhara.blob.core.windows.net/portal-logo/dev_sunbird_logo.png',
+  FAVICON_URL: env.jaldhara_favicon || 'https://jaldhara.blob.core.windows.net/portal-logo/dev_favicon.ico',
 }
 // Combine both env variables
 envVariables = Object.assign({}, envVariables, jaldhara_env_variables)
 
 // For run development
-if (process.env.NODE_ENV === 'local') {
+// if (process.env.NODE_ENV === 'local') {
   envVariables = Object.assign({}, envVariables, require('./jaldhara.localVariables'))
-}
+// }
 
 module.exports = envVariables

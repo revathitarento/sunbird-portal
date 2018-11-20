@@ -143,6 +143,14 @@ function getLocals(req) {
   locals.editorChannelFilter = envHelper.EDITOR_CHANNEL_FILTER_TYPE;
   locals.issueForwateUrl = envHelper.ISSUE_FORWATER_URL;
   locals.discussForwaterUrl = envHelper.DISCUSS_FORWATER_URL;
+  //branding
+  locals.logoUrl = envHelper.LOGO_URL;
+  locals.faviconUrl = envHelper.FAVICON_URL;
+
+  locals.privacyPolicy = envHelper.PRIVACY_POLICY_URL;
+  locals.termsOfService = envHelper.TERM_OF_SERVICE_URL;
+  
+  
   return locals;
 }
 
@@ -203,6 +211,8 @@ app.all('/explore', indexPage)
 app.all('/explore/*', indexPage)
 app.all(['/groups', '/groups/*'], keycloak.protect(), indexPage)
 app.all('/play/*', indexPage)
+app.all('/guideline', indexPage)
+app.all('/guideline/*', indexPage)
 
 // Forwater related routes
 app.all('/guideline', indexPage)
