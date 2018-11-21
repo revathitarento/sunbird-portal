@@ -1,0 +1,8 @@
+.ui.segment {
+    height:800px;
+    overflow:scroll;
+    padding: 40px;
+}
+.text-underline {
+    text-decoration: underline;
+}

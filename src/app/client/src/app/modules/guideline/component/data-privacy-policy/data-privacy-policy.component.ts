@@ -6,11 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./data-privacy-policy.component.css']
 })
 export class DataPrivacyPolicyComponent implements OnInit {
-  pdfSrc: string;
   constructor() { }
 
   ngOnInit() {
-    this.pdfSrc = (<HTMLInputElement>document.getElementById('privacyPolicy')).value;
   }
 
 }

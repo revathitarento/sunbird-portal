@@ -146,10 +146,6 @@ function getLocals(req) {
   //branding
   locals.logoUrl = envHelper.LOGO_URL;
   locals.faviconUrl = envHelper.FAVICON_URL;
-
-  locals.privacyPolicy = envHelper.PRIVACY_POLICY_URL;
-  locals.termsOfService = envHelper.TERM_OF_SERVICE_URL;
-  
   
   return locals;
 }
