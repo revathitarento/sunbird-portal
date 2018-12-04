@@ -8,7 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FrameworkService, FormService, ConceptPickerService, PermissionService, UserService } from './../../services';
 import * as _ from 'lodash';
 import { CacheService } from 'ng2-cache-service';
-
+import { SearchService, ContentService } from '../../services';
 @Component({
   selector: 'app-data-driven-filter',
   templateUrl: './data-driven-filter.component.html',
@@ -25,6 +25,8 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
   @Input() enrichFilters: object;
   @Output() filters = new EventEmitter();
 
+  orgData: any;
+  selectedOrganization: any;
   /**
  * To get url, app configs
  */
@@ -77,6 +79,10 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
   isShowFilterPlaceholder = true;
   contentTypes: any;
   frameworkDataSubscription: Subscription;
+  selectedOrgMap: { id, orgName };
+  selectedOrgData: any;
+  topicslist: any;
+  frameworklist: any;
   /**
     * Constructor to create injected service(s) object
     Default method of Draft Component class
@@ -96,8 +102,9 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
     userService: UserService,
     public conceptPickerService: ConceptPickerService,
     permissionService: PermissionService,
-    private browserCacheTtlService: BrowserCacheTtlService
-
+    private browserCacheTtlService: BrowserCacheTtlService,
+    public searchService: SearchService, public content: ContentService,
+    public config: ConfigService
   ) {
     this.userService = userService;
     this.configService = configService;
@@ -109,13 +116,13 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
     this.permissionService = permissionService;
     this.formInputData = {};
     this.router.onSameUrlNavigation = 'reload';
+    this.searchService = searchService;
   }
 
   ngOnInit() {
     this.frameworkService.initialize(this.hashTagId);
     this.formInputData = {};
     this.getQueryParams();
-    this.fetchFilterMetaData();
     this.contentTypes = this.configService.dropDownConfig.FILTER.RESOURCES.contentTypes;
     this.userService.userData$.subscribe(
       (user: IUserData) => {
@@ -123,6 +130,11 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
           this.loggedInUserRoles = user.userProfile.userRoles;
         }
       });
+    if (this.router.url === '/resources' || this.router.url === '/learn') {
+      this.getOrgList();
+    } else  {
+      this.fetchFilterMetaData();
+    }
   }
 
   getQueryParams() {
@@ -148,6 +160,29 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
       });
     });
   }
+
+  /**  Org Search without offset.*/
+  orgSearch(): Observable<ServerResponse> {
+    const option = {
+      url: this.config.urlConFig.URLS.ADMIN.ORG_SEARCH,
+      data: {
+        request: {
+          filters: {},
+          sort_by: {orgName: 'asc'}
+        }
+      }
+    };
+    return this.content.post(option);
+  }
+  getOrgList() {
+    this.orgSearch().subscribe((resp) => {
+      this.orgData = resp.result && resp.result.response && resp.result.response.content || [];
+      this.orgData = _.map(this.orgData, (obj) => {
+        return { 'id': obj.id, 'orgName': obj.orgName };
+      });
+      this.fetchFilterMetaData();
+    });
+  }
   /**
 * fetchFilterMetaData is gives form config data
 */
@@ -156,6 +191,11 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
     if (this.isCachedDataExists) {
       const data: any | null = this._cacheService.get(this.filterEnv + this.formAction);
       this.formFieldProperties = data;
+      if (this.router.url === '/resources' || this.router.url === '/learn') {
+        if (!this.formFieldProperties.some((item) => item.code !== 'topic' || 'organisation')) {
+          this.addTopicORgField();
+        }
+      }
       this.createFacets();
     } else {
       this.frameworkDataSubscription = this.frameworkService.frameworkData$.subscribe((frameworkData: Framework) => {
@@ -182,6 +222,9 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
                   }
                 }
               });
+              if (this.router.url === '/resources' || this.router.url === '/learn') {
+                this.addTopicORgField();
+              }
               this.getFormConfig();
             },
             (err: ServerResponse) => {
@@ -192,6 +235,63 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
           // this.toasterService.error(this.resourceService.messages.emsg.m0005);
         }
       });
+    }
+  }
+
+  addTopicORgField() {
+    this.frameworkService.frameworkData$.subscribe(
+      res => {
+      if (res && res.frameworkdata) {
+        this.frameworklist = res.frameworkdata;
+
+        for (let i = 0; i < this.frameworklist.length; i++) {
+          if (this.frameworklist[i].code === 'topic') {
+            const obj = {
+              code: 'topic',
+              dataType: 'text',
+              description: 'Topic',
+              displayProperty: 'Editable',
+              editable: true,
+              index: 4,
+              inputType: 'select',
+              label: 'Topic',
+              name: 'Topic',
+              range: this.frameworklist[i].terms,
+              renderingHints: {semanticColumnWidth: 'four'},
+              required: false,
+              visible: true
+            };
+            this.topicslist = this.frameworklist[i].terms;
+            this.formFieldProperties.push(obj);
+          }
+        }
+      }
+    });
+    if (this.orgData.length ) {
+      const morglist = [];
+      for (let i = 0 ; i < this.orgData.length;  i++) {
+        const orgdata = {
+          id: this.orgData[i].id,
+          name: this.orgData[i].orgName
+        };
+        morglist.push(orgdata);
+      }
+      const obj = {
+        code: 'organisation',
+        dataType: 'text',
+        description: 'Organisation',
+        displayProperty: 'Editable',
+        editable: true,
+        index: 5,
+        inputType: 'select',
+        label: 'Organisation',
+        name: 'Organisation',
+        range: morglist,
+        renderingHints: {semanticColumnWidth: 'four'},
+        required: false,
+        visible: true
+      };
+      this.formFieldProperties.push(obj);
     }
   }
 
