@@ -1,0 +1,17 @@
+.ui.segment {
+    height:800px;
+    overflow:scroll;
+    padding: 40px;
+}
+.text-underline {
+    text-decoration: underline;
+}
+
+ul {
+    list-style: disc;
+    padding-left: 14px;
+}
+ul li {
+    margin-bottom: 16px;
+    position: relative;
+}
