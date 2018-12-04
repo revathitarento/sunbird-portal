@@ -33,6 +33,7 @@ export class SignupComponent implements OnInit, OnDestroy {
   * Boolean value to either show/hide app loader
   */
   showLoader = false;
+  showcommonerror = false;
 
   public unsubscribe$ = new Subject<void>();
 
@@ -45,13 +46,12 @@ export class SignupComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.signUpForm = new FormGroup({
-      userName: new FormControl(null, [Validators.required, Validators.pattern('^[-\\w\.\\$@\*\\!]{5,256}$')]),
+      userName: new FormControl(null, [Validators.required, Validators.pattern('^[A-Za-z0-9- ]+$')]),
       password: new FormControl(null, [Validators.required, Validators.pattern('^[^(?! )][0-9]*[A-Za-z\\s@#!$?*^&0-9]*(?<! )$')]),
-      firstName: new FormControl(null, [Validators.required, Validators.pattern('^[^(?! )][0-9]*[A-Za-z\\s]*(?<! )$')]),
+      firstName: new FormControl(null, [Validators.required, Validators.pattern('^[A-Za-z0-9- ]+$')]),
       lastName: new FormControl(null),
-      phone: new FormControl(null, [Validators.required, Validators.pattern('^\\d{10}$')]),
-      email: new FormControl(null, [Validators.required,
-      Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,4}$/)]),
+      phone: new FormControl(null, [Validators.pattern('^\\d{10}$')]),
+      email: new FormControl(null, [Validators.pattern(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,4}$/)]),
       language: new FormControl(null, [Validators.required])
     });
     this.telemetryImpression = {
@@ -76,19 +76,25 @@ export class SignupComponent implements OnInit, OnDestroy {
    * This method invokes signup servicec to create new user
    */
   onSubmitForm() {
-    this.showLoader = true;
-    this.signupService.signup(this.signUpForm.value).pipe(
-    takeUntil(this.unsubscribe$))
-    .subscribe(res => {
-      this.modal.approve();
-      this.showLoader = false;
-      this.toasterService.success(this.resourceService.messages.smsg.m0039);
-      this.router.navigate(['']);
-    },
+    if (!this.signUpForm.value.phone && !this.signUpForm.value.email) {
+      this.showcommonerror = true;
+    } else {
+      this.showcommonerror = false;
+      this.showLoader = true;
+      this.signupService.signup(this.signUpForm.value).pipe(
+      takeUntil(this.unsubscribe$))
+      .subscribe(res => {
+        this.modal.approve();
+        this.showLoader = false;
+        this.signUpForm.reset();
+        this.toasterService.success(this.resourceService.messages.smsg.m0039);
+        this.router.navigate(['']);
+      },
       err => {
         this.showLoader = false;
         this.toasterService.error(err.error.params.errmsg);
       });
+    }
   }
 
   ngOnDestroy() {

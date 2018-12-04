@@ -51,17 +51,17 @@
         {{resourceService?.messages?.stmsg?.m0092}}
       </div>
       <div class="two fields">
-        <div class="required field" [ngClass]="signUpForm.controls.phone.invalid && signUpForm.controls['phone'].errors.required && !signUpForm.controls['phone'].pristine || (signUpForm.controls['phone'].errors && signUpForm.controls['phone'].errors.pattern) ? 'error' : ''">
+        <div class="field" [ngClass]="signUpForm.controls.phone.invalid && !signUpForm.controls['phone'].pristine || (signUpForm.controls['phone'].errors && signUpForm.controls['phone'].errors.pattern) ? 'error' : ''">
           <label>{{resourceService?.frmelmnts?.lbl?.phonenumber}}</label>
-          <input type="text" formControlName="phone" placeholder="eg:XXXXXXXXXX">
-          <div class="margin-bottom-10 ui pointing red basic label below" *ngIf="signUpForm.controls.phone.invalid && signUpForm.controls['phone'].errors.required && !signUpForm.controls['phone'].pristine || (signUpForm.controls['phone'].errors && signUpForm.controls['phone'].errors.pattern)">
+          <input type="text" formControlName="phone" placeholder="eg:XXXXXXXXXX" maxlength="10">
+          <div class="margin-bottom-10 ui pointing red basic label below" *ngIf="signUpForm.controls.phone.invalid && !signUpForm.controls['phone'].pristine || (signUpForm.controls['phone'].errors && signUpForm.controls['phone'].errors.pattern)">
             {{resourceService?.messages?.stmsg?.m0091}}
           </div>
         </div>
-        <div class="required field" [ngClass]="signUpForm.controls.email.invalid && signUpForm.controls['email'].errors.required && !signUpForm.controls['email'].pristine || (signUpForm.controls['email'].errors && signUpForm.controls['email'].errors.pattern) ? 'error' : ''">
+        <div class="field" [ngClass]="signUpForm.controls.email.invalid && !signUpForm.controls['email'].pristine || (signUpForm.controls['email'].errors && signUpForm.controls['email'].errors.pattern) ? 'error' : ''">
           <label>{{resourceService?.frmelmnts?.lbl?.email}}</label>
           <input type="text" formControlName="email" placeholder="User@example.com">
-          <div class="margin-bottom-10 ui pointing red basic label below" *ngIf="signUpForm.controls.email.invalid && signUpForm.controls['email'].errors.required && !signUpForm.controls['email'].pristine || (signUpForm.controls['email'].errors && signUpForm.controls['email'].errors.pattern)">
+          <div class="margin-bottom-10 ui pointing red basic label below" *ngIf="signUpForm.controls.email.invalid && !signUpForm.controls['email'].pristine || (signUpForm.controls['email'].errors && signUpForm.controls['email'].errors.pattern)">
             {{resourceService?.messages?.stmsg?.m0089}}
           </div>
         </div>
@@ -87,6 +87,7 @@
     </div>
   </div>
   <div class="actions">
+      <div *ngIf="showcommonerror && !(this.signUpForm.value.phone || this.signUpForm.value.email)" class="pull-left ui basic red label">Please provide either phone number or emmail id</div>
     <button [disabled]="signUpForm.invalid" class="ui primary button" (click)="onSubmitForm()">{{resourceService?.frmelmnts?.btn?.signup}}</button>
   </div>
 </sui-modal>
