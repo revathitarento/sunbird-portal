@@ -24,7 +24,10 @@
             <div class="ui grid">
                 <div class="twelve column row">
                     <div class="eight wide tablet computer only column">
-                        <i class="float-ContentRight alarm-icon-header alarm icon large alaramIconColor"></i>
+                        <a (click)="navigateToAnnoucements()">
+                            <i class="float-ContentRight alarm-icon-header black alarm icon large alaramIconColor"></i>
+                            <span class="notify-circle" *ngIf="notificationCount > 0">{{notificationCount}}</span>
+                        </a>
                         <a href="{{confluenceDiscussUrl}}" target="blank" title="Discussion"><i class="float-ContentRight alarm-icon-header black comments icon large"></i></a>
                         <a href="{{confluenceIssueUrl}}" target="blank" title="Issues"><i class="float-ContentRight alarm-icon-header black bug icon large"></i></a>
                     </div>

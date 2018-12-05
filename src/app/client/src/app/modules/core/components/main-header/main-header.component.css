@@ -11,3 +11,15 @@
     justify-content: center;
     align-items: center;
 }
+
+.notify-circle {
+    position: absolute;
+    right: 14px;
+    top: 30%;
+    background: #25997D;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 12px !important;
+}

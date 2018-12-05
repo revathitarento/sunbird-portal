@@ -1,13 +1,14 @@
 
-import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
+import { timer, Subscription, Subject } from 'rxjs';
 import { UserService, PermissionService, TenantService } from './../../services';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ConfigService, ResourceService, IUserProfile, IUserData } from '@sunbird/shared';
+import { ConfigService, ResourceService, IUserProfile, IUserData, ServerResponse } from '@sunbird/shared';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import * as _ from 'lodash';
 import { IInteractEventObject, IInteractEventEdata } from '@sunbird/telemetry';
 import { CacheService } from 'ng2-cache-service';
+import { AnnouncementService } from '../../services/announcement/announcement.service';
 /**
  * Main header component
  */
@@ -84,18 +85,29 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
   public telemetryInteractObject: IInteractEventObject;
   tenantDataSubscription: Subscription;
   userDataSubscription: Subscription;
+  public unsubscribe = new Subject<void>();
+  /**
+	 * Contains result object returned from get inbox API
+	 */
+  inboxData: any;
 
+  /**
+   * To make inbox API calls
+   */
+  private announcementService: AnnouncementService;
   /**
   * value to enable and disable signUp button
   */
   enableSignup = true;
-
+  notificationSubscription: Subscription;
+  notificationCount: any;
   /*
   * constructor
   */
   constructor(config: ConfigService, resourceService: ResourceService, public router: Router,
     permissionService: PermissionService, userService: UserService, tenantService: TenantService,
-    public activatedRoute: ActivatedRoute, private cacheService: CacheService) {
+    public activatedRoute: ActivatedRoute, private cacheService: CacheService, announcementService: AnnouncementService) {
+    this.announcementService = announcementService;
     this.config = config;
     this.resourceService = resourceService;
     this.permissionService = permissionService;
@@ -146,6 +158,39 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
     } catch {
       console.log('error while fetching enableSignup');
     }
+
+    // to get announcement count
+    if (this.userService.loggedIn) {
+      const option = {
+        pageNumber: 1,
+        limit: 1000
+      };
+      this.announcementService.getInboxData(option).pipe(
+        switchMap(() => this.announcementService.getInboxData(option))
+      ).subscribe(
+        (apiResponse: ServerResponse) => {
+          this.inboxData = apiResponse.result;
+          localStorage.setItem('NotificationCount', this.inboxData.count);
+        }
+      );
+
+      this.notificationSubscription = timer(0, 30000).pipe(
+        switchMap(() => this.announcementService.getInboxData(option))
+      ).subscribe(
+        (apiResponse: ServerResponse) => {
+          this.inboxData = apiResponse.result;
+          let currentval: any;
+          currentval = parseInt(localStorage.getItem('NotificationCount'), 0);
+          if (currentval < this.inboxData.count) {
+            this.notificationCount = this.inboxData.count - currentval;
+            localStorage.setItem('NotificationCount', this.inboxData.count);
+          } else {
+            this.notificationCount = 0;
+          }
+          console.log('header notify', this.notificationCount);
+        }
+      );
+    }
   }
 
   getCacheLanguage() {
@@ -167,6 +212,10 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate(['']);
     }
+  }
+  navigateToAnnoucements() {
+    this.router.navigate(['../announcement/inbox/1']);
+    this.notificationCount = 0;
   }
   onEnter(key) {
     this.key = key;
@@ -216,5 +265,6 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.tenantDataSubscription.unsubscribe();
     this.userDataSubscription.unsubscribe();
+    this.notificationSubscription.unsubscribe();
   }
 }

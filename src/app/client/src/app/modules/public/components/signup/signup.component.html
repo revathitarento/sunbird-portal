@@ -87,7 +87,7 @@
     </div>
   </div>
   <div class="actions">
-      <div *ngIf="showcommonerror && !(this.signUpForm.value.phone || this.signUpForm.value.email)" class="pull-left ui basic red label">Please provide either phone number or emmail id</div>
+      <div *ngIf="showcommonerror && !(this.signUpForm.value.phone || this.signUpForm.value.email)" class="pull-left ui basic red label">Please provide either phone number or email id</div>
     <button [disabled]="signUpForm.invalid" class="ui primary button" (click)="onSubmitForm()">{{resourceService?.frmelmnts?.btn?.signup}}</button>
   </div>
 </sui-modal>
