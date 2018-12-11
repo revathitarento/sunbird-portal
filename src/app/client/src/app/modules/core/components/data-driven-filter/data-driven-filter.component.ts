@@ -130,7 +130,8 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
           this.loggedInUserRoles = user.userProfile.userRoles;
         }
       });
-    if (this.router.url === '/resources' || this.router.url === '/learn') {
+    if (this.router.url === '/resources' || this.router.url === '/learn' || this.router.url === 'search/Courses/1'
+    || this.router.url === 'search/Library/1') {
       this.getOrgList();
     } else  {
       this.fetchFilterMetaData();
@@ -191,7 +192,8 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
     if (this.isCachedDataExists) {
       const data: any | null = this._cacheService.get(this.filterEnv + this.formAction);
       this.formFieldProperties = data;
-      if (this.router.url === '/resources' || this.router.url === '/learn') {
+      if (this.router.url === '/resources' || this.router.url === '/learn' || this.router.url === 'search/Courses/1'
+      || this.router.url === 'search/Library/1') {
         if (!this.formFieldProperties.some((item) => item.code !== 'topic' || 'organisation')) {
           this.addTopicORgField();
         }
@@ -222,7 +224,8 @@ export class DataDrivenFilterComponent implements OnInit, OnDestroy, OnChanges {
                   }
                 }
               });
-              if (this.router.url === '/resources' || this.router.url === '/learn') {
+              if (this.router.url === '/resources' || this.router.url === '/learn' || this.router.url === 'search/Courses/1'
+              || this.router.url === 'search/Library/1') {
                 this.addTopicORgField();
               }
               this.getFormConfig();

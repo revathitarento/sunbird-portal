@@ -317,6 +317,7 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         this.openContentEditor();
       } else {
         this.toasterService.error(this.resourceService.messages.emsg.m0004);
+        $('#contentEditor').hide();
       }
     }
     );
