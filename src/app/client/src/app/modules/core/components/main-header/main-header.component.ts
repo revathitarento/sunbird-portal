@@ -115,6 +115,39 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
     this.tenantService = tenantService;
     this.confluenceIssueUrl = (<HTMLInputElement>document.getElementById('issueForwateUrl')).value;
     this.confluenceDiscussUrl = (<HTMLInputElement>document.getElementById('discussForwaterUrl')).value;
+    this.router.events.subscribe((val) => {
+      // to get announcement count
+      if (val instanceof NavigationEnd) {
+        console.log('notify');
+        if (this.userService.loggedIn) {
+          const option = {
+            pageNumber: 1,
+            limit: 1000
+          };
+          this.announcementService.getInboxData(option).pipe(
+            switchMap(() => this.announcementService.getInboxData(option))
+          ).subscribe(
+            (apiResponse: ServerResponse) => {
+              this.inboxData = apiResponse.result;
+              let currentval: any;
+              currentval = parseInt(localStorage.getItem('NotificationCount'), 0);
+              if (currentval < this.inboxData.count) {
+                this.notificationCount = this.inboxData.count - currentval;
+                localStorage.setItem('NotificationCount', this.inboxData.count);
+                console.log('new', this.notificationCount);
+              } else if (currentval > this.inboxData.count) {
+                localStorage.setItem('NotificationCount', this.inboxData.count);
+                this.notificationCount = 0;
+                console.log('updated', this.notificationCount);
+              } else {
+                this.notificationCount = 0;
+                console.log('no notifications', this.notificationCount);
+              }
+            }
+          );
+        }
+      }
+  });
   }
 
   ngOnInit() {
@@ -171,23 +204,6 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
         (apiResponse: ServerResponse) => {
           this.inboxData = apiResponse.result;
           localStorage.setItem('NotificationCount', this.inboxData.count);
-        }
-      );
-
-      this.notificationSubscription = timer(0, 30000).pipe(
-        switchMap(() => this.announcementService.getInboxData(option))
-      ).subscribe(
-        (apiResponse: ServerResponse) => {
-          this.inboxData = apiResponse.result;
-          let currentval: any;
-          currentval = parseInt(localStorage.getItem('NotificationCount'), 0);
-          if (currentval < this.inboxData.count) {
-            this.notificationCount = this.inboxData.count - currentval;
-            localStorage.setItem('NotificationCount', this.inboxData.count);
-          } else {
-            this.notificationCount = 0;
-          }
-          console.log('header notify', this.notificationCount);
         }
       );
     }
