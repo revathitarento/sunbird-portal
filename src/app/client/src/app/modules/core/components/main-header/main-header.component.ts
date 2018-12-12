@@ -117,7 +117,7 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
     this.confluenceDiscussUrl = (<HTMLInputElement>document.getElementById('discussForwaterUrl')).value;
     this.router.events.subscribe((val) => {
       // to get announcement count
-      if (val instanceof NavigationEnd) {
+      if (val instanceof NavigationEnd && val.url.indexOf('announcement') === -1) {
         console.log('notify');
         if (this.userService.loggedIn) {
           const option = {
@@ -129,19 +129,12 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
           ).subscribe(
             (apiResponse: ServerResponse) => {
               this.inboxData = apiResponse.result;
-              let currentval: any;
-              currentval = parseInt(localStorage.getItem('NotificationCount'), 0);
-              if (currentval < this.inboxData.count) {
-                this.notificationCount = this.inboxData.count - currentval;
-                localStorage.setItem('NotificationCount', this.inboxData.count);
-                console.log('new', this.notificationCount);
-              } else if (currentval > this.inboxData.count) {
-                localStorage.setItem('NotificationCount', this.inboxData.count);
+              let currentVal: any;
+              currentVal = parseInt(localStorage.getItem('NotificationCount') || '0', 0);
+              if (currentVal < this.inboxData.count) {
+                this.notificationCount = this.inboxData.count - currentVal;
+              } else if (currentVal > this.inboxData.count) {
                 this.notificationCount = 0;
-                console.log('updated', this.notificationCount);
-              } else {
-                this.notificationCount = 0;
-                console.log('no notifications', this.notificationCount);
               }
             }
           );
@@ -230,8 +223,9 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
     }
   }
   navigateToAnnoucements() {
-    this.router.navigate(['../announcement/inbox/1']);
     this.notificationCount = 0;
+    localStorage.setItem('NotificationCount', this.inboxData.count);
+    this.router.navigate(['../announcement/inbox/1']);
   }
   onEnter(key) {
     this.key = key;
