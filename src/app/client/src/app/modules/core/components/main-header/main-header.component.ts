@@ -118,7 +118,6 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
     this.router.events.subscribe((val) => {
       // to get announcement count
       if (val instanceof NavigationEnd && val.url.indexOf('announcement') === -1) {
-        console.log('notify');
         if (this.userService.loggedIn) {
           const option = {
             pageNumber: 1,
@@ -132,7 +131,6 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
               apiResponse.result.announcements.filter(data => data.received === false) || [];
               const currentVal = parseInt(localStorage.getItem(this.userService.userid) || '0', 0);
               this.notificationCount = this.inboxData.length + currentVal;
-              console.log('After redirect count :: ', this.notificationCount);
             }
           );
         }
