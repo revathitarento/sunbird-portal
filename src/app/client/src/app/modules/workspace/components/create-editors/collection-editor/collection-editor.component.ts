@@ -168,7 +168,7 @@ export class CollectionEditorComponent implements OnInit, AfterViewInit, OnDestr
     jQuery('#collectionEditor').iziModal({
       title: '',
       iframe: true,
-      iframeURL: '/thirdparty/editors/collection-editor/index.html?' + this.buildNumber,
+      iframeURL: '/thirdparty/editors/collection-editor_new/index.html?' + this.buildNumber,
       navigateArrows: false,
       fullscreen: false,
       openFullscreen: true,

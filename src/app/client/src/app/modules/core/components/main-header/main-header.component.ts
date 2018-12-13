@@ -128,14 +128,11 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
             switchMap(() => this.announcementService.getInboxData(option))
           ).subscribe(
             (apiResponse: ServerResponse) => {
-              this.inboxData = apiResponse.result;
-              let currentVal: any;
-              currentVal = parseInt(localStorage.getItem('NotificationCount') || '0', 0);
-              if (currentVal < this.inboxData.count) {
-                this.notificationCount = this.inboxData.count - currentVal;
-              } else if (currentVal > this.inboxData.count) {
-                this.notificationCount = 0;
-              }
+              this.inboxData = this.inboxData = apiResponse.result && apiResponse.result.announcements &&
+              apiResponse.result.announcements.filter(data => data.received === false) || [];
+              const currentVal = parseInt(localStorage.getItem(this.userService.userid) || '0', 0);
+              this.notificationCount = this.inboxData.length + currentVal;
+              console.log('After redirect count :: ', this.notificationCount);
             }
           );
         }
@@ -186,7 +183,7 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
     }
 
     // to get announcement count
-    if (this.userService.loggedIn) {
+    if (!localStorage.getItem(this.userService.userid) && this.userService.loggedIn) {
       const option = {
         pageNumber: 1,
         limit: 1000
@@ -195,8 +192,10 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
         switchMap(() => this.announcementService.getInboxData(option))
       ).subscribe(
         (apiResponse: ServerResponse) => {
-          this.inboxData = apiResponse.result;
-          localStorage.setItem('NotificationCount', this.inboxData.count);
+          this.inboxData = apiResponse.result && apiResponse.result.announcements &&
+          apiResponse.result.announcements.filter(data => data.received === false) || [];
+          console.log('On init count :: ', this.inboxData.length);
+          localStorage.setItem(this.userService.userid, this.inboxData.length);
         }
       );
     }
@@ -224,7 +223,7 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
   }
   navigateToAnnoucements() {
     this.notificationCount = 0;
-    localStorage.setItem('NotificationCount', this.inboxData.count);
+    localStorage.setItem(this.userService.userid, this.notificationCount);
     this.router.navigate(['../announcement/inbox/1']);
   }
   onEnter(key) {
