@@ -146,6 +146,8 @@ function getLocals(req) {
   //branding
   locals.logoUrl = envHelper.LOGO_URL;
   locals.faviconUrl = envHelper.FAVICON_URL;
+  //botpress
+  locals.botUrl = envHelper.BOT_URL;
   
   return locals;
 }

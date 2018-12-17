@@ -75,6 +75,7 @@ export class AppComponent implements OnInit {
     this.tenantService = tenantService;
     this.telemetryService = telemetryService;
     this.config = config;
+    this.getBotpress ();
   }
   /**
    * dispatch telemetry window unload event before browser closes
@@ -108,6 +109,39 @@ export class AppComponent implements OnInit {
     }
     this.initTenantService();
   }
+
+  getBotpress () {
+    const digiLockerScript = document.createElement('script');
+    const burl = (<HTMLInputElement>document.getElementById('botUrl')).value;
+    const logo = (<HTMLInputElement>document.getElementById('logoUrl')).value;
+    const url = burl + '/api/botpress-platform-webchat/inject.js';
+    digiLockerScript.setAttribute('type', 'text/javascript');
+    digiLockerScript.setAttribute('src', url);
+    document.head.appendChild(digiLockerScript);
+
+    setTimeout(() => {
+      window.botpressWebChat.init({
+        host: burl,
+        hideWidget: false,
+        botName: 'ForWater',
+        botAvatarUrl: logo,
+        botConvoTitle: 'ForWater',
+        botConvoDescription: 'Hello, I am a ForWater bot!',
+        backgroundColor: '#ffffff',
+        textColorOnBackground: '#666666',
+        foregroundColor: '#25997D',
+        textColorOnForeground: '#ffffff'
+      });
+      window.botpressWebChat.sendEvent({ type: 'show' });
+
+      window.botpressWebChat.sendEvent({
+      type: 'proactive-trigger',
+      platform: 'web',
+      text: 'Helloooooo'
+      });
+    }, 3000);
+  }
+
   initializeLogedInsession() {
     this.userService.startSession();
     this.userService.initialize(true);
