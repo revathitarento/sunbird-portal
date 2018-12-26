@@ -2,6 +2,9 @@
 	<a class="item" [class.active]="router.isActive('/search/All') || router.isActive('/home')" routerLink="/home">
 		{{resourceService?.frmelmnts?.tab?.home}}
 	</a>
+	<a class="item" [class.active]="router.isActive('/workspace/content/create')" routerLink="/workspace/content/create">
+		{{resourceService?.frmelmnts?.tab?.workspace}} 
+	</a>
 	<a class="item" [class.active]="router.isActive('/search/Courses') || router.isActive('/learn')" routerLink="/learn">
 		{{resourceService?.frmelmnts?.tab?.courses}}
 	</a>
