@@ -28,7 +28,7 @@ export class MainMenuComponent implements OnInit {
   /*
   * constructor
   */
-  constructor(resourceService: ResourceService, userService: UserService, router: Router, 
+  constructor(resourceService: ResourceService, userService: UserService, router: Router,
     public permissionService: PermissionService, public config: ConfigService) {
     this.resourceService = resourceService;
     this.userService = userService;
@@ -37,5 +37,12 @@ export class MainMenuComponent implements OnInit {
 
   ngOnInit() {
     this.workSpaceRole = this.config.rolesConfig.headerDropdownRoles.workSpaceRole;
+  }
+
+  navigateToWorkspace() {
+    const authroles = this.permissionService.getWorkspaceAuthRoles();
+    if (authroles) {
+      this.router.navigate([authroles.url]);
+    }
   }
 }
