@@ -149,7 +149,7 @@ function getLocals(req) {
   //botpress
   locals.botUrl = envHelper.BOT_URL;
   locals.isBotPressEnabled = envHelper.BOT_PRESS_ENABLED;
-  
+  locals.error_handler_plugin = envHelper.ERROR_HANDLER_PLUGIN
   return locals;
 }
 

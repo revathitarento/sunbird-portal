@@ -65,7 +65,10 @@ const jaldhara_env_variables = {
 
   //botpress
   BOT_URL: env.jaldhara_botUrl || 'http://13.233.130.61:3001',
-  BOT_PRESS_ENABLED: env.bot_press_url || 'false'
+  BOT_PRESS_ENABLED: env.bot_press_url || 'false',
+
+  // Error handler plugin
+  ERROR_HANDLER_PLUGIN: env.jaldhara_error_handler_plugin || 'https://4ce64633ee3742ddb72156b15d12701a@sentry.io/1363896'
 }
 // Combine both env variables
 envVariables = Object.assign({}, envVariables, jaldhara_env_variables)

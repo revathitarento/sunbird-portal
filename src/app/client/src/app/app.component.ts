@@ -10,6 +10,7 @@ import {
   UserService, PermissionService, CoursesService, TenantService, ConceptPickerService, OrgDetailsService
 } from '@sunbird/core';
 import * as _ from 'lodash';
+import * as Raven from 'raven-js';
 /**
  * main app component
  *
@@ -116,6 +117,7 @@ export class AppComponent implements OnInit {
     } catch (err) {
       console.log(err);
     }
+    this.loadErrorHandlerPlugin();
   }
 
 
@@ -262,5 +264,16 @@ export class AppComponent implements OnInit {
         }
       }
     );
+  }
+
+  loadErrorHandlerPlugin() {
+    const pluginUrl = (<HTMLInputElement>document.getElementById('error_handler_plugin')).value;
+    if (pluginUrl) {
+      try {
+        Raven.config(pluginUrl).install();
+      } catch (err) {
+        console.log('Unable to load error handler plugin');
+      }
+    }
   }
 }
