@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
     this.initTenantService();
     // check botpress
     try {
-      const botpress = (<HTMLInputElement>document.getElementById('exploreButtonVisibility')).value;
+      const botpress = (<HTMLInputElement>document.getElementById('error_handler_plugin')).value;
       if (botpress.toString() === 'true') {
         this.loadBotpress();
       }
