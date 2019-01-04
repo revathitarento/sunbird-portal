@@ -64,7 +64,8 @@ const jaldhara_env_variables = {
   FAVICON_URL: env.jaldhara_favicon || 'https://jaldhara.blob.core.windows.net/portal-logo/dev_favicon.ico',
 
   //botpress
-  BOT_URL: env.jaldhara_botUrl || 'http://13.233.130.61:3001'
+  BOT_URL: env.jaldhara_botUrl || 'http://13.233.130.61:3001',
+  BOT_PRESS_ENABLED: env.bot_press_url || 'false'
 }
 // Combine both env variables
 envVariables = Object.assign({}, envVariables, jaldhara_env_variables)

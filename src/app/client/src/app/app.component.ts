@@ -75,8 +75,6 @@ export class AppComponent implements OnInit {
     this.tenantService = tenantService;
     this.telemetryService = telemetryService;
     this.config = config;
-
-    this.loadBotpress();
   }
   /**
    * dispatch telemetry window unload event before browser closes
@@ -109,7 +107,17 @@ export class AppComponent implements OnInit {
       });
     }
     this.initTenantService();
+    // check botpress
+    try {
+      const botpress = (<HTMLInputElement>document.getElementById('exploreButtonVisibility')).value;
+      if (botpress.toString() === 'true') {
+        this.loadBotpress();
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
+
 
   loadBotpress() {
     const botscript: any = document.createElement('script');
@@ -121,19 +129,19 @@ export class AppComponent implements OnInit {
 
     if (botscript.readyState) {
       botscript.onreadystatechange = () => {
-        if ( botscript.readyState === 'loaded' || botscript.readyState === 'complete' ) {
+        if (botscript.readyState === 'loaded' || botscript.readyState === 'complete') {
           botscript.onreadystatechange = null;
           this.getBotpress();
         }
       };
     } else {
-      botscript.onload =  () => {
+      botscript.onload = () => {
         this.getBotpress();
       };
     }
   }
 
-  getBotpress () {
+  getBotpress() {
     const burl = (<HTMLInputElement>document.getElementById('botUrl')).value;
     const logo = (<HTMLInputElement>document.getElementById('logoUrl')).value;
     window.botpressWebChat.init({

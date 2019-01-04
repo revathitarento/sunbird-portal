@@ -148,6 +148,7 @@ function getLocals(req) {
   locals.faviconUrl = envHelper.FAVICON_URL;
   //botpress
   locals.botUrl = envHelper.BOT_URL;
+  locals.isBotPressEnabled = envHelper.BOT_PRESS_ENABLED;
   
   return locals;
 }
