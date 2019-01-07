@@ -10,6 +10,7 @@ import {
   UserService, PermissionService, CoursesService, TenantService, ConceptPickerService, OrgDetailsService
 } from '@sunbird/core';
 import * as _ from 'lodash';
+import * as Raven from 'raven-js';
 /**
  * main app component
  *
@@ -107,7 +108,58 @@ export class AppComponent implements OnInit {
       });
     }
     this.initTenantService();
+    // check botpress
+    try {
+      const botpress = (<HTMLInputElement>document.getElementById('error_handler_plugin')).value;
+      if (botpress.toString() === 'true') {
+        this.loadBotpress();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    this.loadErrorHandlerPlugin();
   }
+
+
+  loadBotpress() {
+    const botscript: any = document.createElement('script');
+    const burl = (<HTMLInputElement>document.getElementById('botUrl')).value;
+    const url = burl + '/api/botpress-platform-webchat/inject.js';
+    botscript.setAttribute('type', 'text/javascript');
+    botscript.setAttribute('src', url);
+    document.head.appendChild(botscript);
+
+    if (botscript.readyState) {
+      botscript.onreadystatechange = () => {
+        if (botscript.readyState === 'loaded' || botscript.readyState === 'complete') {
+          botscript.onreadystatechange = null;
+          this.getBotpress();
+        }
+      };
+    } else {
+      botscript.onload = () => {
+        this.getBotpress();
+      };
+    }
+  }
+
+  getBotpress() {
+    const burl = (<HTMLInputElement>document.getElementById('botUrl')).value;
+    const logo = (<HTMLInputElement>document.getElementById('logoUrl')).value;
+    window.botpressWebChat.init({
+      host: burl,
+      hideWidget: false,
+      botName: 'ForWater',
+      botAvatarUrl: logo,
+      botConvoTitle: 'ForWater',
+      botConvoDescription: 'Hello, I am a ForWater bot!',
+      backgroundColor: '#ffffff',
+      textColorOnBackground: '#666666',
+      foregroundColor: '#25997D',
+      textColorOnForeground: '#ffffff'
+    });
+  }
+
   initializeLogedInsession() {
     this.userService.startSession();
     this.userService.initialize(true);
@@ -212,5 +264,16 @@ export class AppComponent implements OnInit {
         }
       }
     );
+  }
+
+  loadErrorHandlerPlugin() {
+    const pluginUrl = (<HTMLInputElement>document.getElementById('error_handler_plugin')).value;
+    if (pluginUrl) {
+      try {
+        Raven.config(pluginUrl).install();
+      } catch (err) {
+        console.log('Unable to load error handler plugin');
+      }
+    }
   }
 }
