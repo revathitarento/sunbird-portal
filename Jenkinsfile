@@ -13,7 +13,7 @@ node('master') {
 
        stage('Pre-Build'){
 
-         sh('./installDeps.sh')
+         sh('sudo ./installDeps.sh')
 
        }
 
