@@ -25,7 +25,7 @@ node('master') {
         withCredentials([string(credentialsId: 'Dock_pass', variable: 'dock-pass')]) {
 
         sh '''
-               docker login -u haridasksd -p$dock-pass
+               docker login -u "haridasksd" -p$dock-pass
                docker push "forwater/player:1.10.0-bronze"
            '''
         }
