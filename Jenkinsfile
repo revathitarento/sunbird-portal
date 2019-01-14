@@ -27,7 +27,7 @@ node('master') {
 
 }
             }
-} 
+ 
 }
  
     catch (err) {
