@@ -22,12 +22,12 @@ node('master') {
        } 
         stage('Docker-push') {
 
- withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'dockerpassword', usernameVariable:'dockerusername')]) {
-        sh '''
+           withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'dockerpassword', usernameVariable:'dockerusername')]) {
+           sh '''
                docker login -u $dockerusername -p $dockerpassword
                docker push "forwater/player:1.10.0-bronze"
-           '''
-        }
+              '''
+            }
 } 
 }
  
