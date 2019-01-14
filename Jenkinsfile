@@ -24,7 +24,14 @@ node('master') {
          print "Environment will be : ${env.NODE_ENV}"
          sh('sudo ./build.sh')
 
-       }   
+       }  
+   	stage('Docker-push') {
+
+	withCredentials([string(credentialsId: 'Dock_pass', variable: 'dock-pass')]) {
+        sh ('sudo ./dockerPushToRepo.sh')
+}
+}
+ 
     }
     catch (err) {
         currentBuild.result = "FAILURE"
