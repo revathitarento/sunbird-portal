@@ -19,23 +19,21 @@ node('master') {
 
        stage('Build'){
 
-       } 
+       }
         stage('Docker-push') {
 
-           withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'dockerpassword', usernameVariable:'dockerusername')]) {
-           sh '''
-               docker login -u $dockerusername -p $dockerpassword
-               docker push "forwater/player:1.10.0-bronze"
-              '''
-            }
+                 withCredentials([string(credentialsId: 'hari-docker-pass', variable: 'dock-pass')]) {
+        sh('sudo ./dockerPushToRepo.sh')
+
 }
             }
- 
+
 }
- 
+
     catch (err) {
         currentBuild.result = "FAILURE"
         throw err
     }
 
 }
+
