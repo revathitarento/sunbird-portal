@@ -1,6 +1,6 @@
 #!groovy
 
-node('build-slave') {
+node('master') {
 
     currentBuild.result = "SUCCESS"
 
@@ -13,31 +13,26 @@ node('build-slave') {
 
        stage('Pre-Build'){
 
-         sh('./installDeps.sh')
+         sh('sudo ./installDeps.sh')
 
        }
 
        stage('Build'){
 
-         env.NODE_ENV = "build"
+       } 
+        stage('Docker-push') {
 
-         print "Environment will be : ${env.NODE_ENV}"
-         sh('sudo ./build.sh')
-
-       }
-
-       stage('Publish'){
-
-         echo 'Push to Repo'
-         dir('.') {
-          sh 'ARTIFACT_LABEL=bronze ./dockerPushToRepo.sh'
-          sh './src/app/metadata.sh > metadata.json'
-          sh 'cat metadata.json'
-          archive includes: "metadata.json"
-         }
-
-       }
-    }
+           withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'dockerpassword', usernameVariable:'dockerusername')]) {
+           sh '''
+               docker login -u $dockerusername -p $dockerpassword
+               docker push "forwater/player:1.10.0-bronze"
+              '''
+            }
+}
+            }
+ 
+}
+ 
     catch (err) {
         currentBuild.result = "FAILURE"
         throw err
