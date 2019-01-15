@@ -30,9 +30,8 @@ node('master') {
             }
 
 }
-            }
-
 }
+
 
     catch (err) {
         currentBuild.result = "FAILURE"
