@@ -2,7 +2,8 @@
 	<a class="item" [class.active]="router.isActive('/search/All') || router.isActive('/home')" routerLink="/home">
 		{{resourceService?.frmelmnts?.tab?.home}}
 	</a>
-	<a class="item" [class.active]="router.isActive('/workspace/content/create')" routerLink="/workspace/content/create">
+	<a class="item" [class.active]="router.isActive('/workspace')" routerLink="/workspace/content/create" 
+	*ngIf='permissionService.permissionAvailable' appPermission [permission]='workSpaceRole' (click)="navigateToWorkspace()">
 		{{resourceService?.frmelmnts?.tab?.workspace}} 
 	</a>
 	<a class="item" [class.active]="router.isActive('/search/Courses') || router.isActive('/learn')" routerLink="/learn">
