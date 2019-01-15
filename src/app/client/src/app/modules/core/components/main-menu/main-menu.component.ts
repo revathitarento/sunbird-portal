@@ -1,6 +1,6 @@
-import { ResourceService } from '@sunbird/shared';
-import { Component } from '@angular/core';
-import { UserService } from '../../services';
+import { ResourceService, ConfigService } from '@sunbird/shared';
+import { Component, OnInit } from '@angular/core';
+import { UserService, PermissionService } from '../../services';
 import { Router, ActivatedRoute } from '@angular/router';
 
 /**
@@ -11,7 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   templateUrl: './main-menu.component.html',
   styleUrls: ['./main-menu.component.css']
 })
-export class MainMenuComponent {
+export class MainMenuComponent implements OnInit {
   /**
    * reference of resourceService service.
    */
@@ -24,13 +24,25 @@ export class MainMenuComponent {
    * reference of Router.
    */
   private router: Router;
+  workSpaceRole: any;
   /*
   * constructor
   */
-  constructor(resourceService: ResourceService, userService: UserService, router: Router) {
+  constructor(resourceService: ResourceService, userService: UserService, router: Router,
+    public permissionService: PermissionService, public config: ConfigService) {
     this.resourceService = resourceService;
     this.userService = userService;
     this.router = router;
   }
 
+  ngOnInit() {
+    this.workSpaceRole = this.config.rolesConfig.headerDropdownRoles.workSpaceRole;
+  }
+
+  navigateToWorkspace() {
+    const authroles = this.permissionService.getWorkspaceAuthRoles();
+    if (authroles) {
+      this.router.navigate([authroles.url]);
+    }
+  }
 }

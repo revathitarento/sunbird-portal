@@ -8,6 +8,7 @@ interface Window {
   config: any;
   context: any;
   redirectUrl: any;
+  botpressWebChat: any;
 }
 
 declare module '*.json' {

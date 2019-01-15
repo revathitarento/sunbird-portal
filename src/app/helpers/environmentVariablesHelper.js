@@ -62,6 +62,13 @@ const jaldhara_env_variables = {
   // branding
   LOGO_URL: env.jaldhara_logo || 'https://jaldhara.blob.core.windows.net/portal-logo/dev_sunbird_logo.png',
   FAVICON_URL: env.jaldhara_favicon || 'https://jaldhara.blob.core.windows.net/portal-logo/dev_favicon.ico',
+
+  //botpress
+  BOT_URL: env.jaldhara_botUrl || 'http://52.66.209.199',
+  BOT_PRESS_ENABLED: env.bot_press_url_enable || 'false',
+
+  // Error handler plugin
+  ERROR_HANDLER_PLUGIN: env.jaldhara_error_handler_plugin || 'https://4ce64633ee3742ddb72156b15d12701a@sentry.io/1363896'
 }
 // Combine both env variables
 envVariables = Object.assign({}, envVariables, jaldhara_env_variables)
