@@ -18,9 +18,10 @@ node('master') {
        }
 
        stage('Build'){
-
+	sh('sudo ./build.sh')
        }
-        stage('Docker-push') {
+
+       stage('Docker-push') {
 
           withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'dockerpassword', usernameVariable:'dockerusername')]) {
            sh '''
@@ -28,7 +29,13 @@ node('master') {
                docker push "forwater/player:1.10.0-bronze"
               '''
             }
+}
 
+     stage('Docker-deploy'){
+	sh '''
+	     ansible-playbook -i /home/deploy/ansible/dev-deploy/inventory/dev --extra-vars remote=dev /home/deploy/ansible/dev-deploy/dev-deploy.yml
+
+           '''
 }
 }
 
