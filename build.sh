@@ -10,6 +10,7 @@ org=$(e "${m}" "org")
 name=$(e "${m}" "name")
 version=$(e "${m}" "version")
 
+rm -rf player-dist.zip
 docker build -f ./Dockerfile.Build -t ${org}/${name}:${version}-build . && \
 docker run --name=${name}-${version}-build ${org}/${name}:${version}-build && \
 containerid=$(docker ps -aqf "name=${name}-${version}-build") && \
