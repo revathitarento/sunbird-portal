@@ -235,7 +235,7 @@ export class ContentEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         },
         {
           id: 'org.ekstep.metadata',
-          ver: '1.1',
+          ver: '1.3',
           type: 'plugin'
         },
         {
