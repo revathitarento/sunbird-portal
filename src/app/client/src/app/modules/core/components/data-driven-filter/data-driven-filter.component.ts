@@ -9,6 +9,7 @@ import { FrameworkService, FormService, PermissionService, UserService, OrgDetai
 import * as _ from 'lodash';
 import { CacheService } from 'ng2-cache-service';
 import { IInteractEventEdata } from '@sunbird/telemetry';
+import { SearchService, ContentService } from '../../services';
 @Component({
   selector: 'app-data-driven-filter',
   templateUrl: './data-driven-filter.component.html'
@@ -57,6 +58,7 @@ export class DataDrivenFilterComponent implements OnInit, OnChanges, OnDestroy {
     public userService: UserService, public permissionService: PermissionService, private utilService: UtilService,
     private browserCacheTtlService: BrowserCacheTtlService, private orgDetailsService: OrgDetailsService ) {
     this.router.onSameUrlNavigation = 'reload';
+    this.searchService = searchService;
   }
 
   ngOnInit() {

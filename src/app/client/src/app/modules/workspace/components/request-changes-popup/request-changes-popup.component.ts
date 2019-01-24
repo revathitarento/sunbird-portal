@@ -72,6 +72,11 @@ export class RequestChangesPopupComponent implements OnInit, OnDestroy {
    * To close url
   */
   closeUrl: any;
+
+  /**
+   * Forwater related variable
+   */
+  checkboolen: any;
   /**
    * showDefaultConfig
   */

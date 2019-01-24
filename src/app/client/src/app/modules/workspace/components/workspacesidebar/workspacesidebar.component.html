@@ -52,4 +52,8 @@
   [class.active]="router.isActive('/workspace/content/collaborating-on')">
  {{resourceService?.frmelmnts?.snav?.Collaboratingon}}
 </a>
+  <a class="item" *ngIf='permissionService.permissionAvailable' appPermission [permission]='addUsersOrgsRole' [routerLink]="['addUsersOrgs']"
+    [class.active]="router.isActive('/workspace/content/addUsersOrgs')">
+   {{resourceService?.frmelmnts?.snav?.addUserOrg}}
+  </a>
 </div>

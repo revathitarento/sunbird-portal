@@ -1,0 +1,28 @@
+body {
+    background-color: #e5f0f6 !important;
+}
+.ui.grid {
+    justify-content: center;
+}
+.ui.message {
+    background:transparent !important;
+    padding: 2em 2.5em 4em;
+    color: rgba(0,0,0,.87) !important;
+    box-shadow: none !important;
+    margin: 50px 0 0 !important;
+}
+.ui.negative.message .header {
+    color: #912d2b;
+    margin-bottom: 40px;
+    font-size: 2.2em;
+    margin: 18px 0 20px;
+}
+
+p.font24 {
+    margin-bottom: 10px !important;
+    font-size: 24px !important;
+    border-bottom: 1px solid #e0b4b4;
+}
+p.font15 {
+    font-size: 15px !important;
+} 

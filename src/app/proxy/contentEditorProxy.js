@@ -17,7 +17,6 @@ module.exports = function (app) {
     return require('url').parse(contentProxyUrl + req.originalUrl).path
   }
   app.use('/plugins/v1/search', proxy(contentServiceBaseUrl, {
-    preserveHostHdr: true,
     proxyReqOptDecorator: proxyHeaders.decorateRequestHeaders(),
     proxyReqPathResolver: function (req) {
       var originalUrl = req.originalUrl
@@ -26,26 +25,27 @@ module.exports = function (app) {
     }
   }))
 
+  app.use('/api/*', permissionsHelper.checkPermission(), proxy(contentProxyUrl, {
+    proxyReqOptDecorator: proxyHeaders.decorateRequestHeaders(),
+    proxyReqPathResolver: proxyReqPathResolverMethod
+  }))
+
   app.use('/content-plugins/*', proxy(contentProxyUrl, {
-    preserveHostHdr: true,
     proxyReqOptDecorator: proxyHeaders.decorateRequestHeaders(),
     proxyReqPathResolver: proxyReqPathResolverMethod
   }))
 
   app.use('/plugins/*', proxy(contentProxyUrl, {
-    preserveHostHdr: true,
     proxyReqOptDecorator: proxyHeaders.decorateRequestHeaders(),
     proxyReqPathResolver: proxyReqPathResolverMethod
   }))
 
   app.use('/assets/public/*', proxy(contentProxyUrl, {
-    preserveHostHdr: true,
     proxyReqOptDecorator: proxyHeaders.decorateRequestHeaders(),
     proxyReqPathResolver: proxyReqPathResolverMethod
   }))
 
   app.use('/content/preview/*', proxy(contentProxyUrl, {
-    preserveHostHdr: true,
     proxyReqOptDecorator: proxyHeaders.decorateRequestHeaders(),
     proxyReqPathResolver: proxyReqPathResolverMethod
   }))
@@ -55,7 +55,6 @@ module.exports = function (app) {
 
   app.use('/action/content/v3/unlisted/publish/:contentId', permissionsHelper.checkPermission(),
     bodyParser.json(), proxy(contentProxyUrl, {
-      preserveHostHdr: true,
       limit: reqDataLimitOfContentUpload,
       proxyReqOptDecorator: proxyHeaders.decorateRequestHeaders(),
       proxyReqPathResolver: proxyReqPathResolverMethod,
@@ -132,7 +131,6 @@ module.exports = function (app) {
   }))
 
   app.use('/action/*', permissionsHelper.checkPermission(), proxy(contentProxyUrl, {
-    preserveHostHdr: true,
     limit: reqDataLimitOfContentUpload,
     proxyReqOptDecorator: proxyHeaders.decorateRequestHeaders(),
     proxyReqPathResolver: proxyReqPathResolverMethod

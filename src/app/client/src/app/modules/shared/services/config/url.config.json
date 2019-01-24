@@ -39,7 +39,9 @@
       "UPDATE_PROF_VIS_FIELDS": "user/v1/profile/visibility",
       "GET_USER_BY_KEY": "user/v1/get",
       "CREATE_V2": "user/v2/create",
-      "LOCATION_SEARCH": "data/v1/location/search"
+      "LOCATION_SEARCH": "data/v1/location/search",
+      "ADD_ORG": "org/v1/create",
+      "ADD_MEMBERTOORG": "org/v1/member/add"
     },
     "COMPOSITE": {
       "SEARCH": "composite/v1/search"
@@ -156,6 +158,13 @@
     "OTP": {
       "GENERATE": "otp/v1/generate",
       "VERIFY": "otp/v1/verify"
+    },
+    "RSSFEED": {
+      "RSS_PREFIX": "/rssfeed",
+      "NEWS": "/news",
+      "JOBS": "/opportunities",
+      "QUESTIONS": "/questions",
+      "RESEARCH_PAPERS": "/research/papers"
     }
   }
 }

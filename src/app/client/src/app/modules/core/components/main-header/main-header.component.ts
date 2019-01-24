@@ -1,12 +1,13 @@
-import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
+import { timer, Subscription, Subject } from 'rxjs';
 import { UserService, PermissionService, TenantService } from './../../services';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { ConfigService, ResourceService, IUserProfile, IUserData } from '@sunbird/shared';
+import { ConfigService, ResourceService, IUserProfile, IUserData, ServerResponse } from '@sunbird/shared';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import * as _ from 'lodash';
 import { IInteractEventObject, IInteractEventEdata } from '@sunbird/telemetry';
 import { CacheService } from 'ng2-cache-service';
+import { AnnouncementService } from '../../services/announcement/announcement.service';
 declare var jQuery: any;
 /**
  * Main header component
@@ -29,6 +30,8 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
   queryParam: any = {};
   showExploreHeader = false;
   showQrmodal = false;
+  confluenceIssueUrl: string;
+  confluenceDiscussUrl: string;
   /**
    * tenant name
    */
@@ -102,18 +105,58 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
   userDataSubscription: Subscription;
   exploreRoutingUrl: string;
   pageId: string;
+  public unsubscribe = new Subject<void>();
+  /**
+	 * Contains result object returned from get inbox API
+	 */
+  inboxData: any;
+
+  /**
+   * To make inbox API calls
+   */
+  private announcementService: AnnouncementService;
+  /**
+  * value to enable and disable signUp button
+  */
+  enableSignup = true;
+  notificationSubscription: Subscription;
+  notificationCount: any;
   /*
   * constructor
   */
   constructor(config: ConfigService, resourceService: ResourceService, public router: Router,
     permissionService: PermissionService, userService: UserService, tenantService: TenantService,
-    public activatedRoute: ActivatedRoute, private cacheService: CacheService, private cdr: ChangeDetectorRef) {
+    public activatedRoute: ActivatedRoute, private cacheService: CacheService, private cdr: ChangeDetectorRef, announcementService: AnnouncementService) {
+    this.announcementService = announcementService;
     this.config = config;
     this.resourceService = resourceService;
     this.permissionService = permissionService;
     this.userService = userService;
     this.tenantService = tenantService;
-   }
+    this.confluenceIssueUrl = (<HTMLInputElement>document.getElementById('issueForwateUrl')).value;
+    this.confluenceDiscussUrl = (<HTMLInputElement>document.getElementById('discussForwaterUrl')).value;
+    this.router.events.subscribe((val) => {
+      // to get announcement count
+      if (val instanceof NavigationEnd && val.url.indexOf('announcement') === -1) {
+        if (this.userService.loggedIn) {
+          const option = {
+            pageNumber: 1,
+            limit: 1000
+          };
+          this.announcementService.getInboxData(option).pipe(
+            switchMap(() => this.announcementService.getInboxData(option))
+          ).subscribe(
+            (apiResponse: ServerResponse) => {
+              this.inboxData = this.inboxData = apiResponse.result && apiResponse.result.announcements &&
+              apiResponse.result.announcements.filter(data => data.received === false) || [];
+              const currentVal = parseInt(localStorage.getItem(this.userService.userid) || '0', 0);
+              this.notificationCount = this.inboxData.length + currentVal;
+            }
+          );
+        }
+      }
+  });
+  }
 
   ngOnInit() {
     this.router.events.pipe(filter(event => event instanceof NavigationEnd))
@@ -168,6 +211,31 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
       });
     this.setInteractEventData();
     this.cdr.detectChanges();
+    try {
+      const enableSignupButton: string = (<HTMLInputElement>document.getElementById('enableSignup')) ?
+        (<HTMLInputElement>document.getElementById('enableSignup')).value : 'true';
+      this.enableSignup = (enableSignupButton.toLowerCase() === 'true');
+    } catch {
+      console.log('error while fetching enableSignup');
+    }
+
+    // to get announcement count
+    if (!localStorage.getItem(this.userService.userid) && this.userService.loggedIn) {
+      const option = {
+        pageNumber: 1,
+        limit: 1000
+      };
+      this.announcementService.getInboxData(option).pipe(
+        switchMap(() => this.announcementService.getInboxData(option))
+      ).subscribe(
+        (apiResponse: ServerResponse) => {
+          this.inboxData = apiResponse.result && apiResponse.result.announcements &&
+          apiResponse.result.announcements.filter(data => data.received === false) || [];
+          console.log('On init count :: ', this.inboxData.length);
+          localStorage.setItem(this.userService.userid, this.inboxData.length);
+        }
+      );
+    }
   }
 
   getCacheLanguage() {
@@ -183,6 +251,11 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate(['']);
     }
+  }
+  navigateToAnnoucements() {
+    this.notificationCount = 0;
+    localStorage.setItem(this.userService.userid, this.notificationCount);
+    this.router.navigate(['../announcement/inbox/1']);
   }
   onEnter(key) {
     this.key = key;

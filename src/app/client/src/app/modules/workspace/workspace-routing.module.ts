@@ -8,6 +8,7 @@ import {
   FlagConentplayerComponent, PublishedPopupComponent, RequestChangesPopupComponent, LimitedPublishedComponent,
   AllContentComponent, FlagReviewerComponent, CollaboratingOnComponent} from './components';
 import { AuthGuard } from '../core/guard/auth-gard.service';
+import { OrgRegisteredComponent, UserRegisteredComponent } from '@sunbird/profile';
 const telemetryEnv = 'workspace';
 const objectType = 'workspace';
 const routes: Routes = [

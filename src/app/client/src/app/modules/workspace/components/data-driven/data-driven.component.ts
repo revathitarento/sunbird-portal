@@ -263,8 +263,14 @@ export class DataDrivenComponent extends WorkSpace implements OnInit, OnDestroy 
   generateData(data) {
     this.showLoader = true;
     const requestData = _.cloneDeep(data);
+<<<<<<< HEAD
     requestData.name = data.name ? data.name : this.name,
       requestData.description = data.description ? data.description : this.description,
+=======
+    requestData.name = data.name ? data.name : 'Untitled ' + this.configService.appConfig.contentCreateTypeForEditors[this.contentType],
+      requestData.description = data.description ? data.description : '',
+      requestData.creator = this.userProfile.firstName + ' ' + this.userProfile.lastName,
+>>>>>>> arghyam/jd-1.10.0
       requestData.createdBy = this.userProfile.id,
       requestData.organisation = this.userProfile.organisationNames,
       requestData.createdFor = this.userProfile.organisationIds,

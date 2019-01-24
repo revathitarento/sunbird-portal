@@ -20,6 +20,7 @@ export class FrameworkService {
     .asObservable().pipe(skipWhile(data => data === undefined || data === null));
   public readonly channelData$: Observable<any> = this._channelData$
     .asObservable().pipe(skipWhile(data => data === undefined || data === null));
+  defaultFramework: any;
 
   constructor(private cacheService: CacheService, private browserCacheTtlService: BrowserCacheTtlService,
     private userService: UserService, private configService: ConfigService,

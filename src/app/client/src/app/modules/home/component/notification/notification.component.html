@@ -1,27 +1,19 @@
 <div class="homeCard ui card blur-content mt-40">
     <div class="content">
         <div class="header announcementCard-header">
-            <span class="header cardsHeading">Notifications</span>
-            <a class="ui right floated cardsKnowMore">View All</a>
+            <span class="header cardsHeading">Research Papers</span>
+            <a class="ui right floated cardsKnowMore" href="http://www.indiawaterportal.org/research-subcategory" target="blank">View All</a>
         </div>
         <div class="description annannouncement-description">
             <div class="ui relaxed divided list">
-                <div class="item">
+                <div class="item" *ngFor="let rssFeedResearchPaper of rssFeedResearchPapers  | slice:0:4;">
                     <div class="content">
-                        <a class="header text-decoration-underline cardsSubHeading">Exam Date Announced </a>
+                        <a class="header text-decoration-underline cardsSubHeading" href="{{rssFeedResearchPaper.link}}" target="blank">{{rssFeedResearchPaper.title}} </a>
                         <br>
-                        <div class="description cardsDescription">An excellent polish restaurant, quick delivery and hearty, filling meals.</div>
+                        <div [innerHtml]="rssFeedResearchPaper.description"></div>
                     </div>
                 </div>
                 <br/>
-                <div class="item">
-                    <div class="content">
-                        <br/>
-                        <a class="header text-decoration-underline cardsSubHeading">Exam Date Announced </a>
-                        <br>
-                        <div class="description cardsDescription">An excellent polish restaurant, quick delivery and hearty, filling meals.</div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

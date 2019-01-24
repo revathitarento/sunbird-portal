@@ -66,7 +66,7 @@ class ObjectStoreRest extends ObjectStore {
                 // telemetry.generateApiCallLogEvent(reqID, options, 'data/v1/object/create')
                 let result = await (this.service.call(options))
 
-                console.log("Announcement - create object - Response", result)
+                console.log("Announcement - create object - Response")
                 return {
                     data: _.get(result, 'body.result'),
                 }
@@ -111,7 +111,7 @@ class ObjectStoreRest extends ObjectStore {
                     // telemetry.generateApiCallLogEvent(data.reqID, options, 'data/v1/object/search')
                     let result = await (this.service.call(options))
 
-                    console.log("Announcement - find object - Response", result)
+                    console.log("Announcement - find object - Response")
                     return _.get(result, 'body.result.response.count') > 0 ? {
                         data: _.get(result, 'body.result.response')
                     } : {
@@ -162,7 +162,7 @@ class ObjectStoreRest extends ObjectStore {
                 // telemetry.generateApiCallLogEvent(data.reqID, options, 'data/v1/object/update')
                 let result = await (this.service.call(options))
 
-                console.log("Announcement - find object - Response", result)
+                console.log("Announcement - find object - Response")
                 return {
                     data: result
                 }
@@ -204,7 +204,7 @@ class ObjectStoreRest extends ObjectStore {
                 
                 let result = await (this.service.call(options))
 
-                console.log("Announcement - get metrics - Response", result)
+                console.log("Announcement - get metrics - Response")
                 let response = _.get(result, 'body.responseCode') === 'OK' ? {
                                         data: _.get(result, 'body.result.response')
                                     } : false

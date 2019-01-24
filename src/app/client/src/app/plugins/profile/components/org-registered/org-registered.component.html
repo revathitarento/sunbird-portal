@@ -1,0 +1,75 @@
+<!-- <div>
+  <div  (click)="openModal()">
+      <div class="ui link card width-100">
+          <div class="content ">
+              <div class="workspace-navigate">
+                  <i class='users big icon primary-text-color-sunbird'></i>
+                  <span class="workspace-navigate-heading"> Add Org</span>
+              </div>
+          </div>
+      </div>
+    </div>
+</div> -->
+<!-- <div (click)="openModal()">
+  <div class="ui link card workspacecontent" routerLink="course">
+    <div class="content">
+      <div class="textcontent">
+        <i class='my-icon file text outline icon'></i>
+        <span class="my-text">{{resourceService?.frmelmnts?.lbl?.addSingleOrg}}</span>
+      </div>
+    </div>
+  </div>
+  <p class="workspaceinstuction">{{resourceService?.frmelmnts?.lbl?.addSingleOrgdescription}}</p>
+</div> -->
+
+<sui-modal *ngIf="showModal" [isClosable]="true" [mustScroll]="true" [size]="'large'" (dismissed)="closeModal()"  #orgModal>
+  <div class="header">
+    <div class="ui grid">
+      <div class="twelve wide tablet computer only column">
+        <span class="ui header">Organization</span>
+      </div>
+      <!-- <div class="one wide tablet computer only column">
+        <i class="close icon" (click)="closeModal()"></i>
+      </div> -->
+      <div class="ten wide mobile only column">
+          <span class="ui header">Organization</span>
+        </div>
+        <!-- <div class="two wide mobile only column">
+          <i class="close icon" (click)="closeModal()"></i>
+        </div> -->
+    </div>
+  </div>
+  <div class="content" *ngIf="!showNewOrg">
+    <form *ngIf="!showLoader" [formGroup]="orgReg" autocomplete="off" id="orgReg" class="ui form">
+      <div class="field">
+        <div class="two fields">
+          <div class="required field" [ngClass]="orgReg.controls.orgName.invalid && orgReg.controls['orgName'].errors.required && !orgReg.controls['orgName'].pristine || (orgReg.controls['orgName'].errors && orgReg.controls['orgName'].errors.pattern) ? 'error' : ''">
+            <label>Organization Name</label>
+            <input type="text" formControlName="orgName" placeholder="Organization name, min 5 character required">
+            <div class="margin-bottom-10 ui pointing red basic label below" *ngIf="orgReg.controls.orgName.invalid && orgReg.controls['orgName'].errors.required && !orgReg.controls['orgName'].pristine || (orgReg.controls['orgName'].errors && orgReg.controls['orgName'].errors.pattern)">
+                {{resourceService?.messages?.stmsg?.m0073}}
+            </div>
+          </div>
+          <div class="required field" [ngClass]="orgReg.controls.orgDesc.invalid && orgReg.controls['orgDesc'].errors.required && !orgReg.controls['orgDesc'].pristine || (orgReg.controls['orgDesc'].errors && orgReg.controls['orgDesc'].errors.pattern) ? 'error' : ''">
+              <label>Description</label>
+              <input type="text" formControlName="orgDesc" placeholder="Description">
+              <div class="margin-bottom-10 ui pointing red basic label below" *ngIf="orgReg.controls.orgDesc.invalid && orgReg.controls['orgDesc'].errors.required && !orgReg.controls['orgDesc'].pristine || (orgReg.controls['orgDesc'].errors && orgReg.controls['orgDesc'].errors.pattern)">
+                {{resourceService?.messages?.stmsg?.m0117}}
+              </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div>
+    </div>
+  </div>
+  <div class="content" *ngIf="showNewOrg">
+    <p><b>Organization Name:</b> {{newOrgName}} </p>
+    <p><b>Organization Id:</b> {{newOorganisationId}}</p>
+    <br>
+    <br>
+  </div>
+  <div class="actions" *ngIf="!showNewOrg">
+    <button [disabled]="orgReg.invalid" class="ui primary button" (click)="onSubmitForm()">Add Org</button>
+  </div>
+</sui-modal>

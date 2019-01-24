@@ -25,17 +25,20 @@
                 <div class="one wide column filter-text">
                   <span class="ShowFilterSubTitle">{{resourceService.frmelmnts?.lbl?.filterby}}</span>
                 </div>
-                <div class="two wide column ">
+                <!-- <div class="two wide column ">
                   <sui-multi-select class="selection ui filtersearch" [(ngModel)]="queryParams.Grades" [options]="options" [hasLabels]=false
                     defaultSelectionText="Class" zeroSelectionText="Select" #multiSelect>
                     <sui-select-option *ngFor="let grades of searchGrades" [value]="grades"> </sui-select-option>
                   </sui-multi-select>
 
+                </div> -->
+                <div class="two wide column">
+                  <app-org-dropdown [queryParams]="queryParams" (selectedOrg)="selectedOrg($event)"></app-org-dropdown>
                 </div>
                 <div class="two wide column">
-                  <sui-multi-select class="selection ui filtersearch" [(ngModel)]="queryParams.Medium" [options]="options" [hasLabels]=false
-                    defaultSelectionText="Medium" zeroSelectionText="Select" #multiSelect>
-                    <sui-select-option *ngFor="let medium of searchMediums" [value]="medium"> </sui-select-option>
+                  <sui-multi-select class="selection ui filtersearch" [(ngModel)]="queryParams.Language" [options]="options" [hasLabels]=false
+                    defaultSelectionText="Language" zeroSelectionText="Select" #multiSelect>
+                    <sui-select-option *ngFor="let language of searchLanguages" [value]="language"> </sui-select-option>
                     <i class="dropdown icon"></i>
                   </sui-multi-select>
                 </div>

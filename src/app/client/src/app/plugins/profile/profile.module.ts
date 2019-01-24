@@ -17,6 +17,7 @@ import { WebExtensionModule } from '@project-sunbird/web-extensions';
 import { NgInviewModule } from 'angular-inport';
 import { TelemetryModule } from '@sunbird/telemetry';
 import { AvatarModule } from 'ngx-avatar';
+import { UserRegisteredComponent, OrgRegisteredComponent } from './components';
 @NgModule({
   imports: [
     CommonModule,

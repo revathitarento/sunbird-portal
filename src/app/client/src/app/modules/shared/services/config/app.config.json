@@ -830,15 +830,7 @@
         "externalIds": "externalIds",
         "phoneVerified": "phoneVerified",
         "emailVerified": "emailVerified",
-        "roles": "roles",
-        "position": "position",
-        "grade": "grade",
-        "location": "location",
-        "dob": "dob",
-        "gender": "gender",
-        "language": "language",
-        "profileSummary": "profileSummary",
-        "subject": "subject"
+        "roles": "roles"
       }
     ],
     "SAMPLE_ORGANIZATION_CSV": [
@@ -857,6 +849,23 @@
         "locationId": "locationId",
         "locationCode": "locationCode"
       }
+    ],
+    "SAMPLE_USER_HEADERS_CSV": [
+        "firstName",
+        "lastName",
+        "phone",
+        "email",
+        "userName",
+        "password",
+        "phoneVerified",
+        "emailVerified",
+        "roles"
+    ],
+    "SAMPLE_ORGANIZATION_HEADERS_CSV":[
+      "orgName",
+      "isRootOrg",
+      "channel",
+      "description"
     ]
   },
   "contentCreateType": {

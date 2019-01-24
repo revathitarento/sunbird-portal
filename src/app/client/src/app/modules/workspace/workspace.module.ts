@@ -18,10 +18,13 @@ import {
   AllContentComponent, FlagReviewerComponent, AllMyContentFilterComponent, CollaboratingOnComponent,
   CollaborationContentFilterComponent
 } from './components';
+import { OrgManagementModule } from '@sunbird/org-management';
+import { ProfileModule } from '@sunbird/profile';
 import { NgInviewModule } from 'angular-inport';
 import { TelemetryModule } from '@sunbird/telemetry';
 import { ReviewCommentsComponent } from './components/review-comments/review-comments.component';
 import { OrderModule } from 'ngx-order-pipe';
+import { AddusersorgsComponent } from './components/addusersorgs/addusersorgs.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -33,7 +36,9 @@ import { OrderModule } from 'ngx-order-pipe';
     ReactiveFormsModule,
     NgInviewModule,
     TelemetryModule,
-    OrderModule
+    OrderModule,
+    OrgManagementModule,
+    ProfileModule
   ],
   declarations: [WorkspaceComponent, WorkspacesidebarComponent,
     CreateContentComponent, DraftComponent, ReviewSubmissionsComponent,
@@ -53,6 +58,7 @@ import { OrderModule } from 'ngx-order-pipe';
     CollaborationContentFilterComponent,
     ReviewCommentsComponent,
     CollaborationContentFilterComponent,
+    AddusersorgsComponent
   ],
   providers: [WorkSpaceService, EditorService, BatchService, ReviewCommentsService]
 })

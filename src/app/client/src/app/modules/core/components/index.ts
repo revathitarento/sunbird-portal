@@ -13,3 +13,5 @@ export * from './language-dropdown/language-dropdown.component';
 export * from './prominent-filter/prominent-filter.component';
 export * from './topic-picker/topic-picker.component';
 
+export * from './main-footer/main-footer.component';
+export * from './maintainence-error/maintainence-error.component';

@@ -58,7 +58,7 @@ export class MainMenuComponent implements OnInit {
   * constructor
   */
   constructor(resourceService: ResourceService, userService: UserService, router: Router,
-     permissionService: PermissionService, config: ConfigService, private cacheService: CacheService) {
+    permissionService: PermissionService, config: ConfigService, private cacheService: CacheService) {
     this.resourceService = resourceService;
     this.userService = userService;
     this.permissionService = permissionService;

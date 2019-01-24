@@ -248,7 +248,8 @@ export class AllContentComponent extends WorkSpace implements OnInit {
         subject: bothParams.queryParams.subject,
         medium: bothParams.queryParams.medium,
         gradeLevel: bothParams.queryParams.gradeLevel,
-        resourceType: bothParams.queryParams.resourceType
+        resourceType: bothParams.queryParams.resourceType,
+        topic: bothParams.queryParams.topic
       },
       limit: limit,
       offset: (pageNumber - 1) * (limit),

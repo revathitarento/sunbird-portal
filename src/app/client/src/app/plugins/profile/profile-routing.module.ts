@@ -1,11 +1,29 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ProfilePageComponent } from './components';
+import { AuthGuard } from '../../modules/core/guard/auth-gard.service';
+
 const telemetryEnv = 'profile';
 const objectType = 'profile';
 const routes: Routes = [
   {
     path: 'profile', component: ProfilePageComponent,
+    data: {
+      telemetry: {
+        env: telemetryEnv, type: 'view', mode: 'create', subtype: 'paginate', object: { type: objectType, ver: '1.0' }
+      }, breadcrumbs: [{ label: 'Home', url: '/home' }, { label: 'Profile', url: '' }]
+    }
+  },
+  {
+    path: 'profile/:section', component: ProfilePageComponent,
+    data: {
+      telemetry: {
+        env: telemetryEnv, type: 'view', mode: 'create', subtype: 'paginate', object: { type: objectType, ver: '1.0' }
+      }, breadcrumbs: [{ label: 'Home', url: '/home' }, { label: 'Profile', url: '' }]
+    }
+  },
+  {
+    path: 'profile/:section/:action', component: ProfilePageComponent,
     data: {
       telemetry: {
         env: telemetryEnv, type: 'view', mode: 'create', subtype: 'paginate', object: { type: objectType, ver: '1.0' }

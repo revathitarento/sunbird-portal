@@ -13,6 +13,9 @@ import { TelemetryModule } from '@sunbird/telemetry';
 import { NgInviewModule } from 'angular-inport';
 import { AvatarModule } from 'ngx-avatar';
 
+import { OrgDropdownComponent } from './components';
+import { HomeFilterComponent } from './components/home-filter/home-filter.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -28,7 +31,7 @@ import { AvatarModule } from 'ngx-avatar';
   ],
   declarations: [ UserSearchComponent, CourseSearchComponent, LibrarySearchComponent,
   UserFilterComponent, UserEditComponent, UserDeleteComponent, OrgSearchComponent, OrgFilterComponent,
-   UserProfileComponent, HomeSearchComponent ],
+   UserProfileComponent, HomeSearchComponent, HomeFilterComponent, OrgDropdownComponent],
   providers: [UserSearchService]
 })
 export class SearchModule { }

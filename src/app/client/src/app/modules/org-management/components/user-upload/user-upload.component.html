@@ -14,7 +14,7 @@
       <app-loader></app-loader>
     </div>
     <form *ngIf="!processId && !showLoader" class="ui form" id="bulkUsers" [formGroup]="uploadUserForm">
-      <div class="ui grid" *ngIf="!processId">
+      <!-- <div class="ui grid" *ngIf="!processId">
         <div class="six wide column">
           <div class="required field">
             <label>{{resourceService?.frmelmnts?.lbl?.provider}}</label>
@@ -30,7 +30,7 @@
       </div>
       <div *ngIf="!processId" class="ui horizontal divider mt-40">
         Or
-      </div>
+      </div> -->
       <div class="ui grid" *ngIf="!processId">
         <div class="six wide column">
           <div class="one field">

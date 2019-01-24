@@ -24,6 +24,7 @@ export class LanguageDropdownComponent implements OnInit, OnDestroy {
   formAction = 'search';
   filterEnv = 'resourcebundle';
   public unsubscribe = new Subject<void>();
+  slug: string;
 
   constructor(public router: Router, public activatedRoute: ActivatedRoute,
     public orgDetailsService: OrgDetailsService,
@@ -32,6 +33,7 @@ export class LanguageDropdownComponent implements OnInit, OnDestroy {
     public configService: ConfigService, public resourceService: ResourceService,   public userService: UserService) { }
 
   ngOnInit() {
+    this.slug = this.activatedRoute.snapshot.params.slug;
     this.getChannelId();
    this.isCachedDataExists = this._cacheService.exists('portalLanguage');
    if (this.isCachedDataExists) {
@@ -71,7 +73,7 @@ export class LanguageDropdownComponent implements OnInit, OnDestroy {
         formType: this.formType,
         formAction: this.formAction,
         contentType: this.filterEnv,
-        framework: ''
+        framework: this.frameworkService.defaultFramework
       };
       this.formService.getFormConfig(formServiceInputParams, this.channelId).pipe(
         takeUntil(this.unsubscribe))

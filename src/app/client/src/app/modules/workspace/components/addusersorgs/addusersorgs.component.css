@@ -1,0 +1,30 @@
+.textcontent {
+    display: flex;
+    white-space: normal;
+    align-items: center;
+}
+.my-text {
+    line-height: 22px;
+    padding-left: 5px;
+}
+.workspaceinstuction {
+    width: 290px;
+    max-width: 100%;
+}
+.iconimg {
+    width: 62px;
+    height: 45px;
+    padding: 0 4px;
+    text-align: center;
+}
+.iconimg img {
+    width: 100%;
+    height: auto;
+}
+.singusericon {
+    width: 58% !important;
+}
+
+.singorgicon {
+    width: 72% !important;
+}

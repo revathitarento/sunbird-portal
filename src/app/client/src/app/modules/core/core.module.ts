@@ -6,6 +6,7 @@ import { SuiModule } from 'ng2-semantic-ui';
 import { FormsModule, ReactiveFormsModule, } from '@angular/forms';
 import { SharedModule } from '@sunbird/shared';
 import { AvatarModule } from 'ngx-avatar';
+import { GuidelineModule } from '../guideline';
 import {
   LearnerService, AnnouncementService, ConceptPickerService,
   BadgesService, ContentService, CoursesService, PageApiService,
@@ -22,6 +23,7 @@ import { AuthGuard } from './guard/auth-gard.service';
 import { CacheService } from 'ng2-cache-service';
 import { WebExtensionModule } from '@project-sunbird/web-extensions';
 import { TelemetryModule } from '@sunbird/telemetry';
+import { PortalService } from './services/portal/portal.service';
 @NgModule({
   imports: [
     CommonModule,
@@ -51,7 +53,7 @@ export class CoreModule {
         AnnouncementService, BadgesService, ContentService, CoursesService, PageApiService,
         AuthGuard, FrameworkService, FormService, CacheService,
         ConceptPickerService, BreadcrumbsService, PlayerService, OrgDetailsService,
-        ChannelService]
+        ChannelService, PortalService]
     };
   }
 }

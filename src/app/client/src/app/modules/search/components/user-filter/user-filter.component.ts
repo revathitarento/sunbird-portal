@@ -22,12 +22,13 @@ export class UserFilterComponent implements OnInit {
    */
   private router: Router;
   searchGrades: Array<string>;
-  searchMediums: Array<string>;
+  searchLanguages: Array<string>;
   searchSubjects: Array<string>;
   searchRoles: Array<string>;
   label: any;
   refresh = true;
   isAccordianOpen = false;
+  selectedOrgMap: { id, orgName };
   /**
     * Constructor to create injected service(s) object
     Default method of Draft Component class
@@ -88,7 +89,7 @@ export class UserFilterComponent implements OnInit {
 
     this.queryParams = { ...this.config.dropDownConfig.FILTER.SEARCH.Users.DROPDOWN, ...this.queryParams };
     this.searchGrades = this.config.dropDownConfig.COMMON.grades;
-    this.searchMediums = this.config.dropDownConfig.COMMON.medium;
+    this.searchLanguages = this.config.dropDownConfig.FILTER.RESOURCES.languages;
     this.searchSubjects = this.config.dropDownConfig.FILTER.RESOURCES.subjects;
     this.searchRoles = this.config.dropDownConfig.FILTER.RESOURCES.roles;
     this.label = this.config.dropDownConfig.FILTER.SEARCH.Users.label;
@@ -99,5 +100,18 @@ export class UserFilterComponent implements OnInit {
       this.queryParams = { ...params };
       this.setFilters();
     });
+  }
+
+  getItemLabel(item, value) {
+    if (value !== 'Organization') {
+      return item;
+    } else {
+      const org = _.find(this.selectedOrgMap, {id: item });
+      return (org ? org.orgName : null);
+    }
+  }
+   selectedOrg(data) {
+    this.selectedOrgMap = data;
+    this.queryParams.Organization = _.map(data, 'id');
   }
 }

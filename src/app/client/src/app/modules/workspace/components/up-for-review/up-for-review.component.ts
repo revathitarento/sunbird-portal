@@ -216,6 +216,8 @@ export class UpForReviewComponent extends WorkSpace implements OnInit {
         subject: bothParams.queryParams.subject,
         medium: bothParams.queryParams.medium,
         gradeLevel: bothParams.queryParams.gradeLevel,
+        contentType: bothParams.queryParams.contentType ? bothParams.queryParams.contentType : this.config.appConfig.WORKSPACE.contentType,
+        topic: bothParams.queryParams.topic
       },
       limit: limit,
       offset: (pageNumber - 1) * (limit),

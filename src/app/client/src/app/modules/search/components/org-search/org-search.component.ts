@@ -5,7 +5,7 @@ import { SearchService, UserService } from '@sunbird/core';
 import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IPagination } from '@sunbird/announcement';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
+import { Angular5Csv } from 'angular5-csv/Angular5-csv';
 import * as _ from 'lodash';
 import { IInteractEventObject, IInteractEventEdata, IImpressionEventInput } from '@sunbird/telemetry';
 
@@ -97,6 +97,9 @@ export class OrgSearchComponent implements OnInit {
 	 * telemetryImpression
 	*/
   telemetryImpression: IImpressionEventInput;
+
+  // Forwater related code changes
+  public rootOrgId: string;
   /**
    * To get user profile of logged-in user
    */
@@ -113,8 +116,7 @@ export class OrgSearchComponent implements OnInit {
    */
   constructor(searchService: SearchService, route: Router,
     activatedRoute: ActivatedRoute, paginationService: PaginationService, resourceService: ResourceService,
-    toasterService: ToasterService, public ngZone: NgZone, config: ConfigService,
-    userService: UserService) {
+    toasterService: ToasterService, public ngZone: NgZone, config: ConfigService, public userService: UserService) {
     this.searchService = searchService;
     this.route = route;
     this.activatedRoute = activatedRoute;
@@ -138,7 +140,8 @@ export class OrgSearchComponent implements OnInit {
       },
       limit: this.pageLimit,
       pageNumber: this.pageNumber,
-      query: this.queryParams.key
+      query: this.queryParams.key,
+      sort_by: {orgName: 'asc'}
     };
     this.searchService.orgSearch(searchParams).subscribe(
       (apiResponse: ServerResponse) => {
@@ -186,7 +189,7 @@ export class OrgSearchComponent implements OnInit {
         'orgName': key.orgName
       });
     });
-    return new Angular2Csv(downloadArray, 'Organisations', options);
+    return new Angular5Csv(downloadArray, 'Organisations', options);
   }
 
   /**
@@ -275,5 +278,25 @@ export class OrgSearchComponent implements OnInit {
     this.telemetryImpression.edata.visits = this.inviewLogs;
     this.telemetryImpression.edata.subtype = 'pageexit';
     this.telemetryImpression = Object.assign({}, this.telemetryImpression);
+  }
+
+  /**
+   * This function helps to show org id
+   * @param id : org Id : string
+   */
+  checkOrgIdAccess(id) {
+    const roles = this.userService.userProfile && this.userService.userProfile.userRoles || [];
+    if (_.indexOf(roles, 'ORG_ADMIN') > -1 || _.indexOf(roles, 'SYSTEM_ADMINISTRATION') > -1) {
+      const orgAdminRoleOrgIds = this.userService.RoleOrgMap['ORG_ADMIN'] || [];
+      const sysAdminRoleOrgIds = this.userService.RoleOrgMap['SYSTEM_ADMINISTRATION'] || [];
+      const rootOrgId = this.userService.userProfile.rootOrgId;
+      if (_.indexOf(orgAdminRoleOrgIds, id) > -1 || _.indexOf(sysAdminRoleOrgIds, rootOrgId) > -1 ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 }
