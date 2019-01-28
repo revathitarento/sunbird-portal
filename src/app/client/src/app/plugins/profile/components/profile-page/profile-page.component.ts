@@ -167,7 +167,8 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
   editMobileInteractEdata: IInteractEventEdata;
   editEmailInteractEdata: IInteractEventEdata;
   telemetryInteractObject: IInteractEventObject;
-<<<<<<< HEAD
+  workSpaceRole: any;
+  admin: any;
   constructor( private cacheService: CacheService, public resourceService: ResourceService, public coursesService: CoursesService,
     public permissionService: PermissionService, public toasterService: ToasterService, public profileService: ProfileService,
     public userService: UserService, public configService: ConfigService, public router: Router, public utilService: UtilService,
@@ -176,16 +177,6 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     this.btnArrow = 'prev-button';
   }
 
-=======
-  admin: Array<string>;
-  constructor(public resourceService: ResourceService,
-    public permissionService: PermissionService, public toasterService: ToasterService,
-    public userService: UserService, public configService: ConfigService, public router: Router,
-    public searchService: SearchService, private playerService: PlayerService, private activatedRoute: ActivatedRoute) { }
-  /**
-   * This method is used to fetch user profile details
-   */
->>>>>>> arghyam/jd-1.10.0
   ngOnInit() {
     this.getCustodianOrgUser().subscribe(custodianOrgUser => {
       this.isCustodianOrgUser = custodianOrgUser;
@@ -215,8 +206,6 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
           this.getAttendedTraining();
         }
       });
-<<<<<<< HEAD
-=======
     this.workSpaceRole = this.configService.rolesConfig.headerDropdownRoles.workSpaceRole;
     this.admin = this.configService.rolesConfig.headerDropdownRoles.adminDashboard;
     let pageId = '';
@@ -225,7 +214,6 @@ export class ProfilePageComponent implements OnInit, OnDestroy {
     } else {
       pageId = 'profile-read';
     }
->>>>>>> arghyam/jd-1.10.0
     this.telemetryImpression = {
       context: {
         env: this.activatedRoute.snapshot.data.telemetry.env

@@ -28,8 +28,6 @@ const { frameworkAPI } = require('@project-sunbird/ext-framework-server/api');
 const frameworkConfig = require('./framework.config.js');
 const configHelper = require('./helpers/configServiceSDKHelper.js')
 
-
-
 const app = express()
 
 let keycloak = getKeyCloakClient({
@@ -59,113 +57,8 @@ app.all('/logoff', endSession, (req, res) => {
   res.redirect('/logout')
 })
 
-function getLocals(req) {
-  var locals = {};
-  locals.userId = _.get(req, 'kauth.grant.access_token.content.sub') ? req.kauth.grant.access_token.content.sub : null
-  locals.sessionId = _.get(req, 'sessionID') && _.get(req, 'kauth.grant.access_token.content.sub') ? req.sessionID : null
-  locals.cdnUrl = envHelper.PORTAL_CDN_URL
-  locals.theme = envHelper.PORTAL_THEME
-  locals.defaultPortalLanguage = envHelper.PORTAL_DEFAULT_LANGUAGE
-  locals.instance = process.env.sunbird_instance
-  locals.appId = envHelper.APPID
-  locals.defaultTenant = envHelper.DEFAULT_CHANNEL
-  locals.exploreButtonVisibility = envHelper.EXPLORE_BUTTON_VISIBILITY;
-  locals.defaultTenantIndexStatus = defaultTenantIndexStatus;
-  locals.enableSignup = envHelper.ENABLE_SIGNUP;
-  locals.extContWhitelistedDomains = envHelper.SUNBIRD_EXTCONT_WHITELISTED_DOMAINS;
-  locals.buildNumber = envHelper.BUILD_NUMBER
-  locals.apiCacheTtl = envHelper.PORTAL_API_CACHE_TTL
-  locals.cloudStorageUrls = envHelper.CLOUD_STORAGE_URLS
-
-  // Forwater related variables
-  locals.editorChannelFilter = envHelper.EDITOR_CHANNEL_FILTER_TYPE;
-  locals.issueForwateUrl = envHelper.ISSUE_FORWATER_URL;
-  locals.discussForwaterUrl = envHelper.DISCUSS_FORWATER_URL;
-  //branding
-  locals.logoUrl = envHelper.LOGO_URL;
-  locals.faviconUrl = envHelper.FAVICON_URL;
-  //botpress
-  locals.botUrl = envHelper.BOT_URL;
-  locals.isBotPressEnabled = envHelper.BOT_PRESS_ENABLED;
-  locals.error_handler_plugin = envHelper.ERROR_HANDLER_PLUGIN
-  return locals;
-}
-
-function indexPage(req, res) {
-  if(defaultTenant && req.path === '/'){
-    tenantId = defaultTenant
-    renderTenantPage(req,res)
-  }else{
-    renderDefaultIndexPage(req,res)
-  }
-}
-
-function renderDefaultIndexPage(req,res){
-  const mobileDetect = new MobileDetect(req.headers['user-agent']);
-  if ((req.path === '/get' || req.path === '/' + req.params.slug + '/get')
-    && mobileDetect.os() === 'AndroidOS') {
-    res.redirect(envHelper.ANDROID_APP_URL)
-  } else {
-    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0')
-    _.forIn(getLocals(req), function (value, key) {
-      res.locals[key] = value
-    })
-    res.render(path.join(__dirname, 'dist', 'index.ejs'))
-  }
-}
-
-app.all('/', indexPage)
-app.all('/home', keycloak.protect(), indexPage)
-app.all('/home/*', keycloak.protect(), indexPage)
-app.all('/announcement', keycloak.protect(), indexPage)
-app.all('/announcement/*', keycloak.protect(), indexPage)
-app.all('/search', keycloak.protect(), indexPage)
-app.all('/search/*', keycloak.protect(), indexPage)
-app.all('/orgType', keycloak.protect(), indexPage)
-app.all('/orgType/*', keycloak.protect(), indexPage)
-app.all('/dashboard', keycloak.protect(), indexPage)
-app.all('/dashboard/*', keycloak.protect(), indexPage)
-app.all('/orgDashboard', keycloak.protect(), indexPage)
-app.all('/orgDashboard/*', keycloak.protect(), indexPage)
-app.all('/workspace', keycloak.protect(), indexPage)
-app.all('/workspace/*', keycloak.protect(), indexPage)
-app.all('/profile', keycloak.protect(), indexPage)
-app.all('/profile/*', keycloak.protect(), indexPage)
-app.all('/learn', keycloak.protect(), indexPage)
-app.all('/learn/*', keycloak.protect(), indexPage)
-app.all('/resources', keycloak.protect(), indexPage)
-app.all('/resources/*', keycloak.protect(), indexPage)
-app.all('/myActivity', keycloak.protect(), indexPage)
-app.all('/myActivity/*', keycloak.protect(), indexPage)
-app.all('/signup', indexPage)
-app.all('/get/dial/:dialCode', indexPage)
-app.all('/:slug/get/dial/:dialCode', function (req, res) { res.redirect('/get/dial/:dialCode') })
-app.all('/get', indexPage)
-app.all('/:slug/get', function (req, res) { res.redirect('/get') })
-app.all('/:slug/explore/*', indexPage)
-app.all('/:slug/explore', indexPage)
-app.all('/explore', indexPage)
-app.all('/explore/*', indexPage)
-app.all(['/groups', '/groups/*'], keycloak.protect(), indexPage)
-app.all('/play/*', indexPage)
-app.all('/guideline', indexPage)
-app.all('/guideline/*', indexPage)
-
-// Forwater related routes
-app.all('/guideline', indexPage)
-app.all('/guideline/*', indexPage)
-
-// Mobile redirection to app
-require('./helpers/mobileAppHelper.js')(app)
-
-app.all('/content-editor/telemetry', bodyParser.urlencoded({ extended: false }),
-  bodyParser.json({ limit: reqDataLimitOfContentEditor }), keycloak.protect(), telemetryHelper.logSessionEvents)
-
-app.all('/collection-editor/telemetry', bodyParser.urlencoded({ extended: false }),
-  bodyParser.json({ limit: reqDataLimitOfContentEditor }), keycloak.protect(), telemetryHelper.logSessionEvents)
-
-// Generate telemetry fot public service
-app.all('/public/service/*', telemetryHelper.generateTelemetryForProxy)
+// health check api
+app.get('/health', healthService.createAndValidateRequestBody, healthService.checkHealth)
 
 // client app routes
 require('./routes/googleSignInRoutes.js')(app, keycloak)
@@ -236,10 +129,6 @@ app.get('/v1/user/session/start/:deviceId', (req, res) => {
 // Resource bundles apis
 app.use('/resourcebundles/v1', bodyParser.urlencoded({ extended: false }),
   bodyParser.json({ limit: '50mb' }), require('./helpers/resourceBundles')(express))
-
-// FOrwater related change
-// Used for show rss feed
-require('./helpers/rssfeed/rssfeed.news.controller')(app)
 
 
 console.log('[Extensible framework]: Bootstrapping...')

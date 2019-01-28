@@ -58,7 +58,7 @@ export class DataDrivenFilterComponent implements OnInit, OnChanges, OnDestroy {
     public userService: UserService, public permissionService: PermissionService, private utilService: UtilService,
     private browserCacheTtlService: BrowserCacheTtlService, private orgDetailsService: OrgDetailsService ) {
     this.router.onSameUrlNavigation = 'reload';
-    this.searchService = searchService;
+    // this.searchService = searchService;
   }
 
   ngOnInit() {
