@@ -34,7 +34,8 @@ import { PortalService } from './services/portal/portal.service';
     ReactiveFormsModule,
     WebExtensionModule,
     TelemetryModule,
-    AvatarModule
+    AvatarModule,
+    GuidelineModule
   ],
   declarations: [MainHeaderComponent, MainFooterComponent, MainMenuComponent, SearchComponent, PermissionDirective,
     BodyScrollDirective, ConceptPickerComponent, DataDrivenFilterComponent, BreadcrumbsComponent, SortByComponent,
