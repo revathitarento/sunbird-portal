@@ -16,6 +16,8 @@ export class MainFooterComponent implements OnInit {
    */
   private router: Router;
 
+  date = new Date();
+  public appUrl: string;
   /*
   * constructor
   */
@@ -25,6 +27,7 @@ export class MainFooterComponent implements OnInit {
    }
 
   ngOnInit() {
+    this.appUrl = (<HTMLInputElement>document.getElementById('appUrl')).value;
   }
 
 }
