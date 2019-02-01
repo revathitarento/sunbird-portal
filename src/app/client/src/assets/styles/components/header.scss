@@ -53,6 +53,24 @@
   }
 }
 
+.header-custom-icons{
+  position: relative;
+  vertical-align: top;
+}
+.notify-circle {
+  position: absolute;
+  right: 0px;
+  top: -9px;
+  background: #25997D;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: #fff;
+  vertical-align: 6px;
+  font-size: 12px;
+  padding: 3px;
+  display: table;
+}
 
 .qr-code-btn {
   background: $white-color !important;
