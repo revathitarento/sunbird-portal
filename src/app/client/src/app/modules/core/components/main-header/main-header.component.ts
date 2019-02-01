@@ -44,6 +44,10 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
    * Sui dropdown initiator
    */
   isOpen: boolean;
+   /**
+   * Workspace access roles
+   */
+  workSpaceRole: Array<string>;
   /**
    * Admin Dashboard access roles
    */
@@ -126,7 +130,8 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
   */
   constructor(config: ConfigService, resourceService: ResourceService, public router: Router,
     permissionService: PermissionService, userService: UserService, tenantService: TenantService,
-    public activatedRoute: ActivatedRoute, private cacheService: CacheService, private cdr: ChangeDetectorRef, announcementService: AnnouncementService) {
+    public activatedRoute: ActivatedRoute, private cacheService: CacheService, private cdr: ChangeDetectorRef,
+    announcementService: AnnouncementService) {
     this.announcementService = announcementService;
     this.config = config;
     this.resourceService = resourceService;
@@ -191,6 +196,7 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
       this.queryParam = { ...queryParams };
       this.key = this.queryParam['key'];
     });
+    this.workSpaceRole = this.config.rolesConfig.headerDropdownRoles.workSpaceRole;
     this.adminDashboard = this.config.rolesConfig.headerDropdownRoles.adminDashboard;
     this.announcementRole = this.config.rolesConfig.headerDropdownRoles.announcementRole;
     this.myActivityRole = this.config.rolesConfig.headerDropdownRoles.myActivityRole;
@@ -257,6 +263,14 @@ export class MainHeaderComponent implements OnInit, OnDestroy {
     localStorage.setItem(this.userService.userid, this.notificationCount);
     this.router.navigate(['../announcement/inbox/1']);
   }
+
+  navigateToWorkspace() {
+    const authroles = this.permissionService.getWorkspaceAuthRoles();
+    if (authroles) {
+      this.router.navigate([authroles.url]);
+    }
+  }
+  
   onEnter(key) {
     this.key = key;
     this.queryParam = {};
