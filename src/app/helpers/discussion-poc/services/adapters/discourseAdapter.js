@@ -370,9 +370,10 @@ class DiscourseAdapter {
   getThreadsList(threadData, user) {
     this.userName = user.userName
     return new Promise((resolve, reject) => {
+      let searchTerm = threadData.keyword === undefined ? '' : threadData.keyword + ' '
       this.createUserIfNotExists(user).then((success) => {
         let filters = {
-          q: '#' + threadData.type + ' tags:batch__' + threadData.contextId,
+          q: searchTerm + '#' + threadData.type + ' tags:batch__' + threadData.contextId,
           page: 1,
           api_key: this.apiAuth.apiKey,
           api_username: user.userName

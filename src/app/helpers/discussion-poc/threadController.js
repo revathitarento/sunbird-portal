@@ -559,7 +559,8 @@ class ThreadController {
           return new Promise((resolve, reject) => {
             let threadFilters = {
               contextId: requestObj.body.contextId,
-              type: requestObj.body.type
+              type: requestObj.body.type,
+              keyword: requestObj.body.keyword
             }
             let user = {
               userName: userProfile.userName
